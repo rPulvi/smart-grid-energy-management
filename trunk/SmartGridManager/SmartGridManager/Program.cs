@@ -10,6 +10,11 @@ namespace SmartGridManager
     {
         static void Main(string[] args)
         {
+            Building casa = new Building("Casa Mia", EnergyType.Solar, 4.2f);
+            
+            while(true)
+                Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());
+            
             //EnergyGenerator eg = new EnergyGenerator(EnergyType.Hydric);
 
             //var peerthread = new Thread(eg.Start) { IsBackground = true };

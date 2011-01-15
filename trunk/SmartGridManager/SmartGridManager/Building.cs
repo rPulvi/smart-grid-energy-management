@@ -5,13 +5,18 @@ using System.Text;
 
 namespace SmartGridManager
 {
-    class Building // : Peer
+    class Building : Peer
     {
-        private PowerManager _pwManager;
+        private PowerManager _pwManager;        
 
-        public Building(string ID, EnergyGenerator generator, float energyConsumed)
+        public Building(string ID, EnergyType energy, float energyConsumed):base(ID)
+        {            
+            _pwManager = new PowerManager(new EnergyGenerator(energy), energyConsumed);
+        }
+
+        public float getEnergyLevel()
         {
-            //TODO
+            return _pwManager.getEnergyLevel();
         }
     }
 }

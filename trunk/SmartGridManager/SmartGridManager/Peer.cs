@@ -17,6 +17,7 @@ namespace SmartGridManager
         public Peer(String name)
         {
             this._member = name;
+            this.StartService();
         }
 
         public void StartService()
