@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SmartGridManager
 {
-    class Building : Peer
+    class Building // : Peer
     {
         private PowerManager _pwManager;
 

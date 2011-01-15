@@ -10,17 +10,30 @@ namespace SmartGridManager
     {
         static void Main(string[] args)
         {
-            EnergyGenerator eg = new EnergyGenerator(EnergyType.Hydric);
+            //EnergyGenerator eg = new EnergyGenerator(EnergyType.Hydric);
 
-            var peerthread = new Thread(eg.Start) { IsBackground = true };
+            //var peerthread = new Thread(eg.Start) { IsBackground = true };
 
-            peerthread.Start();
-            for (int i = 0; i < 19; i++)
+            //peerthread.Start();
+            //for (int i = 0; i < 19; i++)
+            //{
+            //    Thread.Sleep(3000);
+            //    Console.WriteLine(eg.EnergyLevel);
+            //}
+            //eg.Stop();
+
+            Console.WriteLine("Starting Peer...");
+            Peer myPeer = new Peer("Rocco");
+            myPeer.StartService();
+
+            while (true)
             {
-                Thread.Sleep(3000);
-                Console.WriteLine(eg.EnergyLevel);
+                Console.WriteLine("Press ENTER to kill Rocco");
+                string tmp = Console.ReadLine();
+                if (tmp == "") break;
             }
-            eg.Stop();
+
+            myPeer.StopService();
         }
     }
 }
