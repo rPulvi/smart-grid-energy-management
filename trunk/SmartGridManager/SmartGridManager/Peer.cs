@@ -59,7 +59,7 @@ namespace SmartGridManager
         }
 
         static void OnOffline(object sender, EventArgs e)
-        {
+        {                  
             Console.WriteLine("**  Offline");
         }        
     }

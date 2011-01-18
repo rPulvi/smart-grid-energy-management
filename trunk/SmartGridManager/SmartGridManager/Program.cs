@@ -4,41 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 
+
 namespace SmartGridManager
 {
     class Program
     {
         static void Main(string[] args)
-        {
-            Building casa = new Building("Casa Mia", EnergyType.Solar, 4.2f);
+        {            
+            String name = args[0];
+            Building casa = new Building(name, EnergyType.Solar, 4.2f);           
             
-            while(true)
-                Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());
-            
-            //EnergyGenerator eg = new EnergyGenerator(EnergyType.Hydric);
-
-            //var peerthread = new Thread(eg.Start) { IsBackground = true };
-
-            //peerthread.Start();
-            //for (int i = 0; i < 19; i++)
-            //{
-            //    Thread.Sleep(3000);
-            //    Console.WriteLine(eg.EnergyLevel);
-            //}
-            //eg.Stop();
-
-            Console.WriteLine("Starting Peer...");
-            Peer myPeer = new Peer("Rocco");
-            myPeer.StartService();
+            Console.WriteLine("Starting Peer...");            
 
             while (true)
             {
-                Console.WriteLine("Press ENTER to kill Rocco");
+                Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());
+                Console.WriteLine("Press any key to read another value");
+                string tmp = Console.ReadLine();
+                if (tmp == "")
+                {
+                    casa.StopEnergyProduction();
+                    break;
+                }
+            }            
+
+            while (true)
+            {
+                Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());                
                 string tmp = Console.ReadLine();
                 if (tmp == "") break;
             }
 
-            myPeer.StopService();
+            casa.StopService();            
         }
     }
 }

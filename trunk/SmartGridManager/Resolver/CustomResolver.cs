@@ -9,23 +9,16 @@ using System.Configuration;
 
 namespace Resolver
 {
-    class CustomResolver
+    class CustomResolver : CustomPeerResolverService
     {
-        public static void Main()
+        public override RegisterResponseInfo Register(RegisterInfo registerInfo)
         {
-            // Create a new resolver service
-            CustomPeerResolverService crs = new CustomPeerResolverService();
-            crs.ControlShape = false;
+            return base.Register(registerInfo);
+        }
 
-            // Create a new service host
-            ServiceHost customResolver = new ServiceHost(crs);
-
-            // Open the resolver service 
-            crs.Open();
-            customResolver.Open();
-            Console.WriteLine("Custom resolver service is started");
-            Console.WriteLine("Press <ENTER> to terminate service");
-            Console.ReadLine();
+        public override ResolveResponseInfo Resolve(ResolveInfo resolveInfo)
+        {
+            return base.Resolve(resolveInfo);
         }
     }
 }

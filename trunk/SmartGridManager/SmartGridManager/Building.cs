@@ -16,7 +16,12 @@ namespace SmartGridManager
 
         public float getEnergyLevel()
         {
-            return _pwManager.getEnergyLevel();
+            return _pwManager.getEnergyLevel();            
+        }
+
+        public void StopEnergyProduction()
+        {
+            _pwManager.ShutDown();
         }
     }
 }

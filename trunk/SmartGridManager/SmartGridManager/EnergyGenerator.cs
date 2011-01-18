@@ -50,15 +50,16 @@ namespace SmartGridManager
             Random r = new Random();
 
             while (_state == true) 
-            {
-                Thread.Sleep(10000);
+            {                
                 EnergyLevel = r.Next((int)level-5,(int)level+2);
+                Thread.Sleep(1000);
             }
         }
 
         public void Stop()
         {
             _state = false;
+            EnergyLevel = 0;
         }
     }
 }
