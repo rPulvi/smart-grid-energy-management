@@ -12,6 +12,7 @@ namespace SmartGridManager
     {
         private string _member;        
         private myMessage _request = new myMessage();
+        private ITestChannel pp;
         
         public Peer(String name)
         {
@@ -29,6 +30,10 @@ namespace SmartGridManager
             }
             else
                 Console.WriteLine("Errore in connessione");
+
+            PeerNode pn = ((IClientChannel)pp).GetProperty<PeerNode>();
+            pn.MessagePropagationFilter = new RemoteOnlyMessagePropagationFilter();
+
 
             IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
 
