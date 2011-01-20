@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Building.cs" />
+    <Compile Include="Connector.cs" />
     <Compile Include="EnergyGenerator.cs" />
     <Compile Include="EnergyType.cs" />
     <Compile Include="ITest.cs" />
