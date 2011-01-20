@@ -51,6 +51,7 @@
     <Compile Include="EnergyGenerator.cs" />
     <Compile Include="EnergyType.cs" />
     <Compile Include="ITest.cs" />
+    <Compile Include="myMessage.cs" />
     <Compile Include="Peer.cs" />
     <Compile Include="PowerManager.cs" />
     <Compile Include="Program.cs" />

@@ -10,6 +10,6 @@ namespace SmartGridManager
     public interface ITest// : IClientChannel //, ICommunicationObject
     {
         [OperationContract(IsOneWay = true)]
-        void testFunction(string s);
+        void testFunction(myMessage m);
     }
 }

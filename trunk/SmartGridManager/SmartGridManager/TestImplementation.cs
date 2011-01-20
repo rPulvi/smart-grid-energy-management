@@ -12,9 +12,9 @@ namespace SmartGridManager
 
     class TestImplementation : ITest
     {
-        public void testFunction(string s)
+        public void testFunction(myMessage message)
         {
-            Console.WriteLine("Ho scritto {0} ", s);
+            Console.WriteLine("Messaggio Ricevuto: {0}", message.Name );
         }
     }
 }

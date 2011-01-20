@@ -12,6 +12,7 @@ namespace SmartGridManager
     {
         private string _member;
         private ITestChannel _channel;
+        private myMessage _request = new myMessage();
         DuplexChannelFactory<ITestChannel> _factory;
 
         public Peer(String name)
@@ -27,12 +28,16 @@ namespace SmartGridManager
             _channel = _factory.CreateChannel();
             
             IOnlineStatus ostat = _channel.GetProperty<IOnlineStatus>();
+            
             ostat.Online += new EventHandler(OnOnline);
             ostat.Offline += new EventHandler(OnOffline);
 
             try
             {
                 ((ICommunicationObject)_channel).Open();
+                _request.Name = "My name is " + _member;
+                Console.WriteLine("Messaggio inviato da: {0}", _member);
+                _channel.testFunction(_request);
             }
             catch(CommunicationException)
             {
@@ -42,7 +47,6 @@ namespace SmartGridManager
                 return;
             }
 
-            _channel.testFunction("Peer " + _member);
         }
 
         public void StopService()
