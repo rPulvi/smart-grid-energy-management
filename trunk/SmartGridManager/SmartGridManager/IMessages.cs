@@ -6,10 +6,10 @@ using System.ServiceModel;
 
 namespace SmartGridManager
 {
-    [ServiceContract(CallbackContract = typeof(ITest))]
-    public interface ITest// : IClientChannel //, ICommunicationObject
+    [ServiceContract(CallbackContract = typeof(IMessages))]
+    public interface IMessages
     {
         [OperationContract(IsOneWay = true)]
-        void testFunction(myMessage m);
+        void sayHello(myMessage m);
     }
 }

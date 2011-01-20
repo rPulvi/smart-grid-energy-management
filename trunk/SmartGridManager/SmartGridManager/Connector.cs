@@ -8,14 +8,17 @@ namespace SmartGridManager
 {
     public static class Connector
     {
-        public static ITestChannel channel;
-        private static DuplexChannelFactory<ITestChannel> _factory;
+        public static IChannel channel;
+        private static DuplexChannelFactory<IChannel> _factory;
 
         public static bool Connect()
         {
-            InstanceContext instanceContext = new InstanceContext(new TestImplementation());
-            _factory = new DuplexChannelFactory<ITestChannel>(instanceContext, "TestEndpoint");
+            InstanceContext instanceContext = new InstanceContext(new MessagesImplementation());
+            _factory = new DuplexChannelFactory<IChannel>(instanceContext, "TestEndpoint");
             channel = _factory.CreateChannel();
+
+            PeerNode pn = ((IClientChannel)Connector.channel).GetProperty<PeerNode>();
+            pn.MessagePropagationFilter = new RemoteOnlyMessagePropagationFilter();
 
             try
             {

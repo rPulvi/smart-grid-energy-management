@@ -7,7 +7,7 @@ namespace SmartGridManager
     {
         public RemoteOnlyMessagePropagationFilter() { }
 
-        public override PeerMessagePropagation ShouldPropagateMessage(Message message, PeerMessageOrigination origination)
+        public override PeerMessagePropagation ShouldMessagePropagate(Message message, PeerMessageOrigination origination)
         {
             PeerMessagePropagation destination = PeerMessagePropagation.LocalAndRemote;
 

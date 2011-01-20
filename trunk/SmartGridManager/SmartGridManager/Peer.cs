@@ -12,8 +12,7 @@ namespace SmartGridManager
     {
         private string _member;        
         private myMessage _request = new myMessage();
-        private ITestChannel pp;
-        
+       
         public Peer(String name)
         {
             this._member = name;
@@ -26,14 +25,10 @@ namespace SmartGridManager
             {
                 _request.Name = "My name is " + _member;
                 Console.WriteLine("Messaggio inviato da: {0}", _member);
-                Connector.channel.testFunction(_request);
+                Connector.channel.sayHello(_request);
             }
             else
                 Console.WriteLine("Errore in connessione");
-
-            PeerNode pn = ((IClientChannel)pp).GetProperty<PeerNode>();
-            pn.MessagePropagationFilter = new RemoteOnlyMessagePropagationFilter();
-
 
             IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
 

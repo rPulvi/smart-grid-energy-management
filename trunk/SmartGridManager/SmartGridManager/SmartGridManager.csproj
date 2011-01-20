@@ -51,14 +51,14 @@
     <Compile Include="Connector.cs" />
     <Compile Include="EnergyGenerator.cs" />
     <Compile Include="EnergyType.cs" />
-    <Compile Include="ITest.cs" />
+    <Compile Include="IMessages.cs" />
     <Compile Include="myMessage.cs" />
     <Compile Include="Peer.cs" />
     <Compile Include="PowerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RemoteOnlyMessagePropagationFilter.cs" />
-    <Compile Include="TestImplementation.cs" />
+    <Compile Include="MessagesImplementation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

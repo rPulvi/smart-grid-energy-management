@@ -6,13 +6,13 @@ using System.ServiceModel;
 
 namespace SmartGridManager
 {
-    public interface ITestChannel : ITest, IClientChannel
+    public interface IChannel : IMessages, IClientChannel
     {
     }
 
-    class TestImplementation : ITest
+    class MessagesImplementation : IMessages
     {
-        public void testFunction(myMessage message)
+        public void sayHello(myMessage message)
         {
             Console.WriteLine("Messaggio Ricevuto: {0}", message.Name );
         }
