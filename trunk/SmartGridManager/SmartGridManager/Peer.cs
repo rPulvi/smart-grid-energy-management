@@ -10,8 +10,7 @@ namespace SmartGridManager
 
     public class Peer
     {
-        private string _member;        
-        //private myMessage _request = new myMessage();
+        private string _member;                
         private GridMessage _request;
 
         public Peer(String name)
