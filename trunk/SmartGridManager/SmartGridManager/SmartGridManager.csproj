@@ -39,6 +39,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -52,7 +54,8 @@
     <Compile Include="EnergyGenerator.cs" />
     <Compile Include="EnergyType.cs" />
     <Compile Include="IMessages.cs" />
-    <Compile Include="myMessage.cs" />
+    <Compile Include="Messaging\GridMessage.cs" />
+    <Compile Include="Messaging\PeerMessage.cs" />
     <Compile Include="Peer.cs" />
     <Compile Include="PowerManager.cs" />
     <Compile Include="Program.cs" />

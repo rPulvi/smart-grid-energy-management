@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
+using SmartGridManager.Messaging;
 
 namespace SmartGridManager
 {
@@ -10,6 +11,7 @@ namespace SmartGridManager
     public interface IMessages
     {
         [OperationContract(IsOneWay = true)]
-        void sayHello(myMessage m);
+        //void sayHello(myMessage m);
+        void sayHello(GridMessage m);
     }
 }

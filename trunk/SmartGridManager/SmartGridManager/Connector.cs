@@ -14,7 +14,7 @@ namespace SmartGridManager
         public static bool Connect()
         {
             InstanceContext instanceContext = new InstanceContext(new MessagesImplementation());
-            _factory = new DuplexChannelFactory<IChannel>(instanceContext, "TestEndpoint");
+            _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");
             channel = _factory.CreateChannel();
 
             PeerNode pn = ((IClientChannel)Connector.channel).GetProperty<PeerNode>();

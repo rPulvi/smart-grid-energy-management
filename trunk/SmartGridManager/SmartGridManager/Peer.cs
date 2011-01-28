@@ -4,15 +4,16 @@ using System.Linq;
 using System.Text;
 using System.ServiceModel;
 using System.ServiceModel.Description;
-
+using SmartGridManager.Messaging;
 namespace SmartGridManager
 {
 
     public class Peer
     {
         private string _member;        
-        private myMessage _request = new myMessage();
-       
+        //private myMessage _request = new myMessage();
+        private GridMessage _request;
+
         public Peer(String name)
         {
             this._member = name;
@@ -23,8 +24,14 @@ namespace SmartGridManager
         {
             if (Connector.Connect())
             {
-                _request.Name = "My name is " + _member;
+                _request = new GridMessage()
+                {
+                    header = new StandardMessageHeader() { MessageID = Guid.NewGuid(), Receiver = "Tu", Sender = this._member, TimeStamp = DateTime.Now },
+                    tmpField = "Se leggi questo vuol dire che funziona"
+                };
+                
                 Console.WriteLine("Messaggio inviato da: {0}", _member);
+                
                 Connector.channel.sayHello(_request);
             }
             else
