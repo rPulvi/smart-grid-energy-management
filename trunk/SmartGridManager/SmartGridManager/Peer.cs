@@ -8,7 +8,6 @@ using SmartGridManager.Messaging;
 
 namespace SmartGridManager
 {
-
     public class Peer
     {
         private string _member;                

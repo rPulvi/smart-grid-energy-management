@@ -5,7 +5,7 @@ using System.Text;
 using System.ServiceModel;
 using SmartGridManager.Messaging;
 
-namespace SmartGridManager
+namespace SmartGridManager.Messaging
 {
     [ServiceContract(CallbackContract = typeof(IMessages))]
     public interface IMessages

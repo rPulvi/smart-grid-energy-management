@@ -5,12 +5,8 @@ using System.Text;
 using System.ServiceModel;
 using SmartGridManager.Messaging;
 
-namespace SmartGridManager
+namespace SmartGridManager.Messaging
 {
-    public interface IChannel : IMessages, IClientChannel
-    {
-    }
-
     class MessagesImplementation : IMessages
     {        
         public void sayHello(GridMessage message)

@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
+using SmartGridManager.Messaging;
 
 namespace SmartGridManager
 {
+    public interface IChannel : IMessages, IClientChannel
+    {
+    }
+
     public static class Connector
     {
         public static IChannel channel;
