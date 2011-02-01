@@ -11,7 +11,7 @@ namespace SmartGridManager
         #region members
         public EnergyType Type { get; private set; }
         public float EnergyLevel { get; private set; }
-
+        public float level { get; set; }
         private Boolean _state;
         
         #endregion
@@ -20,13 +20,14 @@ namespace SmartGridManager
         public EnergyGenerator(EnergyType e)
         {
             this.Type = e;
+            level = 0;
             _state = true;
         }
         #endregion
 
         public void Start()
         {
-            float level = 0;
+            //float level = 0;
 
             switch (Type)
             {

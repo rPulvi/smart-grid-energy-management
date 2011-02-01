@@ -7,9 +7,10 @@ namespace SmartGridManager
 {
     public enum EnergyType
     {
-        Solar = 0,
-        Eolic = 1,
-        Hydric = 2,
-        Thermic = 3,
+        None = 0,
+        Solar = 1,
+        Eolic = 2,
+        Hydric = 3,
+        Thermic = 4,
     }
 }
