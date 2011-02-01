@@ -14,4 +14,13 @@ namespace SmartGridManager.Messaging
 
         public GridMessage() { }
     }
+    
+    [MessageContract]
+    public class AdvertisingMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public String status { get; set; }
+
+        public AdvertisingMessage() { }
+    }
 }

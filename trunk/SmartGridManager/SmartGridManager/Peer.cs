@@ -10,12 +10,12 @@ namespace SmartGridManager
 {
     public class Peer
     {
-        private string _member;                
+        private String _ID;                
         private GridMessage _request;
 
-        public Peer(String name)
+        public Peer(String ID)
         {
-            this._member = name;
+            this._ID = ID;
             this.StartService();
         }
 
@@ -25,11 +25,11 @@ namespace SmartGridManager
             {
                 _request = new GridMessage()
                 {
-                    header = new StandardMessageHeader() { MessageID = Guid.NewGuid(), Receiver = "Tu", Sender = this._member, TimeStamp = DateTime.Now },
+                    header = new StandardMessageHeader() { MessageID = Guid.NewGuid(), Receiver = "Tu", Sender = this._ID, TimeStamp = DateTime.Now },
                     tmpField = "Se leggi questo vuol dire che funziona"
                 };
                 
-                Console.WriteLine("Messaggio inviato da: {0}", _member);
+                Console.WriteLine("Messaggio inviato da: {0}", _ID);
                 
                 Connector.channel.sayHello(_request);
             }

@@ -10,7 +10,10 @@ namespace SmartGridManager.Messaging
     [ServiceContract(CallbackContract = typeof(IMessages))]
     public interface IMessages
     {
-        [OperationContract(IsOneWay = true)]      
+        [OperationContract(IsOneWay = true)]
         void sayHello(GridMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void statusAdv(AdvertisingMessage m);
     }
 }

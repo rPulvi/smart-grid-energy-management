@@ -27,7 +27,7 @@ namespace SmartGridManager
                 //    break;
                 //}
 
-                Thread.Sleep(5000);
+                Thread.Sleep(6000);
                 casa.setLevel(90);                
             }
 

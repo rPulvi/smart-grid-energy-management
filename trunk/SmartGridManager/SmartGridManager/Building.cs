@@ -19,9 +19,10 @@ namespace SmartGridManager
         /// <param name="ID">An Unique ID</param>
         /// <param name="energy">The type of energy producted</param>
         /// <param name="energyThreshold">The threshold to become producer/consumer</param>
-        public Building(string ID, EnergyType energy, float energyThreshold):base(ID)
+        public Building(String Name, EnergyType energy, float energyThreshold)
+            : base(Name)
         {
-            _pwManager = new PowerManager(new EnergyGenerator(energy), energyThreshold);
+            _pwManager = new PowerManager(Name, new EnergyGenerator(energy), energyThreshold);
             peerthread = new Thread(_pwManager.Start) { IsBackground = true };
             peerthread.Start();
         }
