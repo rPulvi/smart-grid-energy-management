@@ -51,11 +51,6 @@
   <ItemGroup>
     <Compile Include="Building.cs" />
     <Compile Include="EnergyGenerator.cs" />
-    <Compile Include="Messaging\GridMessage.cs" />
-    <Compile Include="Messaging\IMessages.cs" />
-    <Compile Include="Messaging\MessageHandler.cs" />
-    <Compile Include="Messaging\MessagesImplementation.cs" />
-    <Compile Include="Messaging\PeerMessage.cs" />
     <Compile Include="PowerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
