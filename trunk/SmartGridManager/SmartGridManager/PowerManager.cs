@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using SmartGridManager.Messaging;
+using SmartGridManager.Core;
+using SmartGridManager.Core.Messaging;
+using SmartGridManager.Core.Commons;
 
 namespace SmartGridManager
 {
