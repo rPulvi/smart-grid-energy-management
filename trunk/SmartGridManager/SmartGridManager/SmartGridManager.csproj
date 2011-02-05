@@ -51,6 +51,11 @@
   <ItemGroup>
     <Compile Include="Building.cs" />
     <Compile Include="EnergyGenerator.cs" />
+    <Compile Include="Messaging\GridMessage.cs" />
+    <Compile Include="Messaging\IMessages.cs" />
+    <Compile Include="Messaging\MessageHandler.cs" />
+    <Compile Include="Messaging\MessagesImplementation.cs" />
+    <Compile Include="Messaging\PeerMessage.cs" />
     <Compile Include="PowerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -62,7 +67,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
