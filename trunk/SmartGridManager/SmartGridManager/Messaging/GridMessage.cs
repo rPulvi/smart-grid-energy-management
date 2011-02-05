@@ -16,11 +16,11 @@ namespace SmartGridManager.Messaging
     }
     
     [MessageContract]
-    public class AdvertisingMessage : PeerMessage
+    public class StatusNotifyMessage : PeerMessage
     {
         [MessageBodyMember]
-        public String status { get; set; }
+        public PeerStatus status { get; set; }
 
-        public AdvertisingMessage() { }
+        public StatusNotifyMessage() { }
     }
 }

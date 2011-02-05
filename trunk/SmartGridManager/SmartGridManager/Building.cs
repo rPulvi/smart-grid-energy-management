@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using SmartGridManager.Messaging;
 
 namespace SmartGridManager
 {
@@ -10,7 +11,7 @@ namespace SmartGridManager
     {
         private PowerManager _pwManager;
         private Thread peerthread;
-
+        
         // TODO: Generare i costruttori per solo producer e solo consumer.
 
         /// <summary>
@@ -21,7 +22,7 @@ namespace SmartGridManager
         /// <param name="energyThreshold">The threshold to become producer/consumer</param>
         public Building(String Name, EnergyType energy, float energyThreshold)
             : base(Name)
-        {
+        {            
             _pwManager = new PowerManager(Name, new EnergyGenerator(energy), energyThreshold);
             peerthread = new Thread(_pwManager.Start) { IsBackground = true };
             peerthread.Start();
@@ -41,6 +42,5 @@ namespace SmartGridManager
         {
             _pwManager.setLevel(value);
         }
-
     }
 }

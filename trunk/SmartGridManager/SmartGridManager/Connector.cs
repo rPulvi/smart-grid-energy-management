@@ -14,14 +14,17 @@ namespace SmartGridManager
     public static class Connector
     {
         public static IChannel channel;
+        public static MessageHandler messageHandler;
         private static DuplexChannelFactory<IChannel> _factory;
 
         public static bool Connect()
-        {
-            InstanceContext instanceContext = new InstanceContext(new MessagesImplementation());
-            _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");
+        {            
+            messageHandler = new MessageHandler();
+            
+            InstanceContext instanceContext = new InstanceContext(messageHandler);
+            _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");            
             channel = _factory.CreateChannel();
-
+           
             PeerNode pn = ((IClientChannel)Connector.channel).GetProperty<PeerNode>();
             pn.MessagePropagationFilter = new RemoteOnlyMessagePropagationFilter();
 

@@ -10,16 +10,25 @@ namespace SmartGridManager
     class PowerManager
     {
         private EnergyGenerator _generator;
-        private String _name;
-        private float _enThreshold;
+        private StatusNotifyMessage _message;
+        private MessageHandler MsgHandler;
+
         private Thread peerthread;
-        private AdvertisingMessage _message;
+        private String _name;
+        private PeerStatus _peerStatus;
+        private float _enThreshold;        
+        private Boolean _state;        
 
         public PowerManager(String bName, EnergyGenerator generator, float energyThreshold)
         {
+            this.MsgHandler = Connector.messageHandler;
+            MsgHandler.OnStatusChanged += new statusNotify(ManageStatus);            
+
             _generator = generator;
             _enThreshold = energyThreshold;
             _name = bName;
+            _peerStatus = PeerStatus.Producer;
+            _state = true;
         }
 
         public void Start()
@@ -27,27 +36,26 @@ namespace SmartGridManager
             peerthread = new Thread(_generator.Start) { IsBackground = true };
             peerthread.Start();
 
-            while (true)
+            while (_state == true)
             {
                 if (getEnergyLevel() < _enThreshold)
                 {
-                    //Console.WriteLine("Sono Consumer");
-                    _message = new AdvertisingMessage()
+                    _peerStatus = PeerStatus.Consumer;
+                    _message = new StatusNotifyMessage()
                     {
                         header = new StandardMessageHeader() { MessageID = Guid.NewGuid(), Receiver = "All", Sender = _name, TimeStamp = DateTime.Now },
-                        status = "Sono Consumer"
+                        status = _peerStatus
                     };
+                    
                     Connector.channel.statusAdv(_message);
                 }
-
-                //else
-                  //  Console.WriteLine("Sono Producer");
             }
         }
 
         public void ShutDown()
-        {           
+        {            
             _generator.Stop();
+            _state = false;
         }
 
         public float getEnergyLevel() { return _generator.EnergyLevel; }
@@ -56,6 +64,14 @@ namespace SmartGridManager
         public void setLevel(float value)
         {
             _generator.level = value;
+        }
+
+        public void ManageStatus(PeerStatus s)
+        {
+            if (s == PeerStatus.Consumer)
+            { 
+                
+            }
         }
     }
 }

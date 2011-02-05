@@ -10,8 +10,14 @@ namespace SmartGridManager
     class Program
     {
         static void Main(string[] args)
-        {            
-            String name = args[0];
+        {    
+            String name;
+            
+            if (args.Length > 0)
+                name = args[0];
+            else
+                name = "Debug";
+            
             Building casa = new Building(name, EnergyType.Solar, 100f);           
             
             Console.WriteLine("Starting Peer...");
@@ -19,7 +25,10 @@ namespace SmartGridManager
             while (true)
             {
                 Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());
-                
+
+                Thread.Sleep(6000);
+                casa.setLevel(90);                
+
                 //string tmp = Console.ReadLine();
                 //if (tmp == "")
                 //{
@@ -27,8 +36,6 @@ namespace SmartGridManager
                 //    break;
                 //}
 
-                Thread.Sleep(6000);
-                casa.setLevel(90);                
             }
 
             casa.StopService();            
