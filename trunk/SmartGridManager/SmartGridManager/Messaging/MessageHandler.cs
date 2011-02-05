@@ -16,7 +16,7 @@ namespace SmartGridManager.Messaging
         public override void sayHello(GridMessage message)
         {
             if (OnSayHello != null)
-                OnSayHello("suca");
+                OnSayHello("ciao");
 
             base.sayHello(message);
         }
