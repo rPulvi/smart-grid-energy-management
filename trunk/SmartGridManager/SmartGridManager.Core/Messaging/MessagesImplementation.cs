@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
-
+using SmartGridManager.Core.Commons;
 
 namespace SmartGridManager.Core.Messaging
 {
@@ -24,11 +24,20 @@ namespace SmartGridManager.Core.Messaging
 
         public virtual void statusAdv(StatusNotifyMessage message)
         {
-            Console.WriteLine("Messaggio: {0}\nRicevuto alle: {1}\ninviato da: {2}\nStato:{3}",
-                message.header.MessageID,
-                message.header.TimeStamp,
-                message.header.Sender,
-                (int)message.status);           
+            if(message.status == PeerStatus.Consumer)
+            {
+                Console.WriteLine("Richiesta di {0}kW di energia da parte di {1}",
+                    message.energyReq,                
+                    message.header.Sender);
+            }
+        }
+
+        public virtual void energyProposal(EnergyProposalMessage message)
+        {
+            Console.WriteLine("Proposta di {0}kW di energia. Prezzo{1}. Mittente {2}",
+                message.energyAvailable,                
+                message.price,
+                message.header.Sender);
         }
     }
 }

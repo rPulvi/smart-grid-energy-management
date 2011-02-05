@@ -14,5 +14,8 @@ namespace SmartGridManager.Core.Messaging
 
         [OperationContract(IsOneWay = true)]
         void statusAdv(StatusNotifyMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void energyProposal(EnergyProposalMessage m);
     }
 }

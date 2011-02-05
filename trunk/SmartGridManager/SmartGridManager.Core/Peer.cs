@@ -5,6 +5,7 @@ using System.Text;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 using SmartGridManager.Core.Messaging;
+using SmartGridManager.Core.Utils;
 
 namespace SmartGridManager.Core
 {
@@ -25,7 +26,7 @@ namespace SmartGridManager.Core
             {
                 _request = new GridMessage()
                 {
-                    header = new StandardMessageHeader() { MessageID = Guid.NewGuid(), Receiver = "Tu", Sender = this._ID, TimeStamp = DateTime.Now },
+                    header = Tools.getHeader("Tu", this._ID),
                     tmpField = "Se leggi questo vuol dire che funziona"
                 };
                 

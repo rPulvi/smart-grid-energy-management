@@ -26,8 +26,12 @@ namespace SmartGridManager
             {
                 Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());
 
+                if (name == "Casa1")
+                {
+                    Thread.Sleep(6000);
+                    casa.setLevel(90);
+                }
                 Thread.Sleep(6000);
-                casa.setLevel(90);                
 
                 //string tmp = Console.ReadLine();
                 //if (tmp == "")
