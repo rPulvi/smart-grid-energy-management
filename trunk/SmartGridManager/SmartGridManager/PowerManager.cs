@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Timers;
+using System.Linq;
 using SmartGridManager.Core;
 using SmartGridManager.Core.Messaging;
 using SmartGridManager.Core.Commons;
@@ -20,22 +22,30 @@ namespace SmartGridManager
         private Thread peerthread;
         private String _name;
         private PeerStatus _peerStatus;
-        private float _enThreshold;        
-        private Boolean _state;  // TODO: cambiare nome      
+        private float _enPeak;        
+        private Boolean _state;  // TODO: cambiare nome
+        private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
+        private System.Timers.Timer _proposalCountdown;
+
         #endregion
 
-        public PowerManager(String bName, EnergyGenerator generator, float energyThreshold)
+        public PowerManager(String bName, EnergyGenerator generator, float energyPeak)
         {
             this.MsgHandler = Connector.messageHandler;
             
-            MsgHandler.OnStatusChanged += new statusNotify(ManageStatus);
-            MsgHandler.OnProposalArrived += new energyProposal(EvaluateProposal);
+            MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
+            MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
 
             _generator = generator;
-            _enThreshold = energyThreshold;
+            _enPeak = energyPeak;
             _name = bName;
             _peerStatus = PeerStatus.Producer;
             _state = true;
+            _proposalCountdown = new System.Timers.Timer();
+            _proposalCountdown.Enabled = false;
+            _proposalCountdown.Interval = 5000;
+            _proposalCountdown.Elapsed += new ElapsedEventHandler(_proposalCountdown_Elapsed);
+
         }
 
         public void Start()
@@ -48,7 +58,7 @@ namespace SmartGridManager
             while (_state == true)
             {
                 //Check the energy level
-                if (getEnergyLevel() < _enThreshold)
+                if (getEnergyLevel() < _enPeak)
                 {
                     _peerStatus = PeerStatus.Consumer;
 
@@ -58,7 +68,7 @@ namespace SmartGridManager
                         {
                             header = Tools.getHeader("All", _name),
                             status = _peerStatus,
-                            energyReq = _enThreshold - getEnergyLevel()
+                            energyReq = _enPeak - getEnergyLevel()
                         };
 
                         Connector.channel.statusAdv(notifyMessage);
@@ -88,33 +98,60 @@ namespace SmartGridManager
             _generator.level = value;
         }
 
-        private void ManageStatus(StatusNotifyMessage message)
+        private void CreateProposal(StatusNotifyMessage message)
         {
             if (message.status == PeerStatus.Consumer)
             {
                 if (_peerStatus == PeerStatus.Producer)
                 {
-                    float energyAvailable = getEnergyLevel() - _enThreshold;
+                    float enAvailable = getEnergyLevel() - _enPeak;
 
-                    EnergyProposalMessage propMessage = new EnergyProposalMessage()
+                    if (enAvailable >= message.energyReq)
                     {
-                        header = Tools.getHeader(message.header.Sender, _name),
-                        
-                        //If peer's energy is >= the request, give the requested energy, otherwise give the en. available
-                        energyAvailable = energyAvailable >= message.energyReq ? message.energyReq : energyAvailable,
-                        
-                        price = 0.9f //TODO: far diventare casuale
-                    };
+                        EnergyProposalMessage propMessage = new EnergyProposalMessage()
+                        {
+                            header = Tools.getHeader(message.header.Sender, _name),
 
-                    Connector.channel.energyProposal(propMessage);
+                            /* TODO: Optimization required
+                            //If peer's energy is >= the request, give the requested energy, otherwise give the en. available
+                            energyAvailable = energyAvailable >= message.energyReq ? message.energyReq : energyAvailable,
+                            */
+                            
+                            energyAvailable = message.energyReq,
+                            
+                            price = 0.9f //TODO: far diventare casuale
+                        };
+
+                        Connector.channel.energyProposal(propMessage);
+                    }
                 }
             }
         }
 
-        private void EvaluateProposal(EnergyProposalMessage message)
+        private void ReceiveProposal(EnergyProposalMessage message)
         {
             if (message.header.Receiver == _name)
-                ;
+            {
+                if(_proposalCountdown.Enabled == false)
+                    _proposalCountdown.Enabled = true;
+                
+                _proposalList.Add(message);                                
+            }
+        }
+
+        private void _proposalCountdown_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            _proposalCountdown.Enabled = false;
+            EvaluateProposal();
+        }
+
+        private void EvaluateProposal()
+        {
+            var m = (from element in _proposalList
+                    orderby element.price ascending
+                    select element).First();
+
+            Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);                        
         }
     }
 }
