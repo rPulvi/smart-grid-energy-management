@@ -12,24 +12,31 @@ namespace SmartGridManager
         static void Main(string[] args)
         {    
             String name;
-            
+            float price;
+
             if (args.Length > 0)
+            {
                 name = args[0];
+                price = 0.9f;
+            }
             else
+            {
                 name = "Debug";
+                price = 1.2f;
+            }
             
-            Building casa = new Building(name, EnergyType.Solar, 100f);           
+            Building casa = new Building(name, EnergyType.Solar, 100f,price);           
             
             Console.WriteLine("Starting Peer...");
 
             while (true)
             {
-                Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());
+                //Console.WriteLine("Energy level: {0}", casa.getEnergyLevel());
 
                 if (name == "Casa1")
                 {
                     Thread.Sleep(6000);
-                    casa.setLevel(90);
+                    casa.setEnergyLevel(90);
                 }
                 Thread.Sleep(6000);
 

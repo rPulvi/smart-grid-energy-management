@@ -21,11 +21,12 @@ namespace SmartGridManager
         /// </summary>
         /// <param name="ID">An Unique ID</param>
         /// <param name="energy">The type of energy producted</param>
-        /// <param name="energyPeak">The threshold to become producer/consumer</param>
-        public Building(String Name, EnergyType energy, float energyPeak)
+        /// <param name="energyPeak">The max energy consumed by a builiding</param>
+        /// <param name="price">The energy selling price</param>
+        public Building(String Name, EnergyType energy, float energyPeak, float price)
             : base(Name)
         {            
-            _pwManager = new PowerManager(Name, new EnergyGenerator(energy), energyPeak);
+            _pwManager = new PowerManager(Name, new EnergyGenerator(energy), energyPeak,price);
             peerthread = new Thread(_pwManager.Start) { IsBackground = true };
             peerthread.Start();
         }
@@ -40,9 +41,9 @@ namespace SmartGridManager
             _pwManager.ShutDown();
         }
 
-        public void setLevel(float value)
+        public void setEnergyLevel(float value)
         {
-            _pwManager.setLevel(value);
+            _pwManager.setEnergyLevel(value);
         }
     }
 }

@@ -10,6 +10,7 @@ namespace SmartGridManager.Core.Messaging
     [MessageContract]
     public class GridMessage : PeerMessage
     {
+        //TODO: sistemare messaggio
         [MessageBodyMember]
         public String tmpField { get; set; }
 
@@ -40,4 +41,21 @@ namespace SmartGridManager.Core.Messaging
         public EnergyProposalMessage() { }
     }
 
+    [MessageContract]
+    public class EnergyAcceptMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public float energy { get; set; }
+
+        public EnergyAcceptMessage() { }
+    }
+
+    [MessageContract]
+    public class EndProposalMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public Boolean endStatus { get; set; }
+
+        public EndProposalMessage() { }
+    }    
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Timers;
-using System.Linq;
 using SmartGridManager.Core;
 using SmartGridManager.Core.Messaging;
 using SmartGridManager.Core.Commons;
@@ -22,30 +21,34 @@ namespace SmartGridManager
         private Thread peerthread;
         private String _name;
         private PeerStatus _peerStatus;
-        private float _enPeak;        
-        private Boolean _state;  // TODO: cambiare nome
+        private float _enPeak;
+        private float _price;
+        private Boolean _loop;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private System.Timers.Timer _proposalCountdown;
 
         #endregion
 
-        public PowerManager(String bName, EnergyGenerator generator, float energyPeak)
+        public PowerManager(String bName, EnergyGenerator generator, float energyPeak, float price)
         {
             this.MsgHandler = Connector.messageHandler;
             
             MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
             MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
+            MsgHandler.OnProposalAccepted += new acceptProposal(ProposalAccepted);
 
             _generator = generator;
             _enPeak = energyPeak;
             _name = bName;
             _peerStatus = PeerStatus.Producer;
-            _state = true;
+            _loop = true;
+            
             _proposalCountdown = new System.Timers.Timer();
             _proposalCountdown.Enabled = false;
             _proposalCountdown.Interval = 5000;
             _proposalCountdown.Elapsed += new ElapsedEventHandler(_proposalCountdown_Elapsed);
 
+            _price = price;
         }
 
         public void Start()
@@ -55,7 +58,7 @@ namespace SmartGridManager
             peerthread = new Thread(_generator.Start) { IsBackground = true };
             peerthread.Start();
 
-            while (_state == true)
+            while (_loop == true)
             {
                 //Check the energy level
                 if (getEnergyLevel() < _enPeak)
@@ -73,6 +76,9 @@ namespace SmartGridManager
 
                         Connector.channel.statusAdv(notifyMessage);
                         
+                        if (_proposalCountdown.Enabled == false)
+                            _proposalCountdown.Enabled = true;
+                        
                         messageSent = true;
                     }
                 }
@@ -87,13 +93,13 @@ namespace SmartGridManager
         public void ShutDown()
         {            
             _generator.Stop();
-            _state = false;
+            _loop = false;
         }
 
         public float getEnergyLevel() { return _generator.EnergyLevel; }
         
-        // TODO: Rinominare il metodo
-        public void setLevel(float value)
+        // TODO: Spostare il metodo da un'altra parte
+        public void setEnergyLevel(float value)
         {
             _generator.level = value;
         }
@@ -119,7 +125,7 @@ namespace SmartGridManager
                             
                             energyAvailable = message.energyReq,
                             
-                            price = 0.9f //TODO: far diventare casuale
+                            price = _price
                         };
 
                         Connector.channel.energyProposal(propMessage);
@@ -131,27 +137,58 @@ namespace SmartGridManager
         private void ReceiveProposal(EnergyProposalMessage message)
         {
             if (message.header.Receiver == _name)
-            {
-                if(_proposalCountdown.Enabled == false)
-                    _proposalCountdown.Enabled = true;
-                
+            {                
                 _proposalList.Add(message);                                
             }
         }
 
         private void _proposalCountdown_Elapsed(object sender, ElapsedEventArgs e)
         {
-            _proposalCountdown.Enabled = false;
-            EvaluateProposal();
+            _proposalCountdown.Enabled = false; //Stop the timer
+            
+            if (_proposalList.Count > 0)
+                EvaluateProposal();
+            else
+                Console.WriteLine("Nessuna offerta energetica ricevuta");
         }
 
         private void EvaluateProposal()
-        {
+        {            
             var m = (from element in _proposalList
                     orderby element.price ascending
                     select element).First();
 
-            Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);                        
+            Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);
+            
+            EnergyAcceptMessage acceptMessage = new EnergyAcceptMessage()
+            {
+                header = Tools.getHeader(m.header.Sender,_name),
+                energy = _enPeak - getEnergyLevel()
+            };
+
+            Connector.channel.acceptProposal(acceptMessage);
+
+            _proposalList.Clear();
         }
+
+        private void ProposalAccepted(EnergyAcceptMessage message)
+        {           
+            if (message.header.Receiver == _name)
+            {
+                Boolean status = false;
+
+                if (message.energy <= getEnergyLevel() - _enPeak)
+                    status = true;                
+
+                EndProposalMessage endMessage = new EndProposalMessage()
+                {
+                    header = Tools.getHeader(message.header.Sender, _name),
+                    endStatus = status
+                };
+
+                Connector.channel.endProposal(endMessage);
+            }
+        }
+
     }
 }

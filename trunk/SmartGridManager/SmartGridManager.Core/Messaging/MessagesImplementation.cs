@@ -39,5 +39,23 @@ namespace SmartGridManager.Core.Messaging
                 message.price,
                 message.header.Sender);
         }
+
+        public virtual void acceptProposal(EnergyAcceptMessage message)
+        {
+            Console.WriteLine("Proposta di {0} accettata - Energia richiesta {1}",
+                message.header.Receiver,
+                message.energy);
+        }
+
+        public virtual void endProposal(EndProposalMessage message)
+        {
+            String s;
+            if (message.endStatus == true)
+                s="Accettata";
+            else
+                s="Rifiutata";
+
+            Console.WriteLine("Proposta " + s);
+        }
     }
 }

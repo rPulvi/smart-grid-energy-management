@@ -17,5 +17,11 @@ namespace SmartGridManager.Core.Messaging
 
         [OperationContract(IsOneWay = true)]
         void energyProposal(EnergyProposalMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void acceptProposal(EnergyAcceptMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void endProposal(EndProposalMessage m);
     }
 }
