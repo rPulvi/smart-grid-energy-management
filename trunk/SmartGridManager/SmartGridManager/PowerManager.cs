@@ -23,9 +23,13 @@ namespace SmartGridManager
         private PeerStatus _peerStatus;
         private float _enPeak;
         private float _price;
+        private float _enBought;
+        private float _enSold;
         private Boolean _loop;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
+        private List<String> _producers = new List<String>();
         private System.Timers.Timer _proposalCountdown;
+        private System.Timers.Timer _heartBeatTimer;
 
         #endregion
 
@@ -36,6 +40,8 @@ namespace SmartGridManager
             MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
             MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
             MsgHandler.OnProposalAccepted += new acceptProposal(ProposalAccepted);
+            MsgHandler.OnEndProposalArrived += new endProposal(EndProposal);
+            MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
 
             _generator = generator;
             _enPeak = energyPeak;
@@ -48,7 +54,14 @@ namespace SmartGridManager
             _proposalCountdown.Interval = 5000;
             _proposalCountdown.Elapsed += new ElapsedEventHandler(_proposalCountdown_Elapsed);
 
+            _heartBeatTimer = new System.Timers.Timer();
+            _heartBeatTimer.Enabled = true;
+            _heartBeatTimer.Interval = 2000;
+            _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);
+
             _price = price;
+            _enBought = 0f;
+            _enSold = 0f;
         }
 
         public void Start()
@@ -61,8 +74,9 @@ namespace SmartGridManager
             while (_loop == true)
             {
                 //Check the energy level
-                if (getEnergyLevel() < _enPeak)
+                if ((getEnergyLevel() + _enBought) < _enPeak)
                 {
+                    //became Consumer
                     _peerStatus = PeerStatus.Consumer;
 
                     if (messageSent == false)
@@ -76,6 +90,7 @@ namespace SmartGridManager
 
                         Connector.channel.statusAdv(notifyMessage);
                         
+                        //start timer
                         if (_proposalCountdown.Enabled == false)
                             _proposalCountdown.Enabled = true;
                         
@@ -84,6 +99,7 @@ namespace SmartGridManager
                 }
                 else
                 {
+                    //became Producer
                     _peerStatus = PeerStatus.Producer;
                     messageSent = false;
                 }
@@ -110,7 +126,7 @@ namespace SmartGridManager
             {
                 if (_peerStatus == PeerStatus.Producer)
                 {
-                    float enAvailable = getEnergyLevel() - _enPeak;
+                    float enAvailable = getEnergyLevel() - _enPeak - _enSold;
 
                     if (enAvailable >= message.energyReq)
                     {
@@ -177,16 +193,64 @@ namespace SmartGridManager
             {
                 Boolean status = false;
 
-                if (message.energy <= getEnergyLevel() - _enPeak)
-                    status = true;                
+                if (message.energy <= (getEnergyLevel() - _enPeak - _enSold))
+                {
+                    status = true;
+                    _enSold = message.energy;
+                }
 
                 EndProposalMessage endMessage = new EndProposalMessage()
                 {
                     header = Tools.getHeader(message.header.Sender, _name),
-                    endStatus = status
+                    endStatus = status,
+                    energy = message.energy
                 };
 
                 Connector.channel.endProposal(endMessage);
+            }
+        }
+
+        private void EndProposal(EndProposalMessage message)
+        {
+            if(message.header.Receiver == _name)
+            {
+                if (message.endStatus == true)
+                {
+                    _enBought = message.energy;
+                    _producers.Add(message.header.Sender);
+                }
+            }
+        }
+
+        private void _heartBeatTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            HeartBeatMessage message = new HeartBeatMessage()
+            {
+                header = Tools.getHeader("@all", _name)
+            };
+
+            Connector.channel.heartBeat(message);
+        }
+
+        private void CheckHeartBeat(HeartBeatMessage message)
+        {
+            bool found = false;
+
+            if (_producers.Count > 0)
+            {
+                foreach(String p in _producers)
+                {
+                    if (message.header.Sender == p)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                //if heartbeat isn't arrived
+                //reset energy
+                if (found == false)
+                    _enBought = 0;
             }
         }
 

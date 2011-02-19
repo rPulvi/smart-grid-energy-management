@@ -11,6 +11,7 @@ namespace SmartGridManager.Core.Messaging
     public delegate void energyProposal (EnergyProposalMessage m);
     public delegate void acceptProposal(EnergyAcceptMessage m);
     public delegate void endProposal(EndProposalMessage m);
+    public delegate void heartBeat(HeartBeatMessage m);
 
     public class MessageHandler : MessagesImplementation
     {
@@ -19,6 +20,7 @@ namespace SmartGridManager.Core.Messaging
         public event energyProposal OnProposalArrived;
         public event acceptProposal OnProposalAccepted;
         public event endProposal OnEndProposalArrived;
+        public event heartBeat OnHeartBeat;
 
         public override void sayHello(GridMessage message)
         {
@@ -58,6 +60,14 @@ namespace SmartGridManager.Core.Messaging
                 OnEndProposalArrived(message);
 
             base.endProposal(message);
+        }
+
+        public override void heartBeat(HeartBeatMessage message)
+        {
+            if (OnHeartBeat != null)
+                OnHeartBeat(message);
+
+            base.heartBeat(message);
         }
     }
 }

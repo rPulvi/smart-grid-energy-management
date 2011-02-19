@@ -23,5 +23,8 @@ namespace SmartGridManager.Core.Messaging
 
         [OperationContract(IsOneWay = true)]
         void endProposal(EndProposalMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void heartBeat(HeartBeatMessage m);
     }
 }

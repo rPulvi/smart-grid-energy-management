@@ -25,7 +25,7 @@ namespace SmartGridManager
                 price = 1.2f;
             }
             
-            Building casa = new Building(name, EnergyType.Solar, 100f,price);           
+            Building casa = new Building(name, EnergyType.Solar, 100f, price);           
             
             Console.WriteLine("Starting Peer...");
 

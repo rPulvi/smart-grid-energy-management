@@ -51,11 +51,16 @@ namespace SmartGridManager.Core.Messaging
         {
             String s;
             if (message.endStatus == true)
-                s="Accettata";
+                s="Confermata";
             else
                 s="Rifiutata";
 
             Console.WriteLine("Proposta " + s);
+        }
+
+        public virtual void heartBeat(HeartBeatMessage message)
+        {
+            Console.WriteLine("heartBeat di {0}, ricevuto alle {1}", message.header.Sender, message.header.TimeStamp);
         }
     }
 }

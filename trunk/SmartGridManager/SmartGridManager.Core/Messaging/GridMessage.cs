@@ -56,6 +56,15 @@ namespace SmartGridManager.Core.Messaging
         [MessageBodyMember]
         public Boolean endStatus { get; set; }
 
+        [MessageBodyMember]
+        public float energy { get; set; }
+
         public EndProposalMessage() { }
-    }    
+    }
+
+    [MessageContract]
+    public class HeartBeatMessage : PeerMessage
+    {
+        public HeartBeatMessage() { }
+    }
 }
