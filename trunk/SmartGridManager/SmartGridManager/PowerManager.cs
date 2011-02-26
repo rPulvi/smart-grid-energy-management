@@ -27,7 +27,8 @@ namespace SmartGridManager
         private float _enSold;
         private Boolean _loop;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
-        private List<String> _producers = new List<String>();
+        private Dictionary<System.Timers.Timer, String> _producers = new Dictionary<System.Timers.Timer, String>();
+        private Dictionary<System.Timers.Timer, String> _consumers = new Dictionary<System.Timers.Timer, String>();
         private System.Timers.Timer _proposalCountdown;
         private System.Timers.Timer _heartBeatTimer;
 
@@ -58,6 +59,7 @@ namespace SmartGridManager
             _heartBeatTimer.Enabled = true;
             _heartBeatTimer.Interval = 2000;
             _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);
+            _heartBeatTimer.Start();
 
             _price = price;
             _enBought = 0f;
@@ -197,6 +199,13 @@ namespace SmartGridManager
                 {
                     status = true;
                     _enSold = message.energy;
+
+                    System.Timers.Timer t = new System.Timers.Timer();
+                    t.Enabled = true;
+                    t.Interval = 10000;
+                    t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
+
+                    _consumers.Add(t, message.header.Sender);
                 }
 
                 EndProposalMessage endMessage = new EndProposalMessage()
@@ -217,7 +226,13 @@ namespace SmartGridManager
                 if (message.endStatus == true)
                 {
                     _enBought = message.energy;
-                    _producers.Add(message.header.Sender);
+
+                    System.Timers.Timer t = new System.Timers.Timer();
+                    t.Enabled = true;
+                    t.Interval = 10000;
+                    t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
+
+                    _producers.Add(t, message.header.Sender);
                 }
             }
         }
@@ -232,25 +247,44 @@ namespace SmartGridManager
             Connector.channel.heartBeat(message);
         }
 
+        private void heartBeatTimeout(object sender, ElapsedEventArgs e)
+        {
+            _producers.Remove((System.Timers.Timer)sender);
+        }
+
         private void CheckHeartBeat(HeartBeatMessage message)
         {
-            bool found = false;
+            CheckHBProducers(message);
+            CheckHBConsumers(message);
+        }
 
-            if (_producers.Count > 0)
+        private void CheckHBProducers(HeartBeatMessage message)
+        {
+            foreach (var p in _producers)
             {
-                foreach(String p in _producers)
-                {
-                    if (message.header.Sender == p)
-                    {
-                        found = true;
-                        break;
-                    }
-                }
 
-                //if heartbeat isn't arrived
-                //reset energy
-                if (found == false)
-                    _enBought = 0;
+                //value = producer
+                //key = timer of this producer
+                if (p.Value == message.header.Sender)
+                {
+                    p.Key.Start();
+                    break;
+                }
+            }
+        }
+
+        private void CheckHBConsumers(HeartBeatMessage message)
+        {
+            foreach (var c in _consumers)
+            {
+
+                //value = consumer
+                //key = timer of this consumer
+                if (c.Value == message.header.Sender)
+                {
+                    c.Key.Start();
+                    break;
+                }
             }
         }
 
