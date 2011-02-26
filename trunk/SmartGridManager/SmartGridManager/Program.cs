@@ -38,7 +38,7 @@ namespace SmartGridManager
                     Thread.Sleep(6000);
                     casa.setEnergyLevel(90);
                 }
-                Thread.Sleep(6000);
+                //Thread.Sleep(6000);
 
                 //string tmp = Console.ReadLine();
                 //if (tmp == "")

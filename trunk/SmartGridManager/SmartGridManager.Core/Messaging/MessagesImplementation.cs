@@ -26,41 +26,55 @@ namespace SmartGridManager.Core.Messaging
         {
             if(message.status == PeerStatus.Consumer)
             {
-                Console.WriteLine("Richiesta di {0}kW di energia da parte di {1}",
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Ricevuta richiesta di {0}kW di energia da parte di {1}",
                     message.energyReq,                
                     message.header.Sender);
+                Console.ResetColor();
             }
         }
 
         public virtual void energyProposal(EnergyProposalMessage message)
         {
-            Console.WriteLine("Proposta di {0}kW di energia. Prezzo{1}. Mittente {2}",
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Proposta di vendita di {0}kW di energia. Prezzo{1}. Mittente {2}",
                 message.energyAvailable,                
                 message.price,
                 message.header.Sender);
+            Console.ResetColor();
         }
 
         public virtual void acceptProposal(EnergyAcceptMessage message)
         {
-            Console.WriteLine("Proposta di {0} accettata - Energia richiesta {1}",
-                message.header.Receiver,
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.WriteLine("Proposta accettata - Energia richiesta {0}",
                 message.energy);
+            Console.ResetColor();
         }
 
         public virtual void endProposal(EndProposalMessage message)
         {
             String s;
             if (message.endStatus == true)
-                s="Confermata";
+            {
+                s = "Confermata";
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
             else
-                s="Rifiutata";
+            {
+                s = "Rifiutata";
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
 
-            Console.WriteLine("Proposta " + s);
+            Console.WriteLine("Offerta " + s);
+            Console.ResetColor();
         }
 
         public virtual void heartBeat(HeartBeatMessage message)
         {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("heartBeat di {0}, ricevuto alle {1}", message.header.Sender, message.header.TimeStamp);
+            Console.ResetColor();
         }
     }
 }

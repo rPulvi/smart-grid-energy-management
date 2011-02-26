@@ -50,10 +50,10 @@ namespace SmartGridManager
             _peerStatus = PeerStatus.Producer;
             _loop = true;
             
-            _proposalCountdown = new System.Timers.Timer();
-            _proposalCountdown.Enabled = false;
+            _proposalCountdown = new System.Timers.Timer();            
             _proposalCountdown.Interval = 5000;
             _proposalCountdown.Elapsed += new ElapsedEventHandler(_proposalCountdown_Elapsed);
+            _proposalCountdown.Enabled = false;
 
             _heartBeatTimer = new System.Timers.Timer();
             _heartBeatTimer.Enabled = true;
@@ -69,9 +69,6 @@ namespace SmartGridManager
         public void Start()
         {
             Boolean messageSent = false;
-
-            peerthread = new Thread(_generator.Start) { IsBackground = true };
-            peerthread.Start();
 
             while (_loop == true)
             {
@@ -92,7 +89,7 @@ namespace SmartGridManager
 
                         Connector.channel.statusAdv(notifyMessage);
                         
-                        //start timer
+                        //start the timer
                         if (_proposalCountdown.Enabled == false)
                             _proposalCountdown.Enabled = true;
                         
@@ -119,7 +116,7 @@ namespace SmartGridManager
         // TODO: Spostare il metodo da un'altra parte
         public void setEnergyLevel(float value)
         {
-            _generator.level = value;
+            _generator.EnergyLevel = value;
         }
 
         private void CreateProposal(StatusNotifyMessage message)
@@ -176,7 +173,9 @@ namespace SmartGridManager
                     orderby element.price ascending
                     select element).First();
 
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);
+            Console.ResetColor();
             
             EnergyAcceptMessage acceptMessage = new EnergyAcceptMessage()
             {
@@ -206,6 +205,8 @@ namespace SmartGridManager
                     t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
 
                     _consumers.Add(t, message.header.Sender);
+
+                    t.Enabled = false;
                 }
 
                 EndProposalMessage endMessage = new EndProposalMessage()
@@ -233,6 +234,8 @@ namespace SmartGridManager
                     t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
 
                     _producers.Add(t, message.header.Sender);
+
+                    t.Enabled = false;
                 }
             }
         }
@@ -249,7 +252,36 @@ namespace SmartGridManager
 
         private void heartBeatTimeout(object sender, ElapsedEventArgs e)
         {
-            _producers.Remove((System.Timers.Timer)sender);
+            if (_producers.ContainsKey((System.Timers.Timer)sender))
+            {
+                foreach (var p in _producers)
+                {
+                    //TODO: rimuovere timer dalla memoria!!!
+
+                    if (p.Key == sender)
+                    {
+                        p.Key.Enabled = false;
+                        break;
+                    }
+                }
+
+                _producers.Remove((System.Timers.Timer)sender);
+            }
+            else if (_consumers.ContainsKey((System.Timers.Timer)sender))
+            {
+                foreach (var c in _consumers)
+                {
+                    //TODO: rimuovere timer dalla memoria!!!
+
+                    if (c.Key == sender)
+                    {
+                        c.Key.Enabled = false;
+                        break;
+                    }
+                }
+
+                _consumers.Remove((System.Timers.Timer)sender);
+            }
         }
 
         private void CheckHeartBeat(HeartBeatMessage message)
@@ -262,12 +294,12 @@ namespace SmartGridManager
         {
             foreach (var p in _producers)
             {
-
                 //value = producer
                 //key = timer of this producer
                 if (p.Value == message.header.Sender)
                 {
-                    p.Key.Start();
+                    p.Key.Enabled = false;
+                    p.Key.Enabled = true;
                     break;
                 }
             }
@@ -277,12 +309,12 @@ namespace SmartGridManager
         {
             foreach (var c in _consumers)
             {
-
                 //value = consumer
                 //key = timer of this consumer
                 if (c.Value == message.header.Sender)
                 {
-                    c.Key.Start();
+                    c.Key.Enabled = false;
+                    c.Key.Enabled = true;
                     break;
                 }
             }

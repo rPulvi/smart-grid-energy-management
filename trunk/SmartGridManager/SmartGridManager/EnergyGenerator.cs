@@ -12,56 +12,35 @@ namespace SmartGridManager
     {
         #region members
         public EnergyType Type { get; private set; }
-        public float EnergyLevel { get; private set; }
-        public float level { get; set; }
-        private Boolean _state;
-        
+        public float EnergyLevel { get; set; }        
         #endregion
 
         #region Constructor
-        public EnergyGenerator(EnergyType e)
+        public EnergyGenerator(EnergyType Type)
         {
-            this.Type = e;
-            level = 0;
-            _state = true;
-        }
-        #endregion
-
-        public void Start()
-        {
-            //float level = 0;
-
             switch (Type)
             {
                 case EnergyType.Eolic:
-                    level = 123;
+                    EnergyLevel = 123;
                     break;
 
                 case EnergyType.Hydric:
-                    level = 50;
+                    EnergyLevel = 50;
                     break;
 
                 case EnergyType.Solar:
-                    level = 789;
+                    EnergyLevel = 789;
                     break;
 
                 case EnergyType.Thermic:
-                    level = 101;
+                    EnergyLevel = 101;
                     break;
-            }
-
-            Random r = new Random();
-
-            while (_state == true) 
-            {                
-                EnergyLevel = r.Next((int)level-5,(int)level+2);
-                Thread.Sleep(1000);
-            }
+            }            
         }
+        #endregion
 
         public void Stop()
-        {
-            _state = false;
+        {            
             EnergyLevel = 0;
         }
     }
