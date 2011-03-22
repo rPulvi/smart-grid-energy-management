@@ -5,7 +5,7 @@
 This project aim to simulate a Smart Grid, offering an intelligent power distribution. The system is modelled above a P2P network.
 
 Each node in the network is a `Building` (single home, private residences, commercial centre, etc.).
-Every `Building` can be energy Provider or Consumer; we will use the term _Prosumers_.
+Every `Building` can be energy Producer or Consumer; we will use the term _Prosumers_.
 
 Each `Building` is made up by a `PowerManager` and a `Generator`.
 
