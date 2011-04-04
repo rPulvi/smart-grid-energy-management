@@ -21,3 +21,6 @@ The `Generator` is a simple component that provides a numerical value indicating
 If the energy produced by a `Generator` can't satisfy the maximum energy required by the `Building`, the `PowerManager` will send a special request over the net and it will choose the best offer in terms of price and energy offered. Meanwhile, the others `Building` will receive the request and will evaluate a proposal if they have an energy surplus.
 
 Once an agreement is established by the parts, they will monitor each other to check if the "connection" is still alive (heartbeat system) and restore the connection in case of fail.
+
+= Scenario =
+http://img651.imageshack.us/img651/461/smartgrid.png
