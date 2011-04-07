@@ -5,14 +5,15 @@ using System.Text;
 using System.ServiceModel;
 using SmartGridManager.Core.Commons;
 
+//This file contains all the contracts of the messages used in the Grid
+
 namespace SmartGridManager.Core.Messaging
 {
     [MessageContract]
     public class GridMessage : PeerMessage
     {
-        //TODO: sistemare messaggio
         [MessageBodyMember]
-        public String tmpField { get; set; }
+        public String descField { get; set; }
 
         public GridMessage() { }
     }

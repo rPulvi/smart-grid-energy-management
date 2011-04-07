@@ -14,17 +14,19 @@ namespace SmartGridManager.Core
     public static class Connector
     {
         public static IChannel channel;
-        public static MessageHandler messageHandler;
+        public static MessageHandler messageHandler; //Static because we need to access the global context (InstanceContext), not a new object
         private static DuplexChannelFactory<IChannel> _factory;
 
         public static bool Connect()
         {            
             messageHandler = new MessageHandler();
             
+            //create channel
             InstanceContext instanceContext = new InstanceContext(messageHandler);
             _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");            
             channel = _factory.CreateChannel();
            
+            //set filter
             PeerNode pn = ((IClientChannel)Connector.channel).GetProperty<PeerNode>();
             pn.MessagePropagationFilter = new RemoteOnlyMessagePropagationFilter();
 

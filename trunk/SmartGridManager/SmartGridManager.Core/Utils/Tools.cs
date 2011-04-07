@@ -8,6 +8,12 @@ namespace SmartGridManager.Core.Utils
 {
     public static class Tools
     {
+        /// <summary>
+        /// return a StandardMessageHeader generating a new message ID and applying the TimeStamp
+        /// </summary>
+        /// <param name="receiver">message receiver</param>
+        /// <param name="sender">message sender</param>
+        /// <returns>the message header</returns>
         public static StandardMessageHeader getHeader(String receiver, String sender )
         { 
             StandardMessageHeader m;

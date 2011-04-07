@@ -6,21 +6,25 @@ using SmartGridManager.Core.Commons;
 
 namespace SmartGridManager.Core.Messaging
 {
+    #region delegates
     public delegate void sayHello (String s);
     public delegate void statusNotify (StatusNotifyMessage m);
     public delegate void energyProposal (EnergyProposalMessage m);
     public delegate void acceptProposal(EnergyAcceptMessage m);
     public delegate void endProposal(EndProposalMessage m);
     public delegate void heartBeat(HeartBeatMessage m);
+    #endregion
 
     public class MessageHandler : MessagesImplementation
     {
+        #region events
         public event sayHello OnSayHello;
         public event statusNotify OnStatusChanged;
         public event energyProposal OnProposalArrived;
         public event acceptProposal OnProposalAccepted;
         public event endProposal OnEndProposalArrived;
         public event heartBeat OnHeartBeat;
+        #endregion
 
         public override void sayHello(GridMessage message)
         {

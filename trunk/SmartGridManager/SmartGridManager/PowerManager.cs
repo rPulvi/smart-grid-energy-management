@@ -47,9 +47,12 @@ namespace SmartGridManager
             _generator = generator;
             _enPeak = energyPeak;
             _name = bName;
-            _peerStatus = PeerStatus.Producer;
-            _loop = true;
             
+            _loop = true;
+            _price = price;
+            _enBought = 0f;
+            _enSold = 0f;
+
             _proposalCountdown = new System.Timers.Timer();            
             _proposalCountdown.Interval = 5000;
             _proposalCountdown.Elapsed += new ElapsedEventHandler(_proposalCountdown_Elapsed);
@@ -60,10 +63,6 @@ namespace SmartGridManager
             _heartBeatTimer.Interval = 2000;
             _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);
             _heartBeatTimer.Start();
-
-            _price = price;
-            _enBought = 0f;
-            _enSold = 0f;
         }
 
         public void Start()
@@ -82,14 +81,14 @@ namespace SmartGridManager
                     {
                         StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
                         {
-                            header = Tools.getHeader("All", _name),
+                            header = Tools.getHeader("@All", _name),
                             status = _peerStatus,
-                            energyReq = _enPeak - getEnergyLevel()
+                            energyReq = _enPeak - getEnergyLevel() + _enBought
                         };
 
                         Connector.channel.statusAdv(notifyMessage);
                         
-                        //start the timer
+                        //start the timer to waiting for proposals
                         if (_proposalCountdown.Enabled == false)
                             _proposalCountdown.Enabled = true;
                         
@@ -180,7 +179,7 @@ namespace SmartGridManager
             EnergyAcceptMessage acceptMessage = new EnergyAcceptMessage()
             {
                 header = Tools.getHeader(m.header.Sender,_name),
-                energy = _enPeak - getEnergyLevel()
+                energy = _enPeak - getEnergyLevel() + _enBought
             };
 
             Connector.channel.acceptProposal(acceptMessage);

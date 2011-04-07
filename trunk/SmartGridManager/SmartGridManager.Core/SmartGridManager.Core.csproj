@@ -46,7 +46,7 @@
     <Compile Include="Commons\EnergyType.cs" />
     <Compile Include="Commons\PeerStatus.cs" />
     <Compile Include="Connector.cs" />
-    <Compile Include="Messaging\GridMessage.cs" />
+    <Compile Include="Messaging\GridMessages.cs" />
     <Compile Include="Messaging\IMessages.cs" />
     <Compile Include="Messaging\MessageHandler.cs" />
     <Compile Include="Messaging\MessagesImplementation.cs" />

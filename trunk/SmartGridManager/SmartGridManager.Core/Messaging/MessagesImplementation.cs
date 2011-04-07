@@ -8,7 +8,6 @@ using SmartGridManager.Core.Commons;
 namespace SmartGridManager.Core.Messaging
 {
 
-    //[CallbackBehavior(UseSynchronizationContext=false)]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode=ConcurrencyMode.Reentrant)]
     public class MessagesImplementation : IMessages
     {
@@ -19,7 +18,7 @@ namespace SmartGridManager.Core.Messaging
                 message.header.TimeStamp,
                 message.header.Sender,
                 message.header.Receiver,
-                message.tmpField);          
+                message.descField);          
         }
 
         public virtual void statusAdv(StatusNotifyMessage message)

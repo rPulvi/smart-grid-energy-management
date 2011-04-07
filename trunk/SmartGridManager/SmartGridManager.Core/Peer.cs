@@ -24,23 +24,24 @@ namespace SmartGridManager.Core
         {
             if (Connector.Connect())
             {
+                //composing hello message
                 _request = new GridMessage()
                 {
-                    header = Tools.getHeader("Tu", this._ID),
-                    tmpField = "Se leggi questo vuol dire che funziona"
+                    header = Tools.getHeader("@All", this._ID),
+                    descField = "PEER: " + this._ID + ".:: Hello ::."
                 };
                 
-                Console.WriteLine("Messaggio inviato da: {0}", _ID);
-                
+                //send hello message
                 Connector.channel.sayHello(_request);
+
+                //handling Online/Offline events
+                IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
+
+                ostat.Online += new EventHandler(OnOnline);
+                ostat.Offline += new EventHandler(OnOffline);
             }
             else
                 Console.WriteLine("Errore in connessione");
-
-            IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
-
-            ostat.Online += new EventHandler(OnOnline);
-            ostat.Offline += new EventHandler(OnOffline);
         }
 
         public void StopService() { Connector.Disconnect(); }
