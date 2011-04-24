@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <RemoteHost>
   <Host>
-    <IP>127.0.0.1</IP>
+    <IP>localhost</IP>
     <Port>8082</Port>
   </Host>
 </RemoteHost>

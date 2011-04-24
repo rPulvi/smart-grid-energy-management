@@ -34,8 +34,6 @@ namespace SmartGridManager.Core.Utils
         public static List<RemoteHost> getRemoteHosts()
         {
             string address = @"net.tcp://";
-            string IP = "127.0.0.1";
-            string port = "8082";
 
             List<RemoteHost> hosts = new List<RemoteHost>();
             RemoteHost h = new RemoteHost();
@@ -47,7 +45,7 @@ namespace SmartGridManager.Core.Utils
             {
                 h.IP = host.Element("IP").Value;
                 h.port = host.Element("Port").Value;
-                h.netAddress = address + IP + ":" + port + @"/Remote";
+                h.netAddress = address + h.IP + ":" + h.port + @"/Remote";
 
                 hosts.Add(h);
             }
