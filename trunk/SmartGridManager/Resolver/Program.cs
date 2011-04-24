@@ -72,9 +72,13 @@ namespace Resolver
                 Console.WriteLine("Connected to: {0}",h[0].IP);
                 //Retrieve Remote IP Addresses
                 foreach (var newRemote in channel.RetrieveContactList())
-                {
-                    if (h.Contains(newRemote) == false)
+                {                    
+                    if (!h.Exists(delegate(RemoteHost x){ return x.netAddress ==
+                        newRemote.netAddress;}))
+                    {
                         h.Add(newRemote);
+                        Tools.updateRemoteHosts(newRemote);
+                    }
                 }
             }
             catch (Exception e)

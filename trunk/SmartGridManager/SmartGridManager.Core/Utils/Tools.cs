@@ -52,5 +52,17 @@ namespace SmartGridManager.Core.Utils
 
             return hosts;
         }
+
+        public static void updateRemoteHosts(RemoteHost h)
+        {
+            XDocument xmlList = XDocument.Load("NetConfig.xml");
+
+            xmlList.Element("RemoteHosts").Add(new XElement("Host", 
+                                                            new XElement("IP",h.IP),
+                                                            new XElement("Port",h.port))
+                                                            );
+
+            xmlList.Save("NetConfig.xml");
+        }
     }
 }
