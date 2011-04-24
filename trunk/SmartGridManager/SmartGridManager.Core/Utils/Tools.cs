@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SmartGridManager.Core.Messaging;
+using SmartGridManager.Core.Commons;
+using System.Xml;
+using System.Xml.Linq;
+
 
 namespace SmartGridManager.Core.Utils
 {
@@ -25,6 +29,30 @@ namespace SmartGridManager.Core.Utils
                 TimeStamp = DateTime.Now };
 
             return m;
+        }
+
+        public static List<RemoteHost> getRemoteHosts()
+        {
+            string address = @"net.tcp://";
+            string IP = "127.0.0.1";
+            string port = "8082";
+
+            List<RemoteHost> hosts = new List<RemoteHost>();
+            RemoteHost h = new RemoteHost();
+
+            var remote = from r in XElement.Load("NetConfig.xml").Elements("Host")
+                         select r;
+
+            foreach (var host in remote)
+            {
+                h.IP = host.Element("IP").Value;
+                h.port = host.Element("Port").Value;
+                h.netAddress = address + IP + ":" + port + @"/Remote";
+
+                hosts.Add(h);
+            }
+
+            return hosts;
         }
     }
 }

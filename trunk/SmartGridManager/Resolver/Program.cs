@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.ServiceModel;
-using System.Xml;
-using System.Xml.Linq;
+using SmartGridManager.Core.Commons;
+using SmartGridManager.Core.Utils;
 
 namespace Resolver
 {
@@ -26,30 +26,6 @@ namespace Resolver
 
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
-        }
-
-        private List<RemoteHost> getRemoteHosts()
-        {
-            string address = @"net.tcp://";
-            string IP = "127.0.0.1";
-            string port = "8082";
-
-            List<RemoteHost> hosts = new List<RemoteHost>();
-            RemoteHost h = new RemoteHost();
-
-            var remote = from r in XElement.Load("NetConfig.xml").Elements("Host")
-                         select r;
-            
-            foreach (var host in remote)
-            {                
-                h.IP = host.Element("IP").Value;                
-                h.port = host.Element("Port").Value;
-                h.netAddress = address + IP + ":" + port + @"/Remote";
-
-                hosts.Add(h);                
-            }
-
-            return hosts;
         }
 
         private void StartLocalResolver()
@@ -80,11 +56,11 @@ namespace Resolver
 
             Console.WriteLine("Connecting to remote host..");
 
-            h = getRemoteHosts();
+            h = Tools.getRemoteHosts();
             
             //To connect to remote host
             NetTcpBinding tcpBinding = new NetTcpBinding();
-            EndpointAddress remoteEndpoint = new EndpointAddress(h[0].netAddress);
+            EndpointAddress remoteEndpoint = new EndpointAddress(h[0].netAddress); //TODO: fix here.
             tcpBinding.Security.Mode = SecurityMode.None;
             
             ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
@@ -94,6 +70,12 @@ namespace Resolver
             {
                 remoteHost.Open();
                 Console.WriteLine("Connected to: {0}",h[0].IP);
+                //Retrieve Remote IP Addresses
+                foreach (var newRemote in channel.RetrieveContactList())
+                {
+                    if (h.Contains(newRemote) == false)
+                        h.Add(newRemote);
+                }
             }
             catch (Exception e)
             {
@@ -102,13 +84,6 @@ namespace Resolver
                 remoteHost.Abort();
                 Console.ReadLine();
             }
-        }
-
-        private class RemoteHost
-        {
-            public String IP { get; set; }
-            public String port { get; set; }
-            public String netAddress { get; set; }            
         }
     }
 }

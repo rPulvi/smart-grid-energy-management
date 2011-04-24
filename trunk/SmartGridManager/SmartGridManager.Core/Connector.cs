@@ -37,7 +37,8 @@ namespace SmartGridManager.Core
             catch (CommunicationException ex){
                 Console.WriteLine("Could not find resolver.  If you are using a custom resolver, please ensure");
                 Console.WriteLine("that the service is running before executing this sample.  Refer to the readme");
-                Console.WriteLine("for more details.");                
+                Console.WriteLine("for more details.");
+                Console.WriteLine("SystemError: {0}", ex);
                 return false;
             }
 
