@@ -8,6 +8,7 @@ using SmartGridManager.Core;
 using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Utils;
 using SmartGridManager.Core.P2P;
+using SmartGridManager.Core.Messaging;
 
 namespace Resolver
 {
@@ -15,8 +16,9 @@ namespace Resolver
     {
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
-
-        private ServiceHost remoteHost = new ServiceHost(typeof(PeerServices));        
+        
+        private ServiceHost remoteHost = new ServiceHost(typeof(PeerServices));
+        private MessageHandler MsgHandler;
 
         static void Main(string[] args)
         {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Timers;
 using SmartGridManager.Core;
 using SmartGridManager.Core.Messaging;
@@ -17,8 +16,7 @@ namespace SmartGridManager
         #region Attributes
         private EnergyGenerator _generator;        
         private MessageHandler MsgHandler;        
-
-        private Thread peerthread;
+        
         private String _name;
         private PeerStatus _peerStatus;
         private float _enPeak;
