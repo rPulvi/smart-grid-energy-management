@@ -9,7 +9,7 @@ using SmartGridManager.Core.Messaging;
 
 namespace SmartGridManager
 {
-    class Building : Peer
+    public class Building : Peer
     {
         private PowerManager _pwManager;
         private Thread peerthread;

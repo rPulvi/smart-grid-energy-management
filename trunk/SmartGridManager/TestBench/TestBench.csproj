@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{6A320C2B-88CA-4071-9AC2-1E02687E98CB}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{334977F5-18B0-46BF-B604-EECBE723488D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SmartGridManager</RootNamespace>
-    <AssemblyName>SmartGridManager</AssemblyName>
+    <RootNamespace>TestBench</RootNamespace>
+    <AssemblyName>TestBench</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -33,18 +33,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Accessibility">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,15 +43,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Building.cs" />
-    <Compile Include="EnergyGenerator.cs" />
-    <Compile Include="PowerManager.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartGridManager.Core\SmartGridManager.Core.csproj">
       <Project>{D7427B1A-5109-49AE-8FAB-BDE83AA02384}</Project>
       <Name>SmartGridManager.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartGridManager\SmartGridManager.csproj">
+      <Project>{6A320C2B-88CA-4071-9AC2-1E02687E98CB}</Project>
+      <Name>SmartGridManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

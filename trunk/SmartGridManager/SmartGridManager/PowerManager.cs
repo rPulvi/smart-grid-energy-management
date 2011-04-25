@@ -26,6 +26,7 @@ namespace SmartGridManager
         private float _enBought;
         private float _enSold;
         private Boolean _loop;
+        private Boolean messageSent = false;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private Dictionary<System.Timers.Timer, String> _producers = new Dictionary<System.Timers.Timer, String>();
         private Dictionary<System.Timers.Timer, String> _consumers = new Dictionary<System.Timers.Timer, String>();
@@ -66,9 +67,7 @@ namespace SmartGridManager
         }
 
         public void Start()
-        {
-            Boolean messageSent = false;
-
+        {            
             while (_loop == true)
             {
                 //Check the energy level
@@ -164,10 +163,9 @@ namespace SmartGridManager
                 EvaluateProposal();
             else
             {
-                Console.WriteLine("Nessuna offerta energetica ricevuta");                
+                Console.WriteLine("Nessuna offerta energetica ricevuta");
+                messageSent = false;
                 //Go Outbound
-
-
             }
         }
 
