@@ -11,7 +11,7 @@ namespace SmartGridManager.Core.Messaging
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode=ConcurrencyMode.Reentrant)]
     public class MessagesImplementation : IMessages
     {
-        public virtual  void sayHello(GridMessage message)
+        public virtual void sayHello(GridMessage message)
         {
             Console.WriteLine("Messaggio: {0}\nRicevuto alle: {1}\ninviato da: {2}\ndestinato a: {3}\nTesto: {4}",
                 message.header.MessageID,
@@ -73,6 +73,13 @@ namespace SmartGridManager.Core.Messaging
         {
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("heartBeat di {0}, ricevuto alle {1}", message.header.Sender, message.header.TimeStamp);
+            Console.ResetColor();
+        }
+
+        public virtual void remoteAdv(StatusNotifyMessage message)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine("Remote request sent to Resolver");
             Console.ResetColor();
         }
     }

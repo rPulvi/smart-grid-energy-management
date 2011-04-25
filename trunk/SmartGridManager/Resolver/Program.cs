@@ -23,9 +23,13 @@ namespace Resolver
         static void Main(string[] args)
         {
             Program p = new Program();
-
+            
             p.StartLocalResolver();
             p.StartRemoteConnection();
+
+            Connector.Connect();
+            p.MsgHandler = Connector.messageHandler;
+            p.MsgHandler.OnRemoteAdv += new remoteAdv(p.SendRemoteRequest);
 
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
@@ -72,6 +76,7 @@ namespace Resolver
             try
             {
                 remoteHost.Open();
+                /*
                 Console.WriteLine("Connected to: {0}",h[0].IP);
                 //Retrieve Remote IP Addresses
                 foreach (var newRemote in Connector.remoteChannel.RetrieveContactList())
@@ -82,6 +87,7 @@ namespace Resolver
                         Tools.updateRemoteHosts(newRemote);
                     }
                 }
+                 */
             }
             catch (Exception e)
             {
@@ -90,6 +96,17 @@ namespace Resolver
                 remoteHost.Abort();
                 Console.ReadLine();
             }
+        }
+
+        private void SendRemoteRequest(StatusNotifyMessage message)
+        {
+            RemoteEnergyRequest remEneReq = new RemoteEnergyRequest()
+            {
+                header = Tools.getHeader("@All", "resolver"),
+                energyReq = message.energyReq
+            };
+
+            Connector.remoteChannel.ManageEnergyRequest(remEneReq);
         }
     }
 }

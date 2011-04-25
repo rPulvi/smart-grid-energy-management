@@ -26,5 +26,8 @@ namespace SmartGridManager.Core.Messaging
 
         [OperationContract(IsOneWay = true)]
         void heartBeat(HeartBeatMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void remoteAdv(StatusNotifyMessage m);
     }
 }

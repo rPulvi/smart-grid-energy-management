@@ -162,8 +162,16 @@ namespace SmartGridManager
             else
             {
                 Console.WriteLine("Nessuna offerta energetica ricevuta");
-                messageSent = false; //send the request message again
+                //messageSent = false; //send the request message again
                 //Go Outbound
+                StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
+                {
+                    header = Tools.getHeader("@All", _name),
+                    status = _peerStatus,
+                    energyReq = _enPeak - getEnergyLevel() + _enBought
+                };
+
+                Connector.channel.remoteAdv(notifyMessage); 
             }
         }
 

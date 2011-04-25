@@ -41,7 +41,7 @@ namespace TestBench
 
             while (true)
             {                
-                if (type == 0)
+                if (type == 1)
                 {
                     Thread.Sleep(6000);
                     casa.setEnergyLevel(90);
