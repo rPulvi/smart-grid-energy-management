@@ -44,7 +44,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PeerServices.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="CustomResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

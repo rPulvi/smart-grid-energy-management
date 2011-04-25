@@ -7,7 +7,7 @@ using SmartGridManager.Core.Messaging;
 using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Utils;
 
-namespace Resolver
+namespace SmartGridManager.Core.P2P
 {
     [ServiceContract]
     public interface IPeerServices

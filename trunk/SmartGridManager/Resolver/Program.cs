@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.ServiceModel;
+using SmartGridManager.Core;
 using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Utils;
+using SmartGridManager.Core.P2P;
 
 namespace Resolver
 {
@@ -14,8 +16,7 @@ namespace Resolver
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
 
-        private ServiceHost remoteHost = new ServiceHost(typeof(PeerServices));
-        private IPeerServices channel;
+        private ServiceHost remoteHost = new ServiceHost(typeof(PeerServices));        
 
         static void Main(string[] args)
         {
@@ -64,17 +65,16 @@ namespace Resolver
             tcpBinding.Security.Mode = SecurityMode.None;
             
             ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
-            channel = cf.CreateChannel();
+            Connector.remoteChannel = cf.CreateChannel();
 
             try
             {
                 remoteHost.Open();
                 Console.WriteLine("Connected to: {0}",h[0].IP);
                 //Retrieve Remote IP Addresses
-                foreach (var newRemote in channel.RetrieveContactList())
+                foreach (var newRemote in Connector.remoteChannel.RetrieveContactList())
                 {                    
-                    if (!h.Exists(delegate(RemoteHost x){ return x.netAddress ==
-                        newRemote.netAddress;}))
+                    if (!h.Exists(delegate(RemoteHost x){ return x.netAddress == newRemote.netAddress;}))
                     {
                         h.Add(newRemote);
                         Tools.updateRemoteHosts(newRemote);

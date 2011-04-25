@@ -164,7 +164,7 @@ namespace SmartGridManager
             else
             {
                 Console.WriteLine("Nessuna offerta energetica ricevuta");
-                messageSent = false;
+                messageSent = false; //send the request message again
                 //Go Outbound
             }
         }

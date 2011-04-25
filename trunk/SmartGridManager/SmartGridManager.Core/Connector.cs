@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ServiceModel;
 using SmartGridManager.Core.Messaging;
+using SmartGridManager.Core.P2P;
 
 namespace SmartGridManager.Core
 {
@@ -13,7 +14,9 @@ namespace SmartGridManager.Core
 
     public static class Connector
     {
-        public static IChannel channel;
+        public static IChannel channel; 
+        public static IPeerServices remoteChannel;
+
         public static MessageHandler messageHandler; //Static because we need to access the global context (InstanceContext), not a new object
         private static DuplexChannelFactory<IChannel> _factory;
 
