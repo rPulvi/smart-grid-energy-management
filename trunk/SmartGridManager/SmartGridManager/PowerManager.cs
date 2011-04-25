@@ -159,11 +159,16 @@ namespace SmartGridManager
         private void _proposalCountdown_Elapsed(object sender, ElapsedEventArgs e)
         {
             _proposalCountdown.Enabled = false; //Stop the timer
-            
+
             if (_proposalList.Count > 0)
                 EvaluateProposal();
             else
-                Console.WriteLine("Nessuna offerta energetica ricevuta");
+            {
+                Console.WriteLine("Nessuna offerta energetica ricevuta");                
+                //Go Outbound
+
+
+            }
         }
 
         private void EvaluateProposal()
