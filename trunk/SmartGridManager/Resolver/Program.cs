@@ -92,7 +92,15 @@ namespace Resolver
                         Tools.updateRemoteHosts(newRemote);
                     }
                 }
-                
+
+                StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
+                {
+                    header = Tools.getHeader("@All", "turi"),
+                    status = PeerStatus.Resolver,
+                    energyReq = 100
+                };
+
+                SendRemoteRequest(notifyMessage);                
             }
             catch (Exception e)
             {
