@@ -49,6 +49,7 @@
     <Compile Include="Connector.cs" />
     <Compile Include="Messaging\GridMessages.cs" />
     <Compile Include="Messaging\IMessages.cs" />
+    <Compile Include="Messaging\MessageFactory.cs" />
     <Compile Include="Messaging\MessageHandler.cs" />
     <Compile Include="Messaging\MessagesImplementation.cs" />
     <Compile Include="Messaging\PeerMessage.cs" />

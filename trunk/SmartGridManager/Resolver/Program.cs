@@ -16,9 +16,10 @@ namespace Resolver
     {
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
-        
+        private IPeerServices remoteChannel;
         private ServiceHost remoteHost = new ServiceHost(typeof(PeerServices));
         private MessageHandler MsgHandler;
+        private PeerServices remoteMessageHandler;
 
         static void Main(string[] args)
         {
@@ -30,7 +31,7 @@ namespace Resolver
             Connector.Connect();
             p.MsgHandler = Connector.messageHandler;
             p.MsgHandler.OnRemoteAdv += new remoteAdv(p.SendRemoteRequest);
-
+            p.remoteMessageHandler.OnRemoteRequest += new remoteEnergyRequest(p.ManageRemoteRequest);
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
         }
@@ -69,9 +70,13 @@ namespace Resolver
             NetTcpBinding tcpBinding = new NetTcpBinding();
             EndpointAddress remoteEndpoint = new EndpointAddress(h[0].netAddress); //TODO: fix here.
             tcpBinding.Security.Mode = SecurityMode.None;
-            
-            ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
-            Connector.remoteChannel = cf.CreateChannel();
+
+            remoteMessageHandler = new PeerServices();
+
+            InstanceContext instanceContext = new InstanceContext(remoteMessageHandler);
+            //ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
+            ChannelFactory<IPeerServices> cf = new DuplexChannelFactory<IPeerServices>(instanceContext, tcpBinding, remoteEndpoint);
+            remoteChannel = cf.CreateChannel();
 
             try
             {
@@ -79,7 +84,7 @@ namespace Resolver
                 
                 Console.WriteLine("Connected to: {0}",h[0].IP);
                 //Retrieve Remote IP Addresses
-                foreach (var newRemote in Connector.remoteChannel.RetrieveContactList())
+                foreach (var newRemote in remoteChannel.RetrieveContactList())
                 {                    
                     if (!h.Exists(delegate(RemoteHost x){ return x.netAddress == newRemote.netAddress;}))
                     {
@@ -106,7 +111,12 @@ namespace Resolver
                 energyReq = message.energyReq
             };
 
-            Connector.remoteChannel.ManageEnergyRequest(remEneReq);
+            remoteChannel.ManageEnergyRequest(remEneReq);
+        }
+
+        private void ManageRemoteRequest(RemoteEnergyRequest m)
+        { 
+        
         }
     }
 }

@@ -10,5 +10,6 @@ namespace SmartGridManager.Core.Commons
         Producer = 0,
         Consumer = 1,
         Prosumer = 2,
+        Resolver = 3,
     }
 }

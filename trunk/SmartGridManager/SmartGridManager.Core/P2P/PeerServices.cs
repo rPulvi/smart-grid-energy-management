@@ -9,7 +9,10 @@ using SmartGridManager.Core.Utils;
 
 namespace SmartGridManager.Core.P2P
 {
-    [ServiceContract]
+    public delegate void remoteEnergyRequest(RemoteEnergyRequest s);
+
+    //[ServiceContract]
+    [ServiceContract(CallbackContract = typeof(IPeerServices))]
     public interface IPeerServices
     {
         [OperationContract]
@@ -22,20 +25,17 @@ namespace SmartGridManager.Core.P2P
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
     public class PeerServices : IPeerServices
     {
-        List<RemoteEnergyRequest> requestList = new List<RemoteEnergyRequest>();
-
-        #region IPeerServices Members
-
+        public event remoteEnergyRequest OnRemoteRequest;
+               
         public void ManageEnergyRequest(RemoteEnergyRequest remoteReq)
         {
-            requestList.Add(remoteReq);
+            if (OnRemoteRequest != null)
+                OnRemoteRequest(remoteReq);
         }
 
         public List<RemoteHost> RetrieveContactList()
         {
             return Tools.getRemoteHosts();
-        }
-
-        #endregion
+        }        
     }
 }

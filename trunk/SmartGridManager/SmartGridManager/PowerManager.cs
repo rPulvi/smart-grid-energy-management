@@ -76,14 +76,8 @@ namespace SmartGridManager
 
                     if (messageSent == false)
                     {
-                        StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
-                        {
-                            header = Tools.getHeader("@All", _name),
-                            status = _peerStatus,
-                            energyReq = _enPeak - getEnergyLevel() + _enBought
-                        };
-
-                        Connector.channel.statusAdv(notifyMessage);
+                        float enReq = _enPeak - getEnergyLevel() + _enBought;                        
+                        Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));
                         
                         //start the timer to waiting for proposals
                         if (_proposalCountdown.Enabled == false)

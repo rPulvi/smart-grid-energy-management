@@ -6,7 +6,7 @@ using System.ServiceModel;
 
 namespace SmartGridManager.Core.Messaging
 {
-    [ServiceContract(CallbackContract = typeof(IMessages))]    
+    [ServiceContract(CallbackContract = typeof(IMessages))]
     public interface IMessages
     {
         [OperationContract(IsOneWay = true)]
