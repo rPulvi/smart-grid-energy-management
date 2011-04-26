@@ -1,15 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <RemoteHosts>
   <Host>
-<<<<<<< .mine
-    <IP>localhost</IP>
-    <Port>8082</Port>
-  </Host>
-  <Host>
-    <IP>192.168.1.197</IP>
-=======
     <IP>192.168.1.2</IP>
->>>>>>> .r48
     <Port>8082</Port>
   </Host>
 </RemoteHosts>
