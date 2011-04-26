@@ -76,7 +76,7 @@ namespace Resolver
             try
             {
                 remoteHost.Open();
-                /*
+                
                 Console.WriteLine("Connected to: {0}",h[0].IP);
                 //Retrieve Remote IP Addresses
                 foreach (var newRemote in Connector.remoteChannel.RetrieveContactList())
@@ -87,7 +87,7 @@ namespace Resolver
                         Tools.updateRemoteHosts(newRemote);
                     }
                 }
-                 */
+                
             }
             catch (Exception e)
             {
