@@ -28,6 +28,15 @@ namespace Resolver
             p.StartLocalResolver();
             p.StartRemoteConnection();
 
+            StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
+            {
+                header = Tools.getHeader("@All", "turi"),
+                status = PeerStatus.Resolver,
+                energyReq = 100
+            };
+
+            p.SendRemoteRequest(notifyMessage);  
+
             Connector.Connect();
             p.MsgHandler = Connector.messageHandler;
             p.MsgHandler.OnRemoteAdv += new remoteAdv(p.SendRemoteRequest);
@@ -91,16 +100,7 @@ namespace Resolver
                         h.Add(newRemote);
                         Tools.updateRemoteHosts(newRemote);
                     }
-                }
-
-                StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
-                {
-                    header = Tools.getHeader("@All", "turi"),
-                    status = PeerStatus.Resolver,
-                    energyReq = 100
-                };
-
-                SendRemoteRequest(notifyMessage);                
+                }              
             }
             catch (Exception e)
             {
