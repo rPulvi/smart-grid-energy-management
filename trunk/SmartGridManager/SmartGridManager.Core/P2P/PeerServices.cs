@@ -22,7 +22,8 @@ namespace SmartGridManager.Core.P2P
         List<RemoteHost> RetrieveContactList();
     }
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
+    //[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class PeerServices : IPeerServices
     {
         public event remoteEnergyRequest OnRemoteRequest;
