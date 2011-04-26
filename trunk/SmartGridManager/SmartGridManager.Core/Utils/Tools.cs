@@ -36,13 +36,15 @@ namespace SmartGridManager.Core.Utils
             string address = @"net.tcp://";
 
             List<RemoteHost> hosts = new List<RemoteHost>();
-            RemoteHost h = new RemoteHost();
+            
 
             var remote = from r in XElement.Load("NetConfig.xml").Elements("Host")
                          select r;
 
             foreach (var host in remote)
             {
+                RemoteHost h = new RemoteHost();
+
                 h.IP = host.Element("IP").Value;
                 h.port = host.Element("Port").Value;
                 h.netAddress = address + h.IP + ":" + h.port + @"/Remote";
