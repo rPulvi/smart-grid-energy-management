@@ -28,6 +28,7 @@ namespace SmartGridManager.Core.P2P
     {
         public event remoteEnergyRequest OnRemoteRequest;
                
+
         public void ManageEnergyRequest(RemoteEnergyRequest remoteReq)
         {
             if (OnRemoteRequest != null)
