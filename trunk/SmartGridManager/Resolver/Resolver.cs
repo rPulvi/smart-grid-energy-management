@@ -20,9 +20,7 @@ namespace Resolver
         private IPeerServices remoteChannel;        
         
         private MessageHandler MsgHandler;
-        private PeerServices remoteMessageHandler;
-
-        private System.Timers.Timer _proposalCountdown;
+        private PeerServices remoteMessageHandler;        
 
         private string _name;
         private PeerStatus _peerStatus;
