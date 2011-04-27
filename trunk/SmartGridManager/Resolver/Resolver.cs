@@ -22,8 +22,12 @@ namespace Resolver
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
+        private System.Timers.Timer _proposalCountdown;
+
         private string _name;
         private PeerStatus _peerStatus;
+
+        private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
 
         public Resolver(string name) : base(name) { 
             _name = name;
@@ -40,6 +44,7 @@ namespace Resolver
             MsgHandler.OnRemoteAdv += new remoteAdv(SendRemoteRequest);
 
             #endregion
+
         }
 
         private void StartLocalResolver()
@@ -123,7 +128,9 @@ namespace Resolver
         private void ManageRemoteRequest(RemoteEnergyRequest message)
         {
             float enReq = message.energyReq;
-            Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));        
-        }
+            Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));
+
+            //...
+        }        
     }
 }
