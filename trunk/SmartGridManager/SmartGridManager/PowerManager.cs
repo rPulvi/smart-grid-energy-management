@@ -76,9 +76,9 @@ namespace SmartGridManager
 
                     if (messageSent == false)
                     {
-                        float enReq = _enPeak - getEnergyLevel() + _enBought;                        
+                        float enReq = _enPeak - getEnergyLevel() + _enBought;
                         Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));
-                        
+
                         //start the timer to waiting for proposals
                         if (_proposalCountdown.Enabled == false)
                             _proposalCountdown.Enabled = true;

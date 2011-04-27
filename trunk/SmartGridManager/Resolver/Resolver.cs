@@ -12,37 +12,34 @@ using SmartGridManager.Core.Messaging;
 
 namespace Resolver
 {
-    class Program
+    public class Resolver : Peer
     {
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
-        private IPeerServices remoteChannel;
-        private ServiceHost remoteHost = new ServiceHost(typeof(PeerServices));
+        private ServiceHost remoteHost;
+        private IPeerServices remoteChannel;        
+        
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
-        static void Main(string[] args)
-        {
-            Program p = new Program();
-            
-            p.StartLocalResolver();
-            p.StartRemoteConnection();
+        private string _name;
+        private PeerStatus _peerStatus;
 
-            StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
-            {
-                header = Tools.getHeader("@All", "turi"),
-                status = PeerStatus.Resolver,
-                energyReq = 100
-            };
+        public Resolver(string name) : base(name) { 
+            _name = name;
+            _peerStatus = PeerStatus.Resolver;
+            remoteMessageHandler.OnRemoteRequest += new remoteEnergyRequest(ManageRemoteRequest);
 
-            p.SendRemoteRequest(notifyMessage);  
+            StartLocalResolver();
+            StartRemoteConnection();
+
+            #region Normal Peer Activity
 
             Connector.Connect();
-            p.MsgHandler = Connector.messageHandler;
-            p.MsgHandler.OnRemoteAdv += new remoteAdv(p.SendRemoteRequest);
-            p.remoteMessageHandler.OnRemoteRequest += new remoteEnergyRequest(p.ManageRemoteRequest);
-            Console.WriteLine("Press [ENTER] to exit.");
-            Console.ReadLine();
+            MsgHandler = Connector.messageHandler;
+            MsgHandler.OnRemoteAdv += new remoteAdv(SendRemoteRequest);
+
+            #endregion
         }
 
         private void StartLocalResolver()
@@ -69,29 +66,28 @@ namespace Resolver
 
         private void StartRemoteConnection()
         {
-            List<RemoteHost> h;
-
-            Console.WriteLine("Connecting to remote host..");
-
+            List<RemoteHost> h;            
+            
+            remoteMessageHandler = new PeerServices();//----------------+
+                                                      //                +
+            remoteHost = new ServiceHost(remoteMessageHandler);//<------+
             h = Tools.getRemoteHosts();
             
             //To connect to remote host
             NetTcpBinding tcpBinding = new NetTcpBinding();
             EndpointAddress remoteEndpoint = new EndpointAddress(h[0].netAddress); //TODO: fix here.
-            tcpBinding.Security.Mode = SecurityMode.None;
-
-            remoteMessageHandler = new PeerServices();
-
-            InstanceContext instanceContext = new InstanceContext(remoteMessageHandler);
-            //ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
-            ChannelFactory<IPeerServices> cf = new DuplexChannelFactory<IPeerServices>(instanceContext, tcpBinding, remoteEndpoint);
+            tcpBinding.Security.Mode = SecurityMode.None;                        
+            
+            ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);            
             remoteChannel = cf.CreateChannel();
 
             try
             {
                 remoteHost.Open();
-                
-                Console.WriteLine("Connected to: {0}",h[0].IP);
+
+                Console.WriteLine("Remote service started.");
+                Console.WriteLine("Connecting to {0}", h[0].IP);
+
                 //Retrieve Remote IP Addresses
                 foreach (var newRemote in remoteChannel.RetrieveContactList())
                 {                    
@@ -100,7 +96,9 @@ namespace Resolver
                         h.Add(newRemote);
                         Tools.updateRemoteHosts(newRemote);
                     }
-                }              
+                }
+
+                Console.WriteLine("Connected to: {0}", h[0].IP);
             }
             catch (Exception e)
             {
@@ -122,9 +120,10 @@ namespace Resolver
             remoteChannel.ManageEnergyRequest(remEneReq);
         }
 
-        private void ManageRemoteRequest(RemoteEnergyRequest m)
-        { 
-        
+        private void ManageRemoteRequest(RemoteEnergyRequest message)
+        {
+            float enReq = message.energyReq;
+            Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));        
         }
     }
 }

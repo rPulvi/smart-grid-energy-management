@@ -11,8 +11,8 @@ namespace SmartGridManager.Core.P2P
 {
     public delegate void remoteEnergyRequest(RemoteEnergyRequest s);
 
-    //[ServiceContract]
-    [ServiceContract(CallbackContract = typeof(IPeerServices))]
+    [ServiceContract]
+    //[ServiceContract(CallbackContract = typeof(IPeerServices))]
     public interface IPeerServices
     {
         [OperationContract]
@@ -22,12 +22,11 @@ namespace SmartGridManager.Core.P2P
         List<RemoteHost> RetrieveContactList();
     }
 
-    //[ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession)]
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class PeerServices : IPeerServices
     {
         public event remoteEnergyRequest OnRemoteRequest;
-               
 
         public void ManageEnergyRequest(RemoteEnergyRequest remoteReq)
         {
