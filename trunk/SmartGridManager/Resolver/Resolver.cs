@@ -16,6 +16,7 @@ namespace Resolver
     {
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
+        
         private ServiceHost remoteHost;
         private IPeerServices remoteChannel;        
         
@@ -27,17 +28,18 @@ namespace Resolver
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
 
-        public Resolver(string name) : base(name) { 
+        public Resolver(string name) : base(name,PeerStatus.Resolver){
             _name = name;
             _peerStatus = PeerStatus.Resolver;
-            remoteMessageHandler.OnRemoteRequest += new remoteEnergyRequest(ManageRemoteRequest);
 
             StartLocalResolver();
             StartRemoteConnection();
 
+            remoteMessageHandler.OnRemoteRequest += new remoteEnergyRequest(ManageRemoteRequest);
+
             #region Normal Peer Activity
 
-            Connector.Connect();
+            base.StartService();
             MsgHandler = Connector.messageHandler;
             MsgHandler.OnRemoteAdv += new remoteAdv(SendRemoteRequest);
 

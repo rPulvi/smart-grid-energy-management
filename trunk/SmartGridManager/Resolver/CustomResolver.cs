@@ -9,7 +9,7 @@ using System.Configuration;
 
 namespace Resolver
 {
-    class CustomResolver : CustomPeerResolverService
+    public class CustomResolver : CustomPeerResolverService
     {
         public override RegisterResponseInfo Register(RegisterInfo registerInfo)
         {

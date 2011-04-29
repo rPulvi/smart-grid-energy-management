@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Description;
 using SmartGridManager.Core.Messaging;
 using SmartGridManager.Core.Utils;
+using SmartGridManager.Core.Commons;
 
 namespace SmartGridManager.Core
 {
@@ -14,10 +15,12 @@ namespace SmartGridManager.Core
         private String _ID;                
         private GridMessage _request;
 
-        public Peer(String ID)
+        public Peer(String ID, PeerStatus status = PeerStatus.None)
         {
             this._ID = ID;
-            this.StartService();
+
+            if (!(status == PeerStatus.Resolver))
+                this.StartService();
         }
 
         public void StartService()

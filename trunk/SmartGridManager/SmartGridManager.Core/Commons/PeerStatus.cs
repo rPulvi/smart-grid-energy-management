@@ -11,5 +11,6 @@ namespace SmartGridManager.Core.Commons
         Consumer = 1,
         Prosumer = 2,
         Resolver = 3,
+        None = 4,
     }
 }
