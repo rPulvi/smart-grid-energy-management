@@ -32,8 +32,8 @@ namespace SmartGridManager.Core
             
             //create channel
             InstanceContext instanceContext = new InstanceContext(messageHandler);
-            //_factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");
-            _factory = new DuplexChannelFactory<IChannel>(instanceContext, p2pBinding, remoteEndpoint);
+            _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");
+            //_factory = new DuplexChannelFactory<IChannel>(instanceContext, p2pBinding, remoteEndpoint);
             channel = _factory.CreateChannel();
            
             //set filter
