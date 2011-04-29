@@ -73,9 +73,9 @@ namespace Resolver
         {
             List<RemoteHost> h;            
             
-            remoteMessageHandler = new PeerServices();//----------------+
-                                                      //                +
-            remoteHost = new ServiceHost(remoteMessageHandler);//<------+
+            remoteMessageHandler = new PeerServices();
+
+            remoteHost = new ServiceHost(remoteMessageHandler);
             h = Tools.getRemoteHosts();
             
             //To connect to remote host

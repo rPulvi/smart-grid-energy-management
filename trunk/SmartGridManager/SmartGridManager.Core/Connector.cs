@@ -20,12 +20,20 @@ namespace SmartGridManager.Core
         private static DuplexChannelFactory<IChannel> _factory;
 
         public static bool Connect()
-        {            
+        {
+            //NetTcpBinding tcpBinding = new NetTcpBinding();
+            NetPeerTcpBinding p2pBinding = new NetPeerTcpBinding();
+            p2pBinding.Security.Mode = SecurityMode.None;
+            EndpointAddress remoteEndpoint = new EndpointAddress(@"net.p2p://sucausca:8080/peerResolverService"); //TODO: fix here.
+            
+            //EndpointAddress remoteEndpoint = new EndpointAddress(@"net.p2p://localhost:8080/peerResolverService"); //TODO: fix here.
+
             messageHandler = new MessageHandler();
             
             //create channel
             InstanceContext instanceContext = new InstanceContext(messageHandler);
-            _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");            
+            //_factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");
+            _factory = new DuplexChannelFactory<IChannel>(instanceContext, p2pBinding, remoteEndpoint);
             channel = _factory.CreateChannel();
            
             //set filter
