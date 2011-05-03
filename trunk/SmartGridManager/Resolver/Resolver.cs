@@ -27,6 +27,7 @@ namespace Resolver
         private PeerStatus _peerStatus;
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
+        //Inserire Hash Map
 
         public Resolver(string name) : base(name,PeerStatus.Resolver){
             _name = name;
@@ -135,15 +136,23 @@ namespace Resolver
             //...
         }
 
-        private void ForwardLocalMessage(PeerMessage message)
-        {            
-            remoteChannel.ManageRemoteMessages(message);
-            //remoteChannel.ManageEnergyRequest(message);
+        //To Resolver
+        private void ForwardLocalMessage(PeerMessage message)   
+        {
+            message.header.Sender = getNameByID(message.header.MessageID);
+            //cancello la chiave dalla hash map
+            remoteChannel.ManageRemoteMessages(message);            
         }
 
-        private void ForwardRemoteMessage(PeerMessage message)
+        //From Resolver
+        private void ForwardRemoteMessage(PeerMessage message)  
         {
-            message.header.Sender = "Resolver";
+            message.header.Sender = _name;
+
+            if (message.header.Receiver == "Resolver")
+                message.header.Receiver = "@all";
+            
+            //salvo nella hash map
 
             if (message is StatusNotifyMessage)
                 Connector.channel.statusAdv((StatusNotifyMessage)message);
@@ -155,6 +164,14 @@ namespace Resolver
                 Connector.channel.endProposal((EndProposalMessage)message);
             else if (message is HeartBeatMessage)
                 Connector.channel.heartBeat((HeartBeatMessage)message);
+        }
+
+        private string getNameByID(Guid ID)
+        { 
+            string name = "foo";
+            //Cerca nella hash map a seconda dell'id e ritorna il nome 
+
+            return name;
         }
     }
 }
