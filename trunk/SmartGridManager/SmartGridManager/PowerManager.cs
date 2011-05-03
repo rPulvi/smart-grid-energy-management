@@ -24,6 +24,7 @@ namespace SmartGridManager
         private float _price;
         private float _enBought;
         private float _enSold;
+        private int _proposalTimeout = 0;
         private Boolean _loop;
         private Boolean messageSent = false;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
@@ -80,7 +81,7 @@ namespace SmartGridManager
                     if (messageSent == false)
                     {
                         float enReq = _enPeak - getEnergyLevel() + _enBought;
-                        Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));
+                        Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage("@All", _name, _peerStatus, enReq));
 
                         //start the timer to waiting for proposals
                         if (_proposalCountdown.Enabled == false)
@@ -145,22 +146,28 @@ namespace SmartGridManager
             _proposalCountdown.Enabled = false; //Stop the timer
 
             if (_proposalList.Count > 0)
+            {
+                _proposalTimeout = 0;
                 EvaluateProposal();
+            }
             else
             {
                 Console.WriteLine("Nessuna offerta energetica ricevuta");
                 messageSent = false; //send the request message again
-                /*
-                //Go Outbound
-                StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
-                {
-                    header = Tools.getHeader("@All", _name),
-                    status = _peerStatus,
-                    energyReq = _enPeak - getEnergyLevel() + _enBought
-                };
+                _proposalTimeout++;
 
-                Connector.channel.remoteAdv(notifyMessage); 
-                 */
+                if (_proposalTimeout == 3)
+                { 
+                    //Go Outbound
+                    StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
+                    {
+                        header = Tools.getHeader("@All", _name),
+                        status = _peerStatus,
+                        energyReq = _enPeak - getEnergyLevel() + _enBought
+                    };
+
+                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage("Resolver", _name, _peerStatus,  _enPeak - getEnergyLevel() + _enBought));
+                }
             }
         }
 

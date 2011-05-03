@@ -10,11 +10,11 @@ namespace SmartGridManager.Core.Messaging
 {
     public static class MessageFactory
     {
-        public static StatusNotifyMessage createEnergyRequestMessage(string source, PeerStatus peerStatus, float enReq)
+        public static StatusNotifyMessage createEnergyRequestMessage(string dest, string source, PeerStatus peerStatus, float enReq)
         {
             StatusNotifyMessage message = new StatusNotifyMessage()
             {
-                header = Tools.getHeader("@All", source),
+                header = Tools.getHeader(dest, source, true),
                 status = peerStatus,
                 energyReq = enReq
             };

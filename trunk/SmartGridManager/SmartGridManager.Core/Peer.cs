@@ -30,7 +30,7 @@ namespace SmartGridManager.Core
                 //composing hello message
                 _request = new GridMessage()
                 {
-                    header = Tools.getHeader("@All", this._ID),
+                    header = Tools.getHeader("@All", this._ID, true),
                     descField = "PEER: " + this._ID + ".:: Hello ::."
                 };
                 

@@ -36,12 +36,14 @@ namespace Resolver
             StartRemoteConnection();
 
             remoteMessageHandler.OnRemoteRequest += new remoteEnergyRequest(ManageRemoteRequest);
+            remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
 
             #region Normal Peer Activity
 
             base.StartService();
             MsgHandler = Connector.messageHandler;
             MsgHandler.OnRemoteAdv += new remoteAdv(SendRemoteRequest);
+            MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
 
             #endregion
 
@@ -128,9 +130,31 @@ namespace Resolver
         private void ManageRemoteRequest(RemoteEnergyRequest message)
         {
             float enReq = message.energyReq;
-            Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));
+            //Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));
 
             //...
-        }        
+        }
+
+        private void ForwardLocalMessage(PeerMessage message)
+        {            
+            remoteChannel.ManageRemoteMessages(message);
+            //remoteChannel.ManageEnergyRequest(message);
+        }
+
+        private void ForwardRemoteMessage(PeerMessage message)
+        {
+            message.header.Sender = "Resolver";
+
+            if (message is StatusNotifyMessage)
+                Connector.channel.statusAdv((StatusNotifyMessage)message);
+            else if (message is EnergyProposalMessage)
+                Connector.channel.energyProposal((EnergyProposalMessage)message);
+            else if (message is EnergyAcceptMessage)
+                Connector.channel.acceptProposal((EnergyAcceptMessage)message);
+            else if (message is EndProposalMessage)
+                Connector.channel.endProposal((EndProposalMessage)message);
+            else if (message is HeartBeatMessage)
+                Connector.channel.heartBeat((HeartBeatMessage)message);
+        }
     }
 }

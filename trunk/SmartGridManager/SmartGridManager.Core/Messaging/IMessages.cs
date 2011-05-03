@@ -29,5 +29,8 @@ namespace SmartGridManager.Core.Messaging
 
         [OperationContract(IsOneWay = true)]
         void remoteAdv(StatusNotifyMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void forwardLocalMessage(PeerMessage m);
     }
 }

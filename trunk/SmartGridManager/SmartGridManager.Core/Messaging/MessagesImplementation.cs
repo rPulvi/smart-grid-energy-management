@@ -82,5 +82,12 @@ namespace SmartGridManager.Core.Messaging
             Console.WriteLine("Remote request sent to Resolver");
             Console.ResetColor();
         }
+
+        public virtual void forwardLocalMessage(PeerMessage message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Peer {0} is forwarding a message..", message.header.Sender);
+            Console.ResetColor();
+        }
     }
 }

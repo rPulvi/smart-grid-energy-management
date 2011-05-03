@@ -12,20 +12,25 @@ namespace SmartGridManager.Core.Utils
 {
     public static class Tools
     {
+        private static Guid _MessageID;
+
         /// <summary>
         /// return a StandardMessageHeader generating a new message ID and applying the TimeStamp
         /// </summary>
         /// <param name="receiver">message receiver</param>
         /// <param name="sender">message sender</param>
         /// <returns>the message header</returns>
-        public static StandardMessageHeader getHeader(String receiver, String sender )
+        public static StandardMessageHeader getHeader(String receiver, String sender, bool isNew=false )
         { 
-            StandardMessageHeader m;
+            StandardMessageHeader m;            
+
+            if (isNew == true)
+                _MessageID = Guid.NewGuid();            
 
             m = new StandardMessageHeader{ 
-                MessageID = Guid.NewGuid(), 
-                Receiver = receiver, 
-                Sender = sender, 
+                MessageID = _MessageID, 
+                Receiver = receiver,
+                Sender = sender,
                 TimeStamp = DateTime.Now };
 
             return m;

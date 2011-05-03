@@ -10,6 +10,7 @@ using SmartGridManager.Core.Utils;
 namespace SmartGridManager.Core.P2P
 {
     public delegate void remoteEnergyRequest(RemoteEnergyRequest s);
+    public delegate void forwardRemoteMessage(PeerMessage m);
 
     [ServiceContract]
     //[ServiceContract(CallbackContract = typeof(IPeerServices))]
@@ -20,6 +21,9 @@ namespace SmartGridManager.Core.P2P
         
         [OperationContract]
         List<RemoteHost> RetrieveContactList();
+
+        [OperationContract]
+        void ManageRemoteMessages(PeerMessage message);
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
@@ -27,6 +31,7 @@ namespace SmartGridManager.Core.P2P
     public class PeerServices : IPeerServices
     {
         public event remoteEnergyRequest OnRemoteRequest;
+        public event forwardRemoteMessage OnForwardRemoteMessage;
 
         public void ManageEnergyRequest(RemoteEnergyRequest remoteReq)
         {
@@ -37,6 +42,12 @@ namespace SmartGridManager.Core.P2P
         public List<RemoteHost> RetrieveContactList()
         {
             return Tools.getRemoteHosts();
-        }        
+        }
+
+        public void ManageRemoteMessages(PeerMessage message)
+        {
+            if (OnForwardRemoteMessage != null)
+                OnForwardRemoteMessage(message);
+        }
     }
 }
