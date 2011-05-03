@@ -14,6 +14,7 @@ namespace SmartGridManager
     {
 
         #region Attributes
+
         private EnergyGenerator _generator;        
         private MessageHandler MsgHandler;        
         
@@ -32,6 +33,8 @@ namespace SmartGridManager
         private System.Timers.Timer _heartBeatTimer;
 
         #endregion
+
+        #region Methods
 
         public PowerManager(String bName, EnergyGenerator generator, float energyPeak, float price)
         {
@@ -119,21 +122,11 @@ namespace SmartGridManager
 
                     if (enAvailable >= message.energyReq)
                     {
-                        EnergyProposalMessage propMessage = new EnergyProposalMessage()
-                        {
-                            header = Tools.getHeader(message.header.Sender, _name),
-
-                            /* TODO: Optimization required
-                            //If peer's energy is >= the request, give the requested energy, otherwise give the en. available
-                            energyAvailable = energyAvailable >= message.energyReq ? message.energyReq : energyAvailable,
-                            */
-                            
-                            energyAvailable = message.energyReq,
-                            
-                            price = _price
-                        };
-
-                        Connector.channel.energyProposal(propMessage);
+                        Connector.channel.energyProposal(MessageFactory.createEnergyProposalMessage(
+                            message.header.Sender,
+                            _name, 
+                            message.energyReq, 
+                            _price));
                     }
                 }
             }
@@ -181,13 +174,10 @@ namespace SmartGridManager
             Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);
             Console.ResetColor();
             
-            EnergyAcceptMessage acceptMessage = new EnergyAcceptMessage()
-            {
-                header = Tools.getHeader(m.header.Sender,_name),
-                energy = _enPeak - getEnergyLevel() + _enBought
-            };
-
-            Connector.channel.acceptProposal(acceptMessage);
+            Connector.channel.acceptProposal(MessageFactory.createEnergyAcceptMessage(
+                m.header.Sender, 
+                _name, 
+                _enPeak - getEnergyLevel() + _enBought));
 
             _proposalList.Clear();
         }
@@ -213,14 +203,11 @@ namespace SmartGridManager
                     t.Enabled = false;
                 }
 
-                EndProposalMessage endMessage = new EndProposalMessage()
-                {
-                    header = Tools.getHeader(message.header.Sender, _name),
-                    endStatus = status,
-                    energy = message.energy
-                };
-
-                Connector.channel.endProposal(endMessage);
+                Connector.channel.endProposal(MessageFactory.createEndProposalMessage(
+                    message.header.Sender,
+                    _name,
+                    status,
+                    message.energy));
             }
         }
 
@@ -246,12 +233,7 @@ namespace SmartGridManager
 
         private void _heartBeatTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            HeartBeatMessage message = new HeartBeatMessage()
-            {
-                header = Tools.getHeader("@all", _name)
-            };
-
-            Connector.channel.heartBeat(message);
+            Connector.channel.heartBeat(MessageFactory.createHeartBeatMessage(_name));
         }
 
         private void heartBeatTimeout(object sender, ElapsedEventArgs e)
@@ -324,5 +306,6 @@ namespace SmartGridManager
             }
         }
 
+        #endregion
     }
 }
