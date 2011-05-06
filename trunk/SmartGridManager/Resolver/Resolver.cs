@@ -27,7 +27,7 @@ namespace Resolver
         private PeerStatus _peerStatus;
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
-        //Inserire Hash Map
+        private Dictionary<Guid, String> _messageList = new Dictionary<Guid, String>();
 
         public Resolver(string name) : base(name,PeerStatus.Resolver){
             _name = name;
@@ -43,6 +43,7 @@ namespace Resolver
 
             base.StartService();
             MsgHandler = Connector.messageHandler;
+            
             MsgHandler.OnRemoteAdv += new remoteAdv(SendRemoteRequest);
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
 
@@ -140,19 +141,20 @@ namespace Resolver
         private void ForwardLocalMessage(PeerMessage message)   
         {
             message.header.Sender = getNameByID(message.header.MessageID);
-            //cancello la chiave dalla hash map
+            _messageList.Remove(message.header.MessageID);
+
             remoteChannel.ManageRemoteMessages(message);            
         }
 
         //From Resolver
         private void ForwardRemoteMessage(PeerMessage message)  
         {
+            _messageList.Add(message.header.MessageID, message.header.Sender);
+            
             message.header.Sender = _name;
 
             if (message.header.Receiver == "Resolver")
                 message.header.Receiver = "@all";
-            
-            //salvo nella hash map
 
             if (message is StatusNotifyMessage)
                 Connector.channel.statusAdv((StatusNotifyMessage)message);
@@ -168,8 +170,19 @@ namespace Resolver
 
         private string getNameByID(Guid ID)
         { 
-            string name = "foo";
-            //Cerca nella hash map a seconda dell'id e ritorna il nome 
+            string name = "";
+
+            if (_messageList.ContainsKey((Guid)ID))
+            {
+                foreach (var k in _messageList)
+                {
+                    if (k.Key == ID)
+                    {
+                        name = k.Value;
+                        break;
+                    }
+                }
+            }
 
             return name;
         }

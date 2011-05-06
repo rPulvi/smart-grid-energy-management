@@ -180,11 +180,16 @@ namespace SmartGridManager
             Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);
             Console.ResetColor();
+
+            EnergyAcceptMessage respMessage = MessageFactory.createEnergyAcceptMessage(
+                    m.header.Sender,
+                    _name,
+                    _enPeak - getEnergyLevel() + _enBought);
             
-            Connector.channel.acceptProposal(MessageFactory.createEnergyAcceptMessage(
-                m.header.Sender, 
-                _name, 
-                _enPeak - getEnergyLevel() + _enBought));
+            if (m.header.Sender == "Resolver")
+                Connector.channel.forwardLocalMessage(respMessage);
+            else
+                Connector.channel.acceptProposal(respMessage);
 
             _proposalList.Clear();
         }
@@ -210,11 +215,16 @@ namespace SmartGridManager
                     t.Enabled = false;
                 }
 
-                Connector.channel.endProposal(MessageFactory.createEndProposalMessage(
+                EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(
                     message.header.Sender,
                     _name,
                     status,
-                    message.energy));
+                    message.energy);
+
+                if (message.header.Sender == "Resolver")
+                    Connector.channel.forwardLocalMessage(respMessage);
+                else
+                    Connector.channel.endProposal(respMessage);
             }
         }
 
@@ -240,6 +250,7 @@ namespace SmartGridManager
 
         private void _heartBeatTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            // ???
             Connector.channel.heartBeat(MessageFactory.createHeartBeatMessage(_name));
         }
 
@@ -291,6 +302,7 @@ namespace SmartGridManager
                 //key = timer of this producer
                 if (p.Value == message.header.Sender)
                 {
+                    //stop & restart the timer
                     p.Key.Enabled = false;
                     p.Key.Enabled = true;
                     break;
