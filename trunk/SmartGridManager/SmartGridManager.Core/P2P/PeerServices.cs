@@ -8,8 +8,7 @@ using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Utils;
 
 namespace SmartGridManager.Core.P2P
-{
-    public delegate void remoteEnergyRequest(RemoteEnergyRequest s);
+{    
     public delegate void forwardRemoteMessage(PeerMessage m);
 
     [ServiceContract]

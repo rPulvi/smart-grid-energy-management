@@ -24,7 +24,7 @@ namespace Resolver
         private PeerServices remoteMessageHandler;        
 
         private string _name;
-        private PeerStatus _peerStatus;
+        private PeerStatus _peerStatus;        
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private Dictionary<Guid, String> _messageList = new Dictionary<Guid, String>();
@@ -34,7 +34,7 @@ namespace Resolver
             this._peerStatus = PeerStatus.Resolver;
 
             StartLocalResolver();
-            StartRemoteConnection();
+            StartRemoteConnection();                
             
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
 
@@ -43,7 +43,6 @@ namespace Resolver
             base.StartService();
             MsgHandler = Connector.messageHandler;
             
-            MsgHandler.OnRemoteAdv += new remoteAdv(SendRemoteRequest);
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
 
             #endregion
@@ -74,6 +73,8 @@ namespace Resolver
 
         private void StartRemoteConnection()
         {
+            int n=0;
+            bool bRet = false;
             List<RemoteHost> h;            
             
             remoteMessageHandler = new PeerServices();
@@ -81,49 +82,46 @@ namespace Resolver
             remoteHost = new ServiceHost(remoteMessageHandler);
             h = Tools.getRemoteHosts();
             
-            //To connect to remote host
-            NetTcpBinding tcpBinding = new NetTcpBinding();
-            EndpointAddress remoteEndpoint = new EndpointAddress(h[0].netAddress); //TODO: fix here.
-            tcpBinding.Security.Mode = SecurityMode.None;                        
-            
-            ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);            
-            remoteChannel = cf.CreateChannel();
-
-            try
+            while (bRet == false && n < h.Count)
             {
-                remoteHost.Open();
+                //To connect to remote host
+                NetTcpBinding tcpBinding = new NetTcpBinding();
+                EndpointAddress remoteEndpoint = new EndpointAddress(h[n].netAddress); //TODO: fix here.
+                tcpBinding.Security.Mode = SecurityMode.None;
 
-                Console.WriteLine("Remote service started.");
-                Console.WriteLine("Connecting to {0}", h[0].IP);
+                ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
+                remoteChannel = cf.CreateChannel();
 
-                //Retrieve Remote IP Addresses
-                foreach (var newRemote in remoteChannel.RetrieveContactList())
-                {                    
-                    if (!h.Exists(delegate(RemoteHost x){ return x.netAddress == newRemote.netAddress;}))
+                try
+                {
+                    remoteHost.Open();
+
+                    Console.WriteLine("Remote service started.");
+                    Console.WriteLine("Connecting to {0}", h[n].IP);
+
+                    //Retrieve Remote IP Addresses
+                    foreach (var newRemote in remoteChannel.RetrieveContactList())
                     {
-                        h.Add(newRemote);
-                        Tools.updateRemoteHosts(newRemote);
+                        if (!h.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
+                        {
+                            h.Add(newRemote);
+                            Tools.updateRemoteHosts(newRemote);
+                        }
                     }
+
+                    Console.WriteLine("Connected to: {0}", h[n].IP);
+                    bRet = true;
                 }
-
-                Console.WriteLine("Connected to: {0}", h[0].IP);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error in connecting to: {0}", h[0].IP);
-                Console.WriteLine(e);
-                remoteHost.Abort();
-                Console.ReadLine();
-            }
-        }
-
-        private void SendRemoteRequest(StatusNotifyMessage message)
-        {
-            RemoteEnergyRequest remEneReq = new RemoteEnergyRequest()
-            {
-                header = Tools.getHeader("@All", "resolver"),
-                energyReq = message.energyReq
-            };            
+                catch (Exception e)
+                {
+                    Console.WriteLine("Error in connecting to: {0}", h[n].IP);
+                    Console.WriteLine(e); //For debug
+                    remoteHost.Abort();
+                    Console.ReadLine();
+                    n++;
+                    bRet = false;
+                }
+            }            
         }
 
         //To Resolver

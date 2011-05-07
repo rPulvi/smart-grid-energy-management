@@ -8,10 +8,10 @@ using System.ServiceModel;
 
 namespace SmartGridManager.Core.Messaging
 {
-    [MessageContract]
-    public class RemoteEnergyRequest : PeerMessage
-    {
-        [MessageBodyMember]
-        public float energyReq { get; set; }
-    }
+    //[MessageContract]
+    //public class RemoteEnergyRequest : PeerMessage
+    //{
+    //    [MessageBodyMember]
+    //    public float energyReq { get; set; }
+    //}
 }
