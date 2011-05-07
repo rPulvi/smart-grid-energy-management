@@ -71,5 +71,10 @@ namespace SmartGridManager.Core.Utils
 
             xmlList.Save("NetConfig.xml");
         }
+
+        public static string getResolverName()
+        {
+            return XElement.Load("NetConfig.xml").Element("Name").Value;
+        }
     }
 }

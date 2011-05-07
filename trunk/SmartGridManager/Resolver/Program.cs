@@ -10,10 +10,7 @@ namespace Resolver
     {
         static void Main(string[] args)
         {
-            CustomResolver crs = null;
-            ServiceHost host = null;
-
-            Resolver p = new Resolver("cambiarequestonome");
+            Resolver p = new Resolver();
 
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();

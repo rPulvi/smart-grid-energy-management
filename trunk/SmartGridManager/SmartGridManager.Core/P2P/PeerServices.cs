@@ -15,10 +15,7 @@ namespace SmartGridManager.Core.P2P
     [ServiceContract]
     //[ServiceContract(CallbackContract = typeof(IPeerServices))]
     public interface IPeerServices
-    {
-        [OperationContract]
-        void ManageEnergyRequest(RemoteEnergyRequest remoteReq);
-        
+    {        
         [OperationContract]
         List<RemoteHost> RetrieveContactList();
 
@@ -30,14 +27,7 @@ namespace SmartGridManager.Core.P2P
     //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class PeerServices : IPeerServices
     {
-        public event remoteEnergyRequest OnRemoteRequest;
         public event forwardRemoteMessage OnForwardRemoteMessage;
-
-        public void ManageEnergyRequest(RemoteEnergyRequest remoteReq)
-        {
-            if (OnRemoteRequest != null)
-                OnRemoteRequest(remoteReq);
-        }
 
         public List<RemoteHost> RetrieveContactList()
         {

@@ -29,14 +29,13 @@ namespace Resolver
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private Dictionary<Guid, String> _messageList = new Dictionary<Guid, String>();
 
-        public Resolver(string name) : base(name,PeerStatus.Resolver){
-            _name = name;
-            _peerStatus = PeerStatus.Resolver;
+        public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
+            this._name = Tools.getResolverName();
+            this._peerStatus = PeerStatus.Resolver;
 
             StartLocalResolver();
             StartRemoteConnection();
-
-            remoteMessageHandler.OnRemoteRequest += new remoteEnergyRequest(ManageRemoteRequest);
+            
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
 
             #region Normal Peer Activity
@@ -124,17 +123,7 @@ namespace Resolver
             {
                 header = Tools.getHeader("@All", "resolver"),
                 energyReq = message.energyReq
-            };
-
-            remoteChannel.ManageEnergyRequest(remEneReq);
-        }
-
-        private void ManageRemoteRequest(RemoteEnergyRequest message)
-        {
-            float enReq = message.energyReq;
-            //Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage(_name, _peerStatus, enReq));
-
-            //...
+            };            
         }
 
         //To Resolver

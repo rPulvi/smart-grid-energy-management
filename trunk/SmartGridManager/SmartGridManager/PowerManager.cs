@@ -28,8 +28,8 @@ namespace SmartGridManager
         private Boolean _loop;
         private Boolean messageSent = false;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
-        private Dictionary<System.Timers.Timer, String> _producers = new Dictionary<System.Timers.Timer, String>();
-        private Dictionary<System.Timers.Timer, String> _consumers = new Dictionary<System.Timers.Timer, String>();
+        private Dictionary<System.Timers.Timer, EnergyLink> _producers = new Dictionary<System.Timers.Timer, EnergyLink>();
+        private Dictionary<System.Timers.Timer, EnergyLink> _consumers = new Dictionary<System.Timers.Timer, EnergyLink>();
         private System.Timers.Timer _proposalCountdown;
         private System.Timers.Timer _heartBeatTimer;
 
@@ -91,28 +91,13 @@ namespace SmartGridManager
                     }
                 }
                 else
-                {
-                    //became Producer
+                {                    
                     _peerStatus = PeerStatus.Producer;
                     messageSent = false;
                 }
             }
-        }
-
-        public void ShutDown()
-        {            
-            _generator.Stop();
-            _loop = false;
-        }
-
-        public float getEnergyLevel() { return _generator.EnergyLevel; }
+        }      
         
-        // TODO: Spostare il metodo da un'altra parte
-        public void setEnergyLevel(float value)
-        {
-            _generator.EnergyLevel = value;
-        }
-
         private void CreateProposal(StatusNotifyMessage message)
         {
             if (message.status == PeerStatus.Consumer)
@@ -123,11 +108,16 @@ namespace SmartGridManager
 
                     if (enAvailable >= message.energyReq)
                     {
-                        Connector.channel.energyProposal(MessageFactory.createEnergyProposalMessage(
+                        EnergyProposalMessage respMessage = MessageFactory.createEnergyProposalMessage(
                             message.header.Sender,
-                            _name, 
-                            message.energyReq, 
-                            _price));
+                            _name,
+                            message.energyReq,
+                            _price);
+
+                        if (message.header.Sender == Tools.getResolverName())
+                            Connector.channel.forwardLocalMessage(respMessage);
+                        else
+                            Connector.channel.energyProposal(respMessage);
                     }
                 }
             }
@@ -156,17 +146,11 @@ namespace SmartGridManager
                 messageSent = false; //send the request message again
                 _proposalTimeout++;
 
-                if (_proposalTimeout == 3)
-                { 
-                    //Go Outbound
-                    StatusNotifyMessage notifyMessage = new StatusNotifyMessage()
-                    {
-                        header = Tools.getHeader("@All", _name),
-                        status = _peerStatus,
-                        energyReq = _enPeak - getEnergyLevel() + _enBought
-                    };
-
-                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage("Resolver", _name, _peerStatus,  _enPeak - getEnergyLevel() + _enBought));
+                if (_proposalTimeout == 3)  //Go Outbound
+                {
+                    messageSent = true;
+                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(Tools.getResolverName(), _name, _peerStatus, _enPeak - getEnergyLevel() + _enBought));
+                    _proposalTimeout = 0;
                 }
             }
         }
@@ -186,7 +170,7 @@ namespace SmartGridManager
                     _name,
                     _enPeak - getEnergyLevel() + _enBought);
             
-            if (m.header.Sender == "Resolver")
+            if (m.header.Sender == Tools.getResolverName())
                 Connector.channel.forwardLocalMessage(respMessage);
             else
                 Connector.channel.acceptProposal(respMessage);
@@ -203,14 +187,12 @@ namespace SmartGridManager
                 if (message.energy <= (getEnergyLevel() - _enPeak - _enSold))
                 {
                     status = true;
-                    _enSold = message.energy;
+                    _enSold += message.energy;
 
-                    System.Timers.Timer t = new System.Timers.Timer();
-                    t.Enabled = true;
-                    t.Interval = 10000;
-                    t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
-
-                    _consumers.Add(t, message.header.Sender);
+                    System.Timers.Timer t = getLinkTimer();
+                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
+                    
+                    _consumers.Add(t, link);
 
                     t.Enabled = false;
                 }
@@ -221,7 +203,7 @@ namespace SmartGridManager
                     status,
                     message.energy);
 
-                if (message.header.Sender == "Resolver")
+                if (message.header.Sender == Tools.getResolverName())
                     Connector.channel.forwardLocalMessage(respMessage);
                 else
                     Connector.channel.endProposal(respMessage);
@@ -234,24 +216,16 @@ namespace SmartGridManager
             {
                 if (message.endStatus == true)
                 {
-                    _enBought = message.energy;
+                    _enBought += message.energy;
 
-                    System.Timers.Timer t = new System.Timers.Timer();
-                    t.Enabled = true;
-                    t.Interval = 10000;
-                    t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
+                    System.Timers.Timer t = getLinkTimer();
+                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
 
-                    _producers.Add(t, message.header.Sender);
+                    _producers.Add(t, link);
 
                     t.Enabled = false;
                 }
             }
-        }
-
-        private void _heartBeatTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            // ???
-            Connector.channel.heartBeat(MessageFactory.createHeartBeatMessage(_name));
         }
 
         private void heartBeatTimeout(object sender, ElapsedEventArgs e)
@@ -260,11 +234,12 @@ namespace SmartGridManager
             {
                 foreach (var p in _producers)
                 {
-                    //TODO: rimuovere timer dalla memoria!!!
+                    //TODO: rimuovere timer dalla memoria!!! .... ???
 
                     if (p.Key == sender)
                     {
                         p.Key.Enabled = false;
+                        _enBought -= p.Value.energy;
                         break;
                     }
                 }
@@ -280,6 +255,7 @@ namespace SmartGridManager
                     if (c.Key == sender)
                     {
                         c.Key.Enabled = false;
+                        _enSold -= c.Value.energy;
                         break;
                     }
                 }
@@ -300,7 +276,7 @@ namespace SmartGridManager
             {
                 //value = producer
                 //key = timer of this producer
-                if (p.Value == message.header.Sender)
+                if (p.Value.peerName == message.header.Sender)
                 {
                     //stop & restart the timer
                     p.Key.Enabled = false;
@@ -316,7 +292,7 @@ namespace SmartGridManager
             {
                 //value = consumer
                 //key = timer of this consumer
-                if (c.Value == message.header.Sender)
+                if (c.Value.peerName == message.header.Sender)
                 {
                     c.Key.Enabled = false;
                     c.Key.Enabled = true;
@@ -325,6 +301,49 @@ namespace SmartGridManager
             }
         }
 
+        private void _heartBeatTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            // ???
+            Connector.channel.heartBeat(MessageFactory.createHeartBeatMessage(_name));
+        }
+
+        public float getEnergyLevel() { return _generator.EnergyLevel; }
+
+        // TODO: Spostare il metodo da un'altra parte
+        public void setEnergyLevel(float value)
+        {
+            _generator.EnergyLevel = value;
+        }
+
+        public void ShutDown()
+        {
+            _generator.Stop();
+            _loop = false;
+        }
+
+        private System.Timers.Timer getLinkTimer()
+        {
+            System.Timers.Timer t = new System.Timers.Timer();
+            t.Enabled = true;
+            t.Interval = 10000;
+            t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
+
+            return t;
+        }
+
         #endregion
+
+        private class EnergyLink
+        {
+            public string peerName { get; private set; }
+            public float energy { get; private set; }
+
+            public EnergyLink(string name, float en)
+            {
+                this.peerName = name;
+                this.energy = en;
+            }
+        }
     }
 }
+
