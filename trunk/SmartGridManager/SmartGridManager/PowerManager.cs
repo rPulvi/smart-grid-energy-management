@@ -19,6 +19,7 @@ namespace SmartGridManager
         private MessageHandler MsgHandler;        
         
         private String _name;
+        private string _resolverName; ///
         private PeerStatus _peerStatus;
         private float _enPeak;
         private float _price;
@@ -41,6 +42,7 @@ namespace SmartGridManager
         {
             this.MsgHandler = Connector.messageHandler;
             
+            MsgHandler.OnHelloResponse += new HelloResponse(ReceiveResolverName);
             MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
             MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
             MsgHandler.OnProposalAccepted += new acceptProposal(ProposalAccepted);
@@ -96,8 +98,13 @@ namespace SmartGridManager
                     messageSent = false;
                 }
             }
-        }      
-        
+        }
+
+        private void ReceiveResolverName(HelloResponseMessage message)
+        {            
+            _resolverName = message.ResolverName;
+        }
+
         private void CreateProposal(StatusNotifyMessage message)
         {
             if (message.status == PeerStatus.Consumer)

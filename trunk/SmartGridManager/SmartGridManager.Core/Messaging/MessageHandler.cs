@@ -8,6 +8,7 @@ namespace SmartGridManager.Core.Messaging
 {
     #region delegates
     public delegate void sayHello (String s);
+    public delegate void HelloResponse (HelloResponseMessage m);
     public delegate void statusNotify (StatusNotifyMessage m);
     public delegate void energyProposal (EnergyProposalMessage m);
     public delegate void acceptProposal(EnergyAcceptMessage m);
@@ -21,6 +22,7 @@ namespace SmartGridManager.Core.Messaging
     {
         #region events
         public event sayHello OnSayHello;
+        public event HelloResponse OnHelloResponse;
         public event statusNotify OnStatusChanged;
         public event energyProposal OnProposalArrived;
         public event acceptProposal OnProposalAccepted;
@@ -36,6 +38,14 @@ namespace SmartGridManager.Core.Messaging
                 OnSayHello("Il nodo " + message.header.Sender + " è entrato nella mesh");
 
             base.sayHello(message);
+        }
+
+        public override void HelloResponse(HelloResponseMessage message)
+        {
+            if (OnHelloResponse != null)
+                OnHelloResponse(message);
+
+            base.HelloResponse(message);
         }
 
         public override void statusAdv(StatusNotifyMessage message)

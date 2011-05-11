@@ -21,6 +21,11 @@ namespace SmartGridManager.Core.Messaging
                 message.descField);          
         }
 
+        public virtual void HelloResponse(HelloResponseMessage message)
+        { 
+            //foo;
+        }
+
         public virtual void statusAdv(StatusNotifyMessage message)
         {
             if(message.status == PeerStatus.Consumer)

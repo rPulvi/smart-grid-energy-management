@@ -10,6 +10,17 @@ namespace SmartGridManager.Core.Messaging
 {
     public static class MessageFactory
     {
+        public static HelloResponseMessage createHelloResponseMessage(string dest, string source, string resName)
+        {
+            HelloResponseMessage message = new HelloResponseMessage()
+            {
+                header = Tools.getHeader(dest, source),
+                ResolverName = resName
+            };
+
+            return message;
+        }
+
         public static StatusNotifyMessage createEnergyRequestMessage(string dest, string source, PeerStatus peerStatus, float enReq)
         {
             StatusNotifyMessage message = new StatusNotifyMessage()

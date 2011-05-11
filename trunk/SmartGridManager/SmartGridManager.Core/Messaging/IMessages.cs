@@ -13,6 +13,9 @@ namespace SmartGridManager.Core.Messaging
         void sayHello(GridMessage m);
 
         [OperationContract(IsOneWay = true)]
+        void HelloResponse(HelloResponseMessage m);
+
+        [OperationContract(IsOneWay = true)]
         void statusAdv(StatusNotifyMessage m);
 
         [OperationContract(IsOneWay = true)]

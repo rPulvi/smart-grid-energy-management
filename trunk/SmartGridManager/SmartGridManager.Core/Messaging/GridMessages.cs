@@ -10,6 +10,15 @@ using SmartGridManager.Core.Commons;
 namespace SmartGridManager.Core.Messaging
 {
     [MessageContract]
+    public class HelloResponseMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public String ResolverName { get; set; }
+
+        public HelloResponseMessage() { }
+    }
+
+    [MessageContract]
     public class GridMessage : PeerMessage
     {
         [MessageBodyMember]

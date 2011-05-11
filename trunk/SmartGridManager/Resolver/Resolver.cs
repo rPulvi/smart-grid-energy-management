@@ -44,6 +44,7 @@ namespace Resolver
             MsgHandler = Connector.messageHandler;
             
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
+            MsgHandler.OnSayHello += new sayHello(HelloResponse);
 
             #endregion
 
@@ -153,6 +154,11 @@ namespace Resolver
                 Connector.channel.endProposal((EndProposalMessage)message);
             else if (message is HeartBeatMessage)
                 Connector.channel.heartBeat((HeartBeatMessage)message);
+        }
+
+        private void HelloResponse(String s)
+        {
+            MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName());
         }
 
         private string getNameByID(Guid ID)
