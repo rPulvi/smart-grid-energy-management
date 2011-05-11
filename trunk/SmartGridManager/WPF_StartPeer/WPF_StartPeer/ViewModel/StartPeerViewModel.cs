@@ -13,7 +13,7 @@ using System.ComponentModel;
 
 namespace WPF_StartPeer.ViewModel
 {
-    class StartPeerViewModel : TraceListener
+    class StartPeerViewModel : TraceListener, INotifyPropertyChanged
     {
         private string nome;
         private EnergyType energia;
@@ -50,6 +50,8 @@ namespace WPF_StartPeer.ViewModel
                 house.setEnergyLevel(90);
             }
 
+            Trace.AutoFlush = true;
+            Trace.Indent();
             Trace.WriteLine("Starting Peer {0} ...", Nome);
 
             //tmpOutput = "Starting Peer ..." + Nome;

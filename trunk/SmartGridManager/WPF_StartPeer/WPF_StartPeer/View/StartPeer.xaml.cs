@@ -33,7 +33,7 @@ namespace WPF_StartPeer.View
             //associo Datasource
             base.DataContext = myvm;
 
-            Trace.Listeners.Add(this.myvm);
+            Trace.Listeners.Add(myvm);
         }
     }
 }
