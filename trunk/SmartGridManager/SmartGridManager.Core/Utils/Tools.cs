@@ -24,7 +24,7 @@ namespace SmartGridManager.Core.Utils
         { 
             StandardMessageHeader m;            
 
-            if (isNew == true)
+            if (isNew == true) //Each session has a GUID
                 _MessageID = Guid.NewGuid();            
 
             m = new StandardMessageHeader{ 

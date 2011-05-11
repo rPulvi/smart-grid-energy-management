@@ -121,7 +121,7 @@ namespace SmartGridManager
                             message.energyReq,
                             _price);
 
-                        if (message.header.Sender == Tools.getResolverName())
+                        if (message.header.Sender == _resolverName)
                             Connector.channel.forwardLocalMessage(respMessage);
                         else
                             Connector.channel.energyProposal(respMessage);
@@ -156,7 +156,7 @@ namespace SmartGridManager
                 if (_proposalTimeout == 3)  //Go Outbound
                 {
                     messageSent = true;
-                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(Tools.getResolverName(), _name, _peerStatus, _enPeak - getEnergyLevel() + _enBought));
+                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, _enPeak - getEnergyLevel() + _enBought));
                     _proposalTimeout = 0;
                 }
             }
@@ -177,7 +177,7 @@ namespace SmartGridManager
                     _name,
                     _enPeak - getEnergyLevel() + _enBought);
             
-            if (m.header.Sender == Tools.getResolverName())
+            if (m.header.Sender == _resolverName)
                 Connector.channel.forwardLocalMessage(respMessage);
             else
                 Connector.channel.acceptProposal(respMessage);
@@ -210,7 +210,7 @@ namespace SmartGridManager
                     status,
                     message.energy);
 
-                if (message.header.Sender == Tools.getResolverName())
+                if (message.header.Sender == _resolverName)
                     Connector.channel.forwardLocalMessage(respMessage);
                 else
                     Connector.channel.endProposal(respMessage);
