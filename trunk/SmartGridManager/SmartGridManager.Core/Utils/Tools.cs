@@ -43,7 +43,7 @@ namespace SmartGridManager.Core.Utils
             List<RemoteHost> hosts = new List<RemoteHost>();
             
 
-            var remote = from r in XElement.Load("NetConfig.xml").Elements("Host")
+            var remote = from r in XElement.Load("NetConfig.xml").Element("RemoteHosts").Elements("Host")
                          select r;
 
             foreach (var host in remote)
