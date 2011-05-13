@@ -43,6 +43,11 @@ namespace WPF_StartPeer.ViewModel
 
         public void Start()
         {
+            if (!producer)
+            {
+                Energia = EnergyType.None;
+            }
+
             house = new Building(Nome, Energia, EnPeak, Price);
 
             if (producer)
