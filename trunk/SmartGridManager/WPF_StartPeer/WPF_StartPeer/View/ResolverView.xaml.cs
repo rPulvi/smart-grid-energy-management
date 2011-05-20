@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using WPF_Resolver.ViewModel;
 
 namespace WPF_Resolver
 {
@@ -19,9 +20,22 @@ namespace WPF_Resolver
     /// </summary>
     public partial class MainWindow : Window
     {
+        ResolverViewModel rvm;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            //Creo il ViewModel
+            this.rvm = new ResolverViewModel();
+
+            //associo Datasource
+            base.DataContext = rvm;
+        }
+
+        private void button1_TargetUpdated(object sender, DataTransferEventArgs e)
+        {
+
         }
     }
 }
