@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Params>
+  <Name>Resolver1</Name>
+  <RemoteHosts>
+    <Host>
+      <IP>localhost</IP>
+      <Port>8082</Port>
+    </Host>
+  </RemoteHosts>
+</Params>
