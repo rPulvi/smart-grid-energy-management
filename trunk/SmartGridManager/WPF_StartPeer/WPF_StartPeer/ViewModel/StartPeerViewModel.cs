@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using SmartGridManager.Core.Commons;
 using SmartGridManager;
-//using WPF_StartPeer.Command;
 using System.Threading;
 using System.IO;
 using System.Windows;
@@ -14,7 +13,7 @@ using WPF_StartPeer.Command;
 
 namespace WPF_StartPeer.ViewModel
 {
-    public class StartPeerViewModel : TraceListener, INotifyPropertyChanged
+    class StartPeerViewModel : TraceListener, INotifyPropertyChanged
     {
         private string nome;
         private EnergyType energia;
@@ -23,20 +22,19 @@ namespace WPF_StartPeer.ViewModel
         private bool producer;
         string output;
         
-
         private readonly StringBuilder builder;
 
         Building house;
-        List<Building> buildings = new List<Building>();
+        //List<Building> buildings = new List<Building>();
 
         public DelegateCommand StartPeer { get; set; }
         public DelegateCommand SetProducer { get; set; }
         public DelegateCommand Exit { get; set; }
 
-        public List<Building> getBuildings()
-        {
-            return this.buildings;
-        }
+        //public List<Building> getBuildings()
+        //{
+        //    return this.buildings;
+        //}
 
         public StartPeerViewModel()
         {
@@ -59,8 +57,8 @@ namespace WPF_StartPeer.ViewModel
 
             house = new Building(Nome, Energia, EnPeak, Price);
 
-            buildings.Add(house);
-            
+            //buildings.Add(house);
+
             if (producer)
             {
                 house.setEnergyLevel(90);
@@ -69,10 +67,6 @@ namespace WPF_StartPeer.ViewModel
             Trace.AutoFlush = true;
             Trace.Indent();
             Trace.WriteLine("Starting Peer {0} ...", Nome);
-
-            //tmpOutput = "Starting Peer ..." + Nome;
-            //File.WriteAllText("output.txt", tmpOutput);
-
         }
 
         public void Producer()
