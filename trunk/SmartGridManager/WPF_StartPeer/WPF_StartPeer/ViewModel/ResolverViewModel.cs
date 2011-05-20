@@ -6,20 +6,34 @@ using WPF_StartPeer.ViewModel;
 using WPF_StartPeer.Command;
 using System.Windows;
 using SmartGridManager;
+using System.ComponentModel;
 
 namespace WPF_Resolver.ViewModel
 {
     class ResolverViewModel : ViewModelBase
     {
-        Resolver.Resolver r;
+        List<Building> peerlist = new List<Building>();
 
+        Resolver.Resolver r;
+        StartPeerViewModel wpfpeer = new StartPeerViewModel();
+               
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
+
 
         public ResolverViewModel()
         {
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
+
+            //adesso si attive il timer
+            this.OnPropertyChanged(new PropertyChangedEventArgs("PeerList"));
+            //sistemare senza ViewModelBases
+        }
+
+        public List<Building> PeerList
+        {
+            get { return wpfpeer.getBuildings(); }
         }
 
         private bool canStart
