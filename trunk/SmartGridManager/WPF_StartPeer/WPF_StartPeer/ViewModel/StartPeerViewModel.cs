@@ -23,6 +23,7 @@ namespace WPF_StartPeer.ViewModel
         private bool producer;
         string output;
         
+
         private readonly StringBuilder builder;
 
         Building house;
