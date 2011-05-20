@@ -1,8 +1,0 @@
-﻿<Application x:Class="WPF_StartPeer.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             StartupUri="View/StartPeer.xaml">
-    <Application.Resources>
-         
-    </Application.Resources>
-</Application>
