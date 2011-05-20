@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using SmartGridManager;
 using WPF_Resolver.Command;
+using Resolver;
 
 namespace WPF_Resolver.ViewModel
 {
