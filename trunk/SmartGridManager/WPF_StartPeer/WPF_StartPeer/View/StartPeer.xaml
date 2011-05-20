@@ -65,6 +65,7 @@
     		<ColumnDefinition Width="222"/>
     	</Grid.ColumnDefinitions>
     	<Grid.Background>
+            
     		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
     			<GradientStop Color="#FFF2FCFF" Offset="0"/>
     			<GradientStop Color="#FF208EAC" Offset="1"/>
