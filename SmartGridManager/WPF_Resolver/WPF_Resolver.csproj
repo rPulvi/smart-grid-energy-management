@@ -160,7 +160,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="NetConfig.xml">
-      <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
