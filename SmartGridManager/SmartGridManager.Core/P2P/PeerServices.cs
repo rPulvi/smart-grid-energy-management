@@ -22,7 +22,7 @@ namespace SmartGridManager.Core.P2P
         void ManageRemoteMessages(PeerMessage message);
     }
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Reentrant)]
     //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class PeerServices : IPeerServices
     {
