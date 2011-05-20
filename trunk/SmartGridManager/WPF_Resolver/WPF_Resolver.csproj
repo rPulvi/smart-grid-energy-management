@@ -73,6 +73,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Util\GridViewSort.cs" />
+    <Compile Include="ViewModel\ResolverViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Page Include="View\ResolverView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -106,6 +108,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -119,6 +124,35 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img\world_map.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Resolver\Resolver.csproj">
+      <Project>{F203A836-3AF9-4783-8D8F-76CD15F67418}</Project>
+      <Name>Resolver</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartGridManager.Core\SmartGridManager.Core.csproj">
+      <Project>{D7427B1A-5109-49AE-8FAB-BDE83AA02384}</Project>
+      <Name>SmartGridManager.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmartGridManager\SmartGridManager.csproj">
+      <Project>{6A320C2B-88CA-4071-9AC2-1E02687E98CB}</Project>
+      <Name>SmartGridManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WPF_StartPeer\WPF_StartPeer\WPF_StartPeer.csproj">
+      <Project>{C2D8D7BD-09B7-476D-91F2-327D425237D0}</Project>
+      <Name>WPF_StartPeer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\down.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="img\up.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

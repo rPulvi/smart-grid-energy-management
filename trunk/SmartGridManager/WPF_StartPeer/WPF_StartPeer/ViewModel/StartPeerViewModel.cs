@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using SmartGridManager.Core.Commons;
 using SmartGridManager;
-using WPF_StartPeer.Command;
+//using WPF_StartPeer.Command;
 using System.Threading;
 using System.IO;
 using System.Windows;
 using System.Diagnostics;
 using System.ComponentModel;
+using WPF_StartPeer.Command;
 
 namespace WPF_StartPeer.ViewModel
 {
-    class StartPeerViewModel : TraceListener, INotifyPropertyChanged
+    public class StartPeerViewModel : TraceListener, INotifyPropertyChanged
     {
         private string nome;
         private EnergyType energia;
@@ -25,10 +26,16 @@ namespace WPF_StartPeer.ViewModel
         private readonly StringBuilder builder;
 
         Building house;
+        List<Building> buildings = new List<Building>();
 
         public DelegateCommand StartPeer { get; set; }
         public DelegateCommand SetProducer { get; set; }
         public DelegateCommand Exit { get; set; }
+
+        public List<Building> getBuildings()
+        {
+            return this.buildings;
+        }
 
         public StartPeerViewModel()
         {
@@ -38,11 +45,12 @@ namespace WPF_StartPeer.ViewModel
             this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canSetProducer);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
 
-            //TODO: leggere periodicamente il file output.txt
+            //TODO: leggere periodicamente
         }
 
         public void Start()
         {
+
             if (!producer)
             {
                 Energia = EnergyType.None;
@@ -50,6 +58,8 @@ namespace WPF_StartPeer.ViewModel
 
             house = new Building(Nome, Energia, EnPeak, Price);
 
+            buildings.Add(house);
+            
             if (producer)
             {
                 house.setEnergyLevel(90);
