@@ -95,7 +95,7 @@ namespace Resolver
 
                 try
                 {
-                    remoteHost.Open();
+                    remoteHost.Open();                    
 
                     Console.WriteLine("Remote service started.");
                     Console.WriteLine("Connecting to {0}", h[n].IP);
