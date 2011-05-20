@@ -300,21 +300,9 @@
     			</LinearGradientBrush>
     		</Menu.Background>
     		<MenuItem Header="File" Foreground="White">
-                <MenuItem Header="Start" Command="{Binding StartResolver}">
-                    <MenuItem.Background>
-                        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                            <GradientStop Color="#FF24396A" Offset="1"/>
-                            <GradientStop Color="#FF9EB6F1"/>
-                        </LinearGradientBrush>
-                    </MenuItem.Background>
+                <MenuItem Header="Start" Foreground="Blue" Command="{Binding StartResolver}">
                 </MenuItem>
-                <MenuItem Header="Exit" Command="{Binding Exit}">
-    				<MenuItem.Background>
-    					<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-    						<GradientStop Color="#FF24396A" Offset="1"/>
-    						<GradientStop Color="#FF9EB6F1"/>
-    					</LinearGradientBrush>
-    				</MenuItem.Background>
+                <MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}">
     			</MenuItem>
     		</MenuItem>
     	</Menu>
