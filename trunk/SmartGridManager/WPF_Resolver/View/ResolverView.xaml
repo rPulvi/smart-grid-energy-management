@@ -333,7 +333,7 @@
                         	</Grid.RowDefinitions>
                             
                             <!--.:LISTA:.-->
-                            <ListView Margin="8,8,350.663,35" Grid.RowSpan="2" Name="ListView" 
+                            <ListView Margin="8,8,350.663,5" Grid.RowSpan="2" Name="ListView" 
                               ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
                               util:GridViewSort.AutoSort="True"
 	                          util:GridViewSort.SortGlyphAscending="/img/up.png"
@@ -346,10 +346,7 @@
                                     </GridView>
                                 </ListView.View>
                             </ListView>
-                            
-                    <Button Content="Refresh" Height="23" HorizontalAlignment="Left" Margin="275,129,0,0" Name="button1" VerticalAlignment="Top" Width="75" Grid.Row="1" />        
-                            
-                        	<GroupBox Header="Charts A" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,8,8,8" Width="338.663"/>
+                    <GroupBox Header="Charts A" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,8,8,8" Width="338.663"/>
                         	<GroupBox Header="Charts B" HorizontalAlignment="Right" Margin="0,-8,8,4.339" Grid.Row="1" Width="338.663" d:LayoutOverrides="GridBox"/>
                     </Grid>
     		</TabItem>
