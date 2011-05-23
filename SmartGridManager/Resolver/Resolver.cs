@@ -12,13 +12,19 @@ using SmartGridManager.Core.Messaging;
 
 namespace Resolver
 {
+    public interface IRemote : IPeerServices, IClientChannel
+    { 
+    
+    }
+
     public class Resolver : Peer
     {
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
         
         private ServiceHost remoteHost;
-        private IPeerServices remoteChannel;        
+        //private IPeerServices remoteChannel;
+        private IRemote remoteChannel;
         
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;        
@@ -32,7 +38,10 @@ namespace Resolver
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
             this._name = Tools.getResolverName();
             this._peerStatus = PeerStatus.Resolver;
+        }
 
+        public void Connect()
+        {
             StartLocalResolver();
             StartRemoteConnection();                
             
@@ -47,7 +56,6 @@ namespace Resolver
             MsgHandler.OnSayHello += new sayHello(HelloResponse);
 
             #endregion
-
         }
 
         private void StartLocalResolver()
@@ -87,10 +95,11 @@ namespace Resolver
             {
                 //To connect to remote host
                 NetTcpBinding tcpBinding = new NetTcpBinding();
-                EndpointAddress remoteEndpoint = new EndpointAddress(h[n].netAddress); //TODO: fix here.
-                tcpBinding.Security.Mode = SecurityMode.None;
+                EndpointAddress remoteEndpoint = new EndpointAddress(h[n].netAddress);
+                tcpBinding.Security.Mode = SecurityMode.None;                
 
-                ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
+                //ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
+                ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
                 remoteChannel = cf.CreateChannel();
 
                 try
@@ -101,7 +110,7 @@ namespace Resolver
                     Console.WriteLine("Connecting to {0}", h[n].IP);
 
                     //Retrieve Remote IP Addresses
-                    foreach (var newRemote in remoteChannel.RetrieveContactList())
+                    foreach (var newRemote in remoteChannel.RetrieveContactList())                    
                     {
                         if (!h.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
                         {
