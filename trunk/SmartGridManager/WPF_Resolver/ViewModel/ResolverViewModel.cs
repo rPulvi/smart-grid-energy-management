@@ -14,9 +14,10 @@ namespace WPF_Resolver.ViewModel
     {
         private Thread thResolver;
         private Resolver.Resolver r;
+        private string _resolverName;
 
         List<Building> peerlist = new List<Building>();
-               
+
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
 
@@ -26,6 +27,7 @@ namespace WPF_Resolver.ViewModel
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
         }
+
 
         //quando un peer si avvia, chiama questo metodo per aggiungersi in lista, 
         //notificando il cambiamento nella ListView
@@ -47,12 +49,17 @@ namespace WPF_Resolver.ViewModel
 
         public void Start()
         {
-            r = new Resolver.Resolver();            
+            _resolverName = "";
+
+            r = new Resolver.Resolver();
+
+            _resolverName = r.name;
+            this.OnPropertyChanged("GetResolverName");
+
             thResolver = new Thread(r.Connect) { IsBackground = true };
             thResolver.Start();
             thResolver.Join();
 
-            
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
         }
@@ -65,6 +72,16 @@ namespace WPF_Resolver.ViewModel
         public void AppExit()
         {
             Application.Current.Shutdown();
+        }
+
+        public string GetResolverName
+        {
+            get { return _resolverName; }
+            set
+            {
+                _resolverName = value;
+                OnPropertyChanged("GetResolverName");
+            }
         }
     }
 }
