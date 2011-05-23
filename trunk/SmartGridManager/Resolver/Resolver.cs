@@ -25,7 +25,8 @@ namespace Resolver
         private ServiceHost remoteHost;
         //private IPeerServices remoteChannel;
         private IRemote remoteChannel;
-        
+
+        private List<SmartGridManager.Building> _buildings = new List<SmartGridManager.Building>();
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
@@ -55,6 +56,7 @@ namespace Resolver
             
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
             MsgHandler.OnSayHello += new sayHello(HelloResponse);
+            MsgHandler.OnPeerAppended += new appendPeer(AppendPeer);
 
             #endregion
         }
@@ -188,6 +190,16 @@ namespace Resolver
             }
 
             return name;
+        }
+
+        private void AppendPeer(Peer p)
+        {
+            _buildings.Add((SmartGridManager.Building)p);
+        }
+
+        public List<SmartGridManager.Building> GetConnectedPeers()
+        {
+            return _buildings;
         }
     }
 }

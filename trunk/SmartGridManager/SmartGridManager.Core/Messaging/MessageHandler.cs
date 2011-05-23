@@ -16,6 +16,7 @@ namespace SmartGridManager.Core.Messaging
     public delegate void heartBeat(HeartBeatMessage m);
     public delegate void remoteAdv(StatusNotifyMessage m);
     public delegate void forwardLocalMessage(PeerMessage m);
+    public delegate void appendPeer(Peer p);
     #endregion
 
     public class MessageHandler : MessagesImplementation
@@ -30,6 +31,7 @@ namespace SmartGridManager.Core.Messaging
         public event heartBeat OnHeartBeat;
         public event remoteAdv OnRemoteAdv;
         public event forwardLocalMessage OnForwardLocalMessage;
+        public event appendPeer OnPeerAppended;
         #endregion
 
         public override void sayHello(GridMessage message)
@@ -102,6 +104,14 @@ namespace SmartGridManager.Core.Messaging
                 OnForwardLocalMessage(message);
             
             base.forwardLocalMessage(message);
+        }
+
+        public override void appendPeer(Peer p)
+        {
+            if (OnPeerAppended != null)
+                OnPeerAppended(p);
+
+            base.appendPeer(p);
         }
     }
 }

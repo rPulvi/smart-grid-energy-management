@@ -12,12 +12,12 @@ namespace SmartGridManager.Core
 {
     public class Peer
     {
-        private String _ID;                
+        public String ID { get; private set; }
         private GridMessage _request;
 
         public Peer(String ID, PeerStatus status = PeerStatus.None)
         {
-            this._ID = ID;
+            this.ID = ID;
 
             if (!(status == PeerStatus.Resolver))
                 this.StartService();
@@ -30,8 +30,8 @@ namespace SmartGridManager.Core
                 //composing hello message
                 _request = new GridMessage()
                 {
-                    header = Tools.getHeader("@All", this._ID, true),
-                    descField = "PEER: " + this._ID + ".:: Hello ::."
+                    header = Tools.getHeader("@All", this.ID, true),
+                    descField = "PEER: " + this.ID + ".:: Hello ::."
                 };
                 
                 //send hello message

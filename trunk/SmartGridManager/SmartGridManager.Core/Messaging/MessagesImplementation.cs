@@ -94,5 +94,10 @@ namespace SmartGridManager.Core.Messaging
             Console.WriteLine("Peer {0} is forwarding a message..", message.header.Sender);
             Console.ResetColor();
         }
+
+        public virtual void appendPeer(Peer p)
+        {
+            Console.WriteLine("Peer {0} added",p.ID);
+        }
     }
 }
