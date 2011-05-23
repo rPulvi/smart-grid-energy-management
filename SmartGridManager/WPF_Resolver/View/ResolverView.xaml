@@ -348,7 +348,7 @@
                 <Grid Opacity="0.135" Background="#FFB9CBD0"/>
     		</TabItem>
     	</TabControl>
-    	<TextBlock Margin="107,48.169,81,8" TextWrapping="Wrap" FontSize="40" FontWeight="Bold" Foreground="#FF184466"><Run Language="it-it" Text="Resolver"/></TextBlock>
+        <TextBlock Margin="107,48.169,81,8" TextWrapping="Wrap" FontSize="40" FontWeight="Bold" Foreground="#FF184466"><Run Language="it-it" Text="{Binding GetResolverName}"/></TextBlock>
     	<Image Margin="8,24,0,1.025" Source="/WPF_Resolver;component/img/resolver.png" Stretch="Fill" HorizontalAlignment="Left" Width="93"/>
     	<ScrollViewer Margin="8,24,8,3.385" Grid.Column="1" BorderBrush="Blue">
     		<TextBlock TextWrapping="Wrap" Height="95.385" Width="283.064" d:IsLocked="True"><Run Language="it-it" Text="Info Resolver..."/></TextBlock>
