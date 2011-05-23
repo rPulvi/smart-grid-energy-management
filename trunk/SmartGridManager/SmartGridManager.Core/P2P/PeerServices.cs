@@ -13,7 +13,7 @@ namespace SmartGridManager.Core.P2P
 
     [ServiceContract]
     //[ServiceContract(CallbackContract = typeof(IPeerServices))]
-    public interface IPeerServices
+    public interface IPeerServices 
     {        
         [OperationContract]
         List<RemoteHost> RetrieveContactList();
@@ -22,7 +22,7 @@ namespace SmartGridManager.Core.P2P
         void ManageRemoteMessages(PeerMessage message);
     }
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class PeerServices : IPeerServices
     {
