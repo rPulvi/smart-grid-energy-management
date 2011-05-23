@@ -6,14 +6,16 @@ using System.Windows;
 using SmartGridManager;
 using WPF_Resolver.Command;
 using Resolver;
+using System.Threading;
 
 namespace WPF_Resolver.ViewModel
 {
     class ResolverViewModel : ViewModelBase
     {
-        List<Building> peerlist = new List<Building>();
+        private Thread thResolver;
+        private Resolver.Resolver r;
 
-        Resolver.Resolver r;
+        List<Building> peerlist = new List<Building>();
                
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
@@ -46,6 +48,10 @@ namespace WPF_Resolver.ViewModel
         public void Start()
         {
             r = new Resolver.Resolver();
+            
+            thResolver = new Thread(r.Connect) { IsBackground = true };
+            thResolver.Start();
+            thResolver.Join();
 
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
