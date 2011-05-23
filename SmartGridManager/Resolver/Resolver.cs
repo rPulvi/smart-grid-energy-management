@@ -27,16 +27,17 @@ namespace Resolver
         private IRemote remoteChannel;
         
         private MessageHandler MsgHandler;
-        private PeerServices remoteMessageHandler;        
+        private PeerServices remoteMessageHandler;
 
-        private string _name;
-        private PeerStatus _peerStatus;        
+        public string name { get; private set; }
+        
+        private PeerStatus _peerStatus;     
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private Dictionary<Guid, String> _messageList = new Dictionary<Guid, String>();
 
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
-            this._name = Tools.getResolverName();
+            this.name = Tools.getResolverName();
             this._peerStatus = PeerStatus.Resolver;
         }
 
@@ -148,7 +149,7 @@ namespace Resolver
         {
             _messageList.Add(message.header.MessageID, message.header.Sender);
             
-            message.header.Sender = _name;
+            message.header.Sender = name;
 
             if (message.header.Receiver == "Resolver")
                 message.header.Receiver = "@all";
