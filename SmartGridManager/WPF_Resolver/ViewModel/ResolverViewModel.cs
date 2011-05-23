@@ -47,12 +47,12 @@ namespace WPF_Resolver.ViewModel
 
         public void Start()
         {
-            r = new Resolver.Resolver();
-            
+            r = new Resolver.Resolver();            
             thResolver = new Thread(r.Connect) { IsBackground = true };
             thResolver.Start();
             thResolver.Join();
 
+            
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
         }
