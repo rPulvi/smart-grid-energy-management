@@ -72,6 +72,10 @@
       <Project>{D7427B1A-5109-49AE-8FAB-BDE83AA02384}</Project>
       <Name>SmartGridManager.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SmartGridManager\SmartGridManager.csproj">
+      <Project>{6A320C2B-88CA-4071-9AC2-1E02687E98CB}</Project>
+      <Name>SmartGridManager</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
