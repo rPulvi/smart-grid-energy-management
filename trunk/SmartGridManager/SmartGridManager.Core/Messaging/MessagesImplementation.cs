@@ -95,9 +95,9 @@ namespace SmartGridManager.Core.Messaging
             Console.ResetColor();
         }
 
-        public virtual void appendPeer(Peer p)
+        public virtual void appendPeer(AddPeerMessage message)
         {
-            Console.WriteLine("Peer {0} added",p.ID);
+            Console.WriteLine("Peer {0} added",message.p.ID);
         }
     }
 }
