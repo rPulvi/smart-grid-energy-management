@@ -56,7 +56,7 @@ namespace Resolver
             
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
             MsgHandler.OnSayHello += new sayHello(HelloResponse);
-            MsgHandler.OnPeerAppended += new appendPeer(AppendPeer);
+            MsgHandler.OnPeerAppended += new appendPeer(AppendPeer);            
 
             #endregion
         }
@@ -192,9 +192,9 @@ namespace Resolver
             return name;
         }
 
-        private void AppendPeer(Peer p)
+        private void AppendPeer(AddPeerMessage message)
         {
-            _buildings.Add((SmartGridManager.Building)p);
+            _buildings.Add((SmartGridManager.Building)message.p);
         }
 
         public List<SmartGridManager.Building> GetConnectedPeers()
