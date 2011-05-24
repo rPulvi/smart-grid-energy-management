@@ -37,8 +37,7 @@ namespace SmartGridManager.Core
                 //send hello message
                 Connector.channel.sayHello(_request);
 
-                Connector.channel.appendPeer(this);
-
+                Connector.channel.appendPeer(MessageFactory.createAddPeerMessage(this.ID, this));
                 //handling Online/Offline events
                 IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
 
