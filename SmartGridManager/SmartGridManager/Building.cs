@@ -6,12 +6,17 @@ using System.Threading;
 using SmartGridManager.Core;
 using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Messaging;
+using System.Runtime.Serialization;
 
 namespace SmartGridManager
 {
+    [DataContract]
     public class Building : Peer
     {
+        [DataMember]
         private PowerManager _pwManager;
+        
+        [DataMember]
         private Thread peerthread;
         
         // TODO: Generare i costruttori per solo producer e solo consumer.
