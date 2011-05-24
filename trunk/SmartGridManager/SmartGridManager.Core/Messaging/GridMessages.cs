@@ -77,4 +77,13 @@ namespace SmartGridManager.Core.Messaging
     {
         public HeartBeatMessage() { }
     }
+
+    [MessageContract]
+    public class AddPeerMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public Peer p { get; set; }
+        
+        public AddPeerMessage() { }
+    }
 }
