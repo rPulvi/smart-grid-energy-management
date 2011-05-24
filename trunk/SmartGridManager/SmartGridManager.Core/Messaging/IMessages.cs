@@ -37,6 +37,6 @@ namespace SmartGridManager.Core.Messaging
         void forwardLocalMessage(PeerMessage m);
 
         [OperationContract(IsOneWay = true)]
-        void appendPeer(Peer p);
+        void appendPeer(AddPeerMessage m);
     }
 }
