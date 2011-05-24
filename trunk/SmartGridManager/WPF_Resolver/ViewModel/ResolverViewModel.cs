@@ -15,6 +15,7 @@ namespace WPF_Resolver.ViewModel
         private Thread thResolver;
         private Resolver.Resolver r;
         private string _resolverName;
+        private string _resolverStatus;
 
         List<Building> peerlist = new List<Building>();
 
@@ -50,6 +51,7 @@ namespace WPF_Resolver.ViewModel
         public void Start()
         {
             _resolverName = "";
+            _resolverStatus = "";
 
             r = new Resolver.Resolver();
 
@@ -59,6 +61,9 @@ namespace WPF_Resolver.ViewModel
             thResolver = new Thread(r.Connect) { IsBackground = true };
             thResolver.Start();
             thResolver.Join();
+
+            _resolverStatus = "Online...";
+            this.OnPropertyChanged("GetResolverStatus");
 
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
@@ -81,6 +86,16 @@ namespace WPF_Resolver.ViewModel
             {
                 _resolverName = value;
                 OnPropertyChanged("GetResolverName");
+            }
+        }
+
+        public string GetResolverStatus
+        {
+            get { return _resolverStatus; }
+            set
+            {
+                _resolverStatus = value;
+                OnPropertyChanged("GetResolverStatus");
             }
         }
     }
