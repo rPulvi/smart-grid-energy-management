@@ -129,11 +129,6 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img\world_map.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Resolver\Resolver.csproj">
       <Project>{F203A836-3AF9-4783-8D8F-76CD15F67418}</Project>
       <Name>Resolver</Name>

@@ -8,6 +8,7 @@
         Title="Resolver" Height="541.5" Width="749"
         WindowState="Maximized">
     <Grid x:Name="grid">
+        
         <Grid.Resources>
 
             <local:ResolverViewModel x:Key="PeerList"/>
@@ -278,6 +279,7 @@
             </Style>
 
         </Grid.Resources>
+        
         <Grid.RowDefinitions>
     		<RowDefinition Height="127.385"/>
     		<RowDefinition/>
@@ -306,7 +308,7 @@
     			</MenuItem>
     		</MenuItem>
     	</Menu>
-    	<TabControl Margin="8,2.975,8,28.209" Grid.ColumnSpan="2" Grid.Row="1">
+    	<TabControl Margin="8,2.975,8,26" Grid.ColumnSpan="2" Grid.Row="1">
     		<TabItem Header="Local" FontWeight="Bold" Foreground="DarkBlue">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -354,10 +356,7 @@
     		<TextBlock TextWrapping="Wrap" Height="95.385" Width="283.064" d:IsLocked="True"><Run Language="it-it" Text="Info Resolver..."/></TextBlock>
     	</ScrollViewer>
         
-        <!--<StatusBar Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" d:LayoutOverrides="VerticalAlignment">
-            <TextBlock Text="Ciao"></TextBlock>
-        </StatusBar>-->
-        <StatusBar VerticalAlignment="Bottom" Grid.Row="1">
+        <StatusBar VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -373,17 +372,12 @@
                     </Grid>
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
+            <StatusBarItem Margin="23,0,0,0" HorizontalAlignment="Left" Width="56.517" d:LayoutOverrides="HorizontalAlignment">
+                <TextBlock Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="80.517"/>
+            </StatusBarItem>
+            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
             <StatusBarItem>
-                <TextBlock>Ready</TextBlock>
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="1">
-                <ProgressBar Value="30" Width="80" Height="18"/>
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="2">
-                <TextBlock>Set</TextBlock>
-            </StatusBarItem>
-            <StatusBarItem Grid.Column="3">
-                <TextBlock>Go!</TextBlock>
+                <Image Source="/img/resolver.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center"/>
             </StatusBarItem>
         </StatusBar>
 
