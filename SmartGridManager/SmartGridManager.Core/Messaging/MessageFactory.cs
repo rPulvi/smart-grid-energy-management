@@ -81,5 +81,16 @@ namespace SmartGridManager.Core.Messaging
 
             return message;
         }
+
+        public static AddPeerMessage createAddPeerMessage(string source, Peer peer)
+        {
+            AddPeerMessage message = new AddPeerMessage()
+            {
+                header = Tools.getHeader("@All", source),
+                p = peer
+            };
+
+            return message;
+        }
     }
 }
