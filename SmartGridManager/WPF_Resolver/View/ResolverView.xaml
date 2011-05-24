@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:WPF_Resolver.ViewModel"
         xmlns:util="clr-namespace:WPF_Resolver.Util"
         Title="Resolver" Height="541.5" Width="749"
-        WindowState="Maximized">
+        WindowState="Maximized" Icon="/Energy-icon.ico">
     <Grid x:Name="grid">
         
         <Grid.Resources>
