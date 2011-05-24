@@ -7,12 +7,17 @@ using System.ServiceModel.Description;
 using SmartGridManager.Core.Messaging;
 using SmartGridManager.Core.Utils;
 using SmartGridManager.Core.Commons;
+using System.Runtime.Serialization;
 
 namespace SmartGridManager.Core
 {
+    [DataContract]
     public class Peer
     {
+        [DataMember]
         public String ID { get; private set; }
+        
+        [DataMember]
         private GridMessage _request;
 
         public Peer(String ID, PeerStatus status = PeerStatus.None)
