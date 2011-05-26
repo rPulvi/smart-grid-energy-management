@@ -7,6 +7,7 @@ using SmartGridManager;
 using WPF_Resolver.Command;
 using Resolver;
 using System.Threading;
+using System.Net;
 
 namespace WPF_Resolver.ViewModel
 {
@@ -17,18 +18,21 @@ namespace WPF_Resolver.ViewModel
         private string _resolverName;
         private string _resolverStatus;
         Visibility vi = new Visibility();
+        private IPHostEntry _ipHost;
+        private string _resolverIP;
 
         List<Building> peerlist = new List<Building>();
 
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
 
-
         public ResolverViewModel()
         {
             vi = Visibility.Hidden;
+            _ipHost = Dns.GetHostByName(Dns.GetHostName());
+
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
-            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
+            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);         
         }
 
         public List<Building> PeerList
@@ -45,6 +49,7 @@ namespace WPF_Resolver.ViewModel
         { 
             _resolverName = "";
             _resolverStatus = "";
+            _resolverIP = _ipHost.AddressList[0].ToString();
 
             r = new Resolver.Resolver();
 
@@ -57,9 +62,11 @@ namespace WPF_Resolver.ViewModel
 
             _resolverStatus = "Online...";
             vi = Visibility.Visible;
+            
 
             this.OnPropertyChanged("GetResolverStatus");
             this.OnPropertyChanged("ImgVisibility");
+            this.OnPropertyChanged("GetResolverIP");
 
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
@@ -102,6 +109,16 @@ namespace WPF_Resolver.ViewModel
             {
                 vi = value;
                 OnPropertyChanged("ImgVisibility");
+            }
+        }
+
+        public string GetResolverIP
+        {
+            get { return _resolverIP; }
+            set
+            {
+                _resolverIP = value;
+                OnPropertyChanged("GetResolverIP");
             }
         }
     }
