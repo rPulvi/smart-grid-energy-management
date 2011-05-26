@@ -373,11 +373,11 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Margin="23,0,0,0" HorizontalAlignment="Left" Width="56.517" d:LayoutOverrides="HorizontalAlignment">
-                <TextBlock Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="80.517"/>
+                <TextBlock  Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="80.517"/>
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
             <StatusBarItem>
-                <Image Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center"/>
+                <Image Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center"/>
             </StatusBarItem>
         </StatusBar>
 

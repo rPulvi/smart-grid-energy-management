@@ -32,10 +32,5 @@ namespace WPF_Resolver
             //associo Datasource
             base.DataContext = rvm;
         }
-
-        private void button1_TargetUpdated(object sender, DataTransferEventArgs e)
-        {
-
-        }
     }
 }
