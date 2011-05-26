@@ -352,9 +352,6 @@
     	</TabControl>
         <TextBlock Margin="107,48.169,81,8" TextWrapping="Wrap" FontSize="40" FontWeight="Bold" Foreground="#FF184466"><Run Language="it-it" Text="{Binding GetResolverName}"/></TextBlock>
     	<Image Margin="8,24,0,1.025" Source="/WPF_Resolver;component/img/resolver.png" Stretch="Fill" HorizontalAlignment="Left" Width="93"/>
-    	<ScrollViewer Margin="8,24,8,3.385" Grid.Column="1" BorderBrush="Blue">
-            <TextBlock TextWrapping="Wrap" Height="95.385" Width="283.064" d:IsLocked="True"><Run Language="it-it" Text="{Binding GetResolverIP}"/></TextBlock>
-    	</ScrollViewer>
         
         <StatusBar VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2">
             <StatusBar.ItemsPanel>
@@ -379,6 +376,11 @@
             <StatusBarItem>
                 <Image Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center"/>
             </StatusBarItem>
+            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
+			<StatusBarItem Margin="88,0,0,0" HorizontalAlignment="Left" Width="121.517" d:LayoutOverrides="HorizontalAlignment">
+                <TextBlock Text="{Binding GetResolverIP}" FontWeight="Bold" Foreground="DarkBlue" Width="103.517"/>
+            </StatusBarItem>
+            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="185.833,2,0,2"/>
         </StatusBar>
 
     </Grid>
