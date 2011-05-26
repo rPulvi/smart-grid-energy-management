@@ -49,7 +49,7 @@ namespace WPF_Resolver.ViewModel
         { 
             _resolverName = "";
             _resolverStatus = "";
-            _resolverIP = _ipHost.AddressList[0].ToString();
+            _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
 
             r = new Resolver.Resolver();
 
