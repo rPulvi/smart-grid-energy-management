@@ -16,6 +16,7 @@ namespace WPF_Resolver.ViewModel
         private Resolver.Resolver r;
         private string _resolverName;
         private string _resolverStatus;
+        Visibility vi = new Visibility();
 
         List<Building> peerlist = new List<Building>();
 
@@ -25,17 +26,9 @@ namespace WPF_Resolver.ViewModel
 
         public ResolverViewModel()
         {
+            vi = Visibility.Hidden;
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
-        }
-
-
-        //quando un peer si avvia, chiama questo metodo per aggiungersi in lista, 
-        //notificando il cambiamento nella ListView
-        public void addPeer(Building peer)
-        {
-            peerlist.Add(peer);
-            this.OnPropertyChanged("PeerList");
         }
 
         public List<Building> PeerList
@@ -49,7 +42,7 @@ namespace WPF_Resolver.ViewModel
         }
 
         public void Start()
-        {
+        { 
             _resolverName = "";
             _resolverStatus = "";
 
@@ -63,7 +56,10 @@ namespace WPF_Resolver.ViewModel
             thResolver.Join();
 
             _resolverStatus = "Online...";
+            vi = Visibility.Visible;
+
             this.OnPropertyChanged("GetResolverStatus");
+            this.OnPropertyChanged("ImgVisibility");
 
             Console.WriteLine("Press [ENTER] to exit.");
             Console.ReadLine();
@@ -98,7 +94,15 @@ namespace WPF_Resolver.ViewModel
                 OnPropertyChanged("GetResolverStatus");
             }
         }
+
+        public Visibility ImgVisibility
+        {
+            get { return vi; }
+            set
+            {
+                vi = value;
+                OnPropertyChanged("ImgVisibility");
+            }
+        }
     }
 }
-
-//Un servizio WCF può essere hostato dentro un WPF ???
