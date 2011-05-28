@@ -13,6 +13,7 @@ namespace WPF_Resolver.ViewModel
 {
     class ResolverViewModel : ViewModelBase
     {
+        #region Attributes
         private Thread thResolver;
         private Resolver.Resolver r;
         private string _resolverName;
@@ -20,14 +21,30 @@ namespace WPF_Resolver.ViewModel
         Visibility vi = new Visibility();
         private IPHostEntry _ipHost;
         private string _resolverIP;
+        private string _ora;
+        private string _minuto;
+        private string _secondo;
 
+        int i = 0;
+
+        #endregion
+
+        #region Objects
         List<Building> peerlist = new List<Building>();
+        System.Windows.Threading.DispatcherTimer temporizzatore;
+        #endregion
 
+        #region DelegateCommands
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
+        #endregion
 
         public ResolverViewModel()
         {
+            temporizzatore = new System.Windows.Threading.DispatcherTimer();
+            temporizzatore.Interval = new TimeSpan(0, 0, 0, 1);
+            temporizzatore.Tick += new EventHandler(Temporizzatore_Tick);
+
             vi = Visibility.Hidden;
             _ipHost = Dns.GetHostByName(Dns.GetHostName());
 
@@ -59,6 +76,8 @@ namespace WPF_Resolver.ViewModel
             thResolver = new Thread(r.Connect) { IsBackground = true };
             thResolver.Start();
             thResolver.Join();
+
+            temporizzatore.Start();
 
             _resolverStatus = "Online...";
             vi = Visibility.Visible;
@@ -120,6 +139,53 @@ namespace WPF_Resolver.ViewModel
                 _resolverIP = value;
                 OnPropertyChanged("GetResolverIP");
             }
+        }
+
+        public string GetOra
+        {
+            get { return _ora; }
+            set
+            {
+                _ora = value;
+                OnPropertyChanged("GetOra");
+            }
+        }
+
+        public string GetMinuto
+        {
+            get { return _minuto; }
+            set
+            {
+                _minuto = value;
+                OnPropertyChanged("GetMinuto");
+            }
+        }
+
+        public string GetSecondo
+        {
+            get { return _secondo; }
+            set
+            {
+                _secondo = value;
+                OnPropertyChanged("GetSecondo");
+            }
+        }
+
+        public void Temporizzatore_Tick(object sender, EventArgs e)
+        {
+            i += 1;
+
+            int ora = i / 3600;
+            int minuto = i / 60;
+            int secondo = i % 60;
+
+            _ora = ora.ToString("00") + ":";
+            _minuto = minuto.ToString("00") + ":";
+            _secondo = secondo.ToString("00");
+
+            this.OnPropertyChanged("GetOra");
+            this.OnPropertyChanged("GetMinuto");
+            this.OnPropertyChanged("GetSecondo");
         }
     }
 }

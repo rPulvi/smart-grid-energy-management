@@ -285,8 +285,7 @@
     		<RowDefinition/>
     	</Grid.RowDefinitions>
     	<Grid.ColumnDefinitions>
-    		<ColumnDefinition Width="0.592*"/>
-    		<ColumnDefinition Width="0.408*"/>
+    		<ColumnDefinition/>
     	</Grid.ColumnDefinitions>
         <Grid.Background>
         	<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -294,7 +293,7 @@
         		<GradientStop Color="#FF184466" Offset="1"/>
         	</LinearGradientBrush>
         </Grid.Background>
-    	<Menu Height="20" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="auto">
+    	<Menu Height="20" VerticalAlignment="Top" Width="auto">
     		<Menu.Background>
     			<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
     				<GradientStop Color="#FF24396A" Offset="1"/>
@@ -308,7 +307,7 @@
     			</MenuItem>
     		</MenuItem>
     	</Menu>
-    	<TabControl Margin="8,2.975,8,26" Grid.ColumnSpan="2" Grid.Row="1">
+    	<TabControl Margin="8,2.975,8,26" Grid.Row="1">
     		<TabItem Header="Local" FontWeight="Bold" Foreground="DarkBlue">
                 <TabItem.Background>
                     <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -350,10 +349,10 @@
                 <Grid Opacity="0.135" Background="#FFB9CBD0"/>
     		</TabItem>
     	</TabControl>
-        <TextBlock Margin="107,48.169,81,8" TextWrapping="Wrap" FontSize="40" FontWeight="Bold" Foreground="#FF184466"><Run Language="it-it" Text="{Binding GetResolverName}"/></TextBlock>
+        <TextBlock Margin="107,48.169,0,8" TextWrapping="Wrap" FontSize="40" FontWeight="Bold" Foreground="#FF184466" HorizontalAlignment="Left" Width="245.203"><Run Language="it-it" Text="{Binding GetResolverName}"/></TextBlock>
     	<Image Margin="8,24,0,1.025" Source="/WPF_Resolver;component/img/resolver.png" Stretch="Fill" HorizontalAlignment="Left" Width="93"/>
         
-        <StatusBar VerticalAlignment="Bottom" Grid.Row="1" Grid.ColumnSpan="2">
+        <StatusBar VerticalAlignment="Bottom" Grid.Row="1">
             <StatusBar.ItemsPanel>
                 <ItemsPanelTemplate>
                     <Grid>
@@ -370,17 +369,23 @@
                 </ItemsPanelTemplate>
             </StatusBar.ItemsPanel>
             <StatusBarItem Margin="23,0,0,0" HorizontalAlignment="Left" Width="56.517" d:LayoutOverrides="HorizontalAlignment">
-                <TextBlock  Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="80.517"/>
+                <TextBlock  Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="52"/>
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
             <StatusBarItem>
                 <Image Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center"/>
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
-			<StatusBarItem Margin="88,0,0,0" HorizontalAlignment="Left" Width="121.517" d:LayoutOverrides="HorizontalAlignment">
-                <TextBlock Text="{Binding GetResolverIP}" FontWeight="Bold" Foreground="DarkBlue" Width="103.517"/>
+			<StatusBarItem Margin="94.5,0,370.9,0">
+                <TextBlock Name="Ora" Text="{Binding GetOra}" FontWeight="Bold" Foreground="DarkBlue" Width="19"/>
             </StatusBarItem>
-            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="185.833,2,0,2"/>
+			<StatusBarItem Margin="112,0,353.15,0">
+                <TextBlock Name="Minuto" Text="{Binding GetMinuto}" FontWeight="Bold" Foreground="DarkBlue" Width="18.723"/>
+            </StatusBarItem>
+			<StatusBarItem Margin="129.5,0,335.65,0">
+                <TextBlock Name="Secondo" Text="{Binding GetSecondo}" FontWeight="Bold" Foreground="DarkBlue" Width="18.723"/>
+            </StatusBarItem>
+            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="160.502,2,0,2"/>
         </StatusBar>
 
     </Grid>
