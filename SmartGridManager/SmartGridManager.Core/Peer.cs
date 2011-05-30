@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 
 namespace SmartGridManager.Core
 {
+    [Serializable]
     [DataContract]
     public class Peer
     {
@@ -20,14 +21,18 @@ namespace SmartGridManager.Core
         [DataMember]
         private GridMessage _request;
 
+        [DataMember]
+        private PeerStatus status;
+        
         public Peer(String ID, PeerStatus status = PeerStatus.None)
         {
             this.ID = ID;
+            this.status = status;
 
-            if (!(status == PeerStatus.Resolver))
+            if (!(status == PeerStatus.Resolver)) //Il Resolver lancerà il servizio manualmente
                 this.StartService();
         }
-
+        
         public void StartService()
         {
             if (Connector.Connect())
@@ -42,7 +47,9 @@ namespace SmartGridManager.Core
                 //send hello message
                 Connector.channel.sayHello(_request);
 
-                Connector.channel.appendPeer(MessageFactory.createAddPeerMessage(this.ID, this));
+                if (!(status == PeerStatus.Resolver))                    
+                    Connector.channel.appendPeer(MessageFactory.createAddPeerMessage(this.ID, this));
+
                 //handling Online/Offline events
                 IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
 
@@ -53,8 +60,9 @@ namespace SmartGridManager.Core
                 Console.WriteLine("Errore in connessione");
         }
 
+        
         public void StopService() { Connector.Disconnect(); }
-
+        
         // PeerNode event handlers
         static void OnOnline(object sender, EventArgs e)
         {
