@@ -35,7 +35,6 @@ namespace WPF_StartPeer.ViewModel
         public DelegateCommand Exit { get; set; }
         #endregion
 
-
         public StartPeerViewModel()
         {
             this.builder = new StringBuilder();
