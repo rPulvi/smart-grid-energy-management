@@ -11,12 +11,12 @@ namespace SmartGridManager.Core.Messaging
     public delegate void HelloResponse (HelloResponseMessage m);
     public delegate void statusNotify (StatusNotifyMessage m);
     public delegate void energyProposal (EnergyProposalMessage m);
-    public delegate void acceptProposal(EnergyAcceptMessage m);
-    public delegate void endProposal(EndProposalMessage m);
-    public delegate void heartBeat(HeartBeatMessage m);
-    public delegate void remoteAdv(StatusNotifyMessage m);
-    public delegate void forwardLocalMessage(PeerMessage m);
-    public delegate void appendPeer(AddPeerMessage m);
+    public delegate void acceptProposal (EnergyAcceptMessage m);
+    public delegate void endProposal (EndProposalMessage m);
+    public delegate void heartBeat (HeartBeatMessage m);
+    public delegate void remoteAdv (StatusNotifyMessage m);
+    public delegate void forwardLocalMessage (PeerMessage m);
+    public delegate void appendPeer (AddPeerMessage m);
     #endregion
 
     public class MessageHandler : MessagesImplementation
