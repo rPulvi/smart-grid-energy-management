@@ -17,13 +17,13 @@ namespace SmartGridManager.Core
     {
         [DataMember]
         public String ID { get; private set; }
-        
+
         [DataMember]
         private GridMessage _request;
 
         [DataMember]
         private PeerStatus status;
-        
+
         public Peer(String ID, PeerStatus status = PeerStatus.None)
         {
             this.ID = ID;
@@ -32,7 +32,7 @@ namespace SmartGridManager.Core
             if (!(status == PeerStatus.Resolver)) //Il Resolver lancerà il servizio manualmente
                 this.StartService();
         }
-        
+
         public void StartService()
         {
             if (Connector.Connect())
@@ -43,11 +43,11 @@ namespace SmartGridManager.Core
                     header = Tools.getHeader("@All", this.ID, true),
                     descField = "PEER: " + this.ID + ".:: Hello ::."
                 };
-                
+
                 //send hello message
                 Connector.channel.sayHello(_request);
 
-                if (!(status == PeerStatus.Resolver))                    
+                if (!(status == PeerStatus.Resolver))
                     Connector.channel.appendPeer(MessageFactory.createAddPeerMessage(this.ID, this));
 
                 //handling Online/Offline events
@@ -60,9 +60,9 @@ namespace SmartGridManager.Core
                 Console.WriteLine("Errore in connessione");
         }
 
-        
+
         public void StopService() { Connector.Disconnect(); }
-        
+
         // PeerNode event handlers
         static void OnOnline(object sender, EventArgs e)
         {
@@ -70,8 +70,8 @@ namespace SmartGridManager.Core
         }
 
         static void OnOffline(object sender, EventArgs e)
-        {                  
+        {
             Console.WriteLine("**  Offline");
-        }        
+        }
     }
 }
