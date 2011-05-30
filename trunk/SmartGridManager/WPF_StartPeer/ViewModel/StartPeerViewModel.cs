@@ -15,26 +15,25 @@ namespace WPF_StartPeer.ViewModel
 {
     class StartPeerViewModel : TraceListener, INotifyPropertyChanged
     {
+        #region Attributes
         private string nome;
         private EnergyType energia;
         private float enpeak;
         private float price;
         private bool producer;
         string output;
-        
+        #endregion
+
+        #region Objects
         private readonly StringBuilder builder;
-
         Building house;
-        //List<Building> buildings = new List<Building>();
+        #endregion
 
+        #region DelegateCommands
         public DelegateCommand StartPeer { get; set; }
         public DelegateCommand SetProducer { get; set; }
         public DelegateCommand Exit { get; set; }
-
-        //public List<Building> getBuildings()
-        //{
-        //    return this.buildings;
-        //}
+        #endregion
 
         public StartPeerViewModel()
         {
@@ -43,21 +42,17 @@ namespace WPF_StartPeer.ViewModel
             this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canSetProducer);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
-
-            //TODO: leggere periodicamente
         }
 
         public void Start()
         {
-
+            string nome;
             if (!producer)
             {
                 Energia = EnergyType.None;
             }
 
             house = new Building(Nome, Energia, EnPeak, Price);
-
-            //buildings.Add(house);
 
             if (producer)
             {
@@ -66,7 +61,8 @@ namespace WPF_StartPeer.ViewModel
 
             Trace.AutoFlush = true;
             Trace.Indent();
-            Trace.WriteLine("Starting Peer {0} ...", Nome);
+            nome = "Starting Peer " + Nome + "...";
+            Trace.WriteLine(nome);
         }
 
         public void Producer()
