@@ -44,6 +44,9 @@ namespace Resolver
 
         public void Connect()
         {
+            OperationContext.Current.Channel.Faulted +=new EventHandler(Channel_Faulted);
+
+
             StartLocalResolver();
             StartRemoteConnection();                
             
@@ -193,7 +196,7 @@ namespace Resolver
         }
 
         private void AppendPeer(AddPeerMessage message)
-        {
+        {            
             _buildings.Add((SmartGridManager.Building)message.p);
         }
 
@@ -201,5 +204,11 @@ namespace Resolver
         {
             return _buildings;
         }
+
+        private void Channel_Faulted(object sender, EventArgs e)
+        { 
+        
+        }
+
     }
 }
