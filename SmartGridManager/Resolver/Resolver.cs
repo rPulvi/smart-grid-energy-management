@@ -44,7 +44,7 @@ namespace Resolver
 
         public void Connect()
         {
-            OperationContext.Current.Channel.Faulted +=new EventHandler(Channel_Faulted);
+            //OperationContext.Current.Channel.Faulted +=new EventHandler(Channel_Faulted);
 
 
             StartLocalResolver();
