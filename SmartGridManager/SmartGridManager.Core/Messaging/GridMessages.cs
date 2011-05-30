@@ -81,7 +81,7 @@ namespace SmartGridManager.Core.Messaging
     [MessageContract]
     public class AddPeerMessage : PeerMessage
     {
-        [MessageBodyMember]
+        [MessageBodyMember]        
         public Peer p { get; set; }
         
         public AddPeerMessage() { }
