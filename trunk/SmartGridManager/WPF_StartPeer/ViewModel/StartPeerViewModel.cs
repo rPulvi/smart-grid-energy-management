@@ -20,7 +20,7 @@ namespace WPF_StartPeer.ViewModel
         private EnergyType energia;
         private float enpeak;
         private float price;
-        private bool producer;
+        private PeerStatus status;
         string output;
         #endregion
 
@@ -47,17 +47,13 @@ namespace WPF_StartPeer.ViewModel
         public void Start()
         {
             string nome;
-            if (!producer)
+            if (status == PeerStatus.Consumer)
             {
                 Energia = EnergyType.None;
             }
 
+            //TODO: aggiornare costruttore
             house = new Building(Nome, Energia, EnPeak, Price);
-
-            if (producer)
-            {
-                house.setEnergyLevel(90);
-            }
 
             Trace.AutoFlush = true;
             Trace.Indent();
@@ -67,7 +63,7 @@ namespace WPF_StartPeer.ViewModel
 
         public void Producer()
         {
-            producer = true;
+            status = PeerStatus.Producer;
         }
 
         private bool canStart
@@ -125,19 +121,12 @@ namespace WPF_StartPeer.ViewModel
             }
         }
 
-        public string LeggiFile
-        {
-            get
-            {
-                return output = File.ReadAllText("output.txt");
-            }
-        }
-
         public void AppExit()
         {
             Application.Current.Shutdown();
         }
 
+        #region Tracing Methods
         public string MyTrace
         {
             get { return this.builder.ToString(); }
@@ -154,6 +143,7 @@ namespace WPF_StartPeer.ViewModel
             this.builder.AppendLine(message);
             this.OnPropertyChanged(new PropertyChangedEventArgs("MyTrace"));
         }
+        #endregion
 
         public event PropertyChangedEventHandler PropertyChanged;
 
