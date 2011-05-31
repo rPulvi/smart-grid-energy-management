@@ -9,6 +9,7 @@ using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Utils;
 using SmartGridManager.Core.P2P;
 using SmartGridManager.Core.Messaging;
+using System.Timers;
 
 namespace Resolver
 {
@@ -37,6 +38,8 @@ namespace Resolver
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private Dictionary<Guid, String> _messageList = new Dictionary<Guid, String>();
 
+        private System.Timers.Timer _HBTimer;
+
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
             this.name = Tools.getResolverName();
             this._peerStatus = PeerStatus.Resolver;
@@ -49,13 +52,19 @@ namespace Resolver
             
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
 
+            _HBTimer = new System.Timers.Timer();
+            _HBTimer.Interval = 5000;
+            _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
+            _HBTimer.Enabled = false;
+
             #region Normal Peer Activity
 
             base.StartService();
             MsgHandler = Connector.messageHandler;
             
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
-            MsgHandler.OnSayHello += new sayHello(HelloResponse);            
+            MsgHandler.OnSayHello += new sayHello(HelloResponse);
+            MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
 
             #endregion
         }
@@ -182,6 +191,7 @@ namespace Resolver
             b.EnType = message.EnType;
             b.Name = message.header.Sender;
             b.status = message.Status;
+            b.TTE = 5;
             #endregion
 
             _buildings.Add(b);
@@ -212,5 +222,26 @@ namespace Resolver
         {
             return _buildings;
         }
+
+        private void CheckHeartBeat(HeartBeatMessage message)
+        {
+            foreach (var b in _buildings)
+            {
+                if (b.Name == message.header.Sender)
+                    b.TTE = 5;
+            }
+        }
+
+        private void _HBTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            foreach (var b in _buildings)
+            {
+                if (b.TTE > 0)
+                    b.TTE--;
+                else
+                    _buildings.Remove(b);
+            }
+        }
+
     }
 }
