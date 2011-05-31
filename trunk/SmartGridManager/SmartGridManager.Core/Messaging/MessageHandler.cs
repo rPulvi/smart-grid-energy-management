@@ -7,7 +7,7 @@ using SmartGridManager.Core.Commons;
 namespace SmartGridManager.Core.Messaging
 {
     #region delegates
-    public delegate void sayHello (String s);
+    public delegate void sayHello (HelloMessage m);
     public delegate void HelloResponse (HelloResponseMessage m);
     public delegate void statusNotify (StatusNotifyMessage m);
     public delegate void energyProposal (EnergyProposalMessage m);
@@ -15,8 +15,7 @@ namespace SmartGridManager.Core.Messaging
     public delegate void endProposal (EndProposalMessage m);
     public delegate void heartBeat (HeartBeatMessage m);
     public delegate void remoteAdv (StatusNotifyMessage m);
-    public delegate void forwardLocalMessage (PeerMessage m);
-    public delegate void appendPeer (AddPeerMessage m);
+    public delegate void forwardLocalMessage (PeerMessage m);   
     #endregion
 
     public class MessageHandler : MessagesImplementation
@@ -30,14 +29,13 @@ namespace SmartGridManager.Core.Messaging
         public event endProposal OnEndProposalArrived;
         public event heartBeat OnHeartBeat;
         public event remoteAdv OnRemoteAdv;
-        public event forwardLocalMessage OnForwardLocalMessage;
-        public event appendPeer OnPeerAppended;
+        public event forwardLocalMessage OnForwardLocalMessage;        
         #endregion
 
-        public override void sayHello(GridMessage message)
+        public override void sayHello(HelloMessage message)
         {
             if (OnSayHello != null)
-                OnSayHello("Il nodo " + message.header.Sender + " è entrato nella mesh");
+                OnSayHello(message);
 
             base.sayHello(message);
         }
@@ -104,14 +102,6 @@ namespace SmartGridManager.Core.Messaging
                 OnForwardLocalMessage(message);
             
             base.forwardLocalMessage(message);
-        }
-
-        public override void appendPeer(AddPeerMessage message)
-        {
-            if (OnPeerAppended != null)
-                OnPeerAppended(message);
-
-            base.appendPeer(message);
         }
     }
 }

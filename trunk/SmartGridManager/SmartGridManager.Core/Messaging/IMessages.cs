@@ -10,7 +10,7 @@ namespace SmartGridManager.Core.Messaging
     public interface IMessages
     {
         [OperationContract(IsOneWay = true)]
-        void sayHello(GridMessage m);
+        void sayHello(HelloMessage m);
 
         [OperationContract(IsOneWay = true)]
         void HelloResponse(HelloResponseMessage m);
@@ -36,7 +36,5 @@ namespace SmartGridManager.Core.Messaging
         [OperationContract(IsOneWay = true)]
         void forwardLocalMessage(PeerMessage m);
 
-        [OperationContract(IsOneWay = true)]
-        void appendPeer(AddPeerMessage m);
     }
 }

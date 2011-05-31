@@ -26,7 +26,7 @@ namespace Resolver
         //private IPeerServices remoteChannel;
         private IRemote remoteChannel;
 
-        private List<SmartGridManager.Building> _buildings = new List<SmartGridManager.Building>();
+        private List<TempBuilding> _buildings = new List<TempBuilding>();
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
@@ -43,10 +43,7 @@ namespace Resolver
         }
 
         public void Connect()
-        {
-            //OperationContext.Current.Channel.Faulted +=new EventHandler(Channel_Faulted);
-
-
+        {            
             StartLocalResolver();
             StartRemoteConnection();                
             
@@ -58,8 +55,7 @@ namespace Resolver
             MsgHandler = Connector.messageHandler;
             
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
-            MsgHandler.OnSayHello += new sayHello(HelloResponse);
-            MsgHandler.OnPeerAppended += new appendPeer(AppendPeer);            
+            MsgHandler.OnSayHello += new sayHello(HelloResponse);            
 
             #endregion
         }
@@ -171,8 +167,25 @@ namespace Resolver
                 Connector.channel.heartBeat((HeartBeatMessage)message);
         }
 
-        private void HelloResponse(String s)
+        private void HelloResponse(HelloMessage message)
         {
+            TempBuilding b = new TempBuilding();
+
+            #region setting fields
+            b.Address = message.Address;
+            b.Admin = message.Admin;
+            b.EnBought = 0;
+            b.EnPeak = message.EnPeak;
+            b.EnPrice = message.EnPrice;
+            b.EnProduced = message.EnProduced;
+            b.EnSold = 0;
+            b.EnType = message.EnType;
+            b.Name = message.header.Sender;
+            b.status = message.Status;
+            #endregion
+
+            _buildings.Add(b);
+
             MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName());
         }
 
@@ -195,20 +208,9 @@ namespace Resolver
             return name;
         }
 
-        private void AppendPeer(AddPeerMessage message)
-        {            
-            _buildings.Add((SmartGridManager.Building)message.p);
-        }
-
-        public List<SmartGridManager.Building> GetConnectedPeers()
+        public List<TempBuilding> GetConnectedPeers()
         {
             return _buildings;
         }
-
-        private void Channel_Faulted(object sender, EventArgs e)
-        { 
-        
-        }
-
     }
 }

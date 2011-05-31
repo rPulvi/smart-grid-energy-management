@@ -10,18 +10,11 @@ using SmartGridManager.Core.Commons;
 using System.Runtime.Serialization;
 
 namespace SmartGridManager.Core
-{
-    [Serializable]
-    [DataContract]
+{       
     public class Peer
-    {
-        [DataMember]
+    {     
         public String ID { get; private set; }
 
-        [DataMember]
-        private GridMessage _request;
-
-        [DataMember]
         private PeerStatus status;
 
         public Peer(String ID, PeerStatus status = PeerStatus.None)
@@ -36,20 +29,7 @@ namespace SmartGridManager.Core
         public void StartService()
         {
             if (Connector.Connect())
-            {
-                //composing hello message
-                _request = new GridMessage()
-                {
-                    header = Tools.getHeader("@All", this.ID, true),
-                    descField = "PEER: " + this.ID + ".:: Hello ::."
-                };
-
-                //send hello message
-                Connector.channel.sayHello(_request);
-
-                if (!(status == PeerStatus.Resolver))
-                    Connector.channel.appendPeer(MessageFactory.createAddPeerMessage(this.ID, this));
-
+            {                                
                 //handling Online/Offline events
                 IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
 
