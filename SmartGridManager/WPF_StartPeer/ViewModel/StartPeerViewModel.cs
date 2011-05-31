@@ -58,7 +58,6 @@ namespace WPF_StartPeer.ViewModel
                 EnType = EnergyType.None;
             }
 
-            //TODO: aggiornare costruttore
             house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
 
             Trace.AutoFlush = true;
