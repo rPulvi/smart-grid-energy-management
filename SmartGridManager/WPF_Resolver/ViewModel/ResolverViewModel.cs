@@ -8,39 +8,45 @@ using WPF_Resolver.Command;
 using Resolver;
 using System.Threading;
 using System.Net;
+using SmartGridManager.Core.Commons;
+using System.Collections.ObjectModel;
 
 namespace WPF_Resolver.ViewModel
 {
     class ResolverViewModel : ViewModelBase
     {
         #region Attributes
-        private Thread thResolver;
-        private Resolver.Resolver r;
         private string _resolverName;
         private string _resolverStatus;
-        Visibility vi = new Visibility();
-        private IPHostEntry _ipHost;
         private string _resolverIP;
         private string _ora;
         private string _minuto;
         private string _secondo;
+        private string _peerName;
 
         int i = 0;
 
         #endregion
 
         #region Objects
-        List<Building> peerlist = new List<Building>();
+        List<TempBuilding> peerList = new List<TempBuilding>();
         System.Windows.Threading.DispatcherTimer temporizzatore;
+        private Thread thResolver;
+        private Resolver.Resolver r;
+        Visibility vi = new Visibility();
+        private IPHostEntry _ipHost;
         #endregion
 
         #region DelegateCommands
+        public DelegateCommand PopolaLista { get; set; }
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
         #endregion
 
         public ResolverViewModel()
         {
+            r = new Resolver.Resolver();
+
             temporizzatore = new System.Windows.Threading.DispatcherTimer();
             temporizzatore.Interval = new TimeSpan(0, 0, 0, 1);
             temporizzatore.Tick += new EventHandler(Temporizzatore_Tick);
@@ -49,12 +55,29 @@ namespace WPF_Resolver.ViewModel
             _ipHost = Dns.GetHostByName(Dns.GetHostName());
 
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
-            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);         
+            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
+            this.PopolaLista = new DelegateCommand((o) => this.Popola(), o => this.canPopola);
         }
 
-        public List<Building> PeerList
+        public List<TempBuilding> PeerList
         {
-            get { return peerlist; }
+            get { return peerList; }
+            //set
+            //{
+            //    peerList = value;
+            //    OnPropertyChanged("PeerList");
+            //}
+        }
+
+        private bool canPopola
+        {
+            get { return true; }
+        }
+
+        public void Popola()
+        {
+            peerList = r.GetConnectedPeers();
+            this.OnPropertyChanged("PeerList");
         }
 
         private bool canStart
@@ -67,8 +90,6 @@ namespace WPF_Resolver.ViewModel
             _resolverName = "";
             _resolverStatus = "";
             _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
-
-            r = new Resolver.Resolver();
 
             _resolverName = r.name;
             this.OnPropertyChanged("GetResolverName");
@@ -186,6 +207,9 @@ namespace WPF_Resolver.ViewModel
             this.OnPropertyChanged("GetOra");
             this.OnPropertyChanged("GetMinuto");
             this.OnPropertyChanged("GetSecondo");
+
+            peerList = r.GetConnectedPeers();
+            //this.OnPropertyChanged("PeerList");
         }
     }
 }

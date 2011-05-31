@@ -21,7 +21,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Image Source="" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding Nome}" VerticalAlignment="Center" Grid.Column="1" />
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -322,14 +322,15 @@
                         	</Grid.RowDefinitions>
                             
                             <!--.:LISTA:.-->
-                            <ListView Margin="8,8,350.663,5" Grid.RowSpan="2" Name="ListView" 
+                            <ListView Margin="8,8,350.663,5" Grid.RowSpan="2" Name="ListView"
+                              ItemsSource="{Binding PeerList}"
                               ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
                               util:GridViewSort.AutoSort="True"
 	                          util:GridViewSort.SortGlyphAscending="/img/up.png"
                               util:GridViewSort.SortGlyphDescending="/img/down.png">
                                 <ListView.View>
                                     <GridView>
-                                        <GridViewColumn CellTemplate="{StaticResource NomeItemTemplate}" Header="Nome" util:GridViewSort.PropertyName="Nome"/>
+                                        <GridViewColumn CellTemplate="{StaticResource NomeItemTemplate}" Header="Nome" util:GridViewSort.PropertyName="Name"/>
                                         <GridViewColumn CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energia" util:GridViewSort.PropertyName="Energia"/>
                                         <GridViewColumn CellTemplate="{StaticResource PeakItemTemplate}" Header="Picco" util:GridViewSort.PropertyName="EnPeak"/>
                                     </GridView>
@@ -387,6 +388,6 @@
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="160.502,2,0,2"/>
         </StatusBar>
-
+        <Button Command="{Binding PopolaLista}" Content="Button" Height="23" HorizontalAlignment="Left" Margin="546,76,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
     </Grid>
 </Window>
