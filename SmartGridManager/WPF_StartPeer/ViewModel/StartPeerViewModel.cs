@@ -16,12 +16,18 @@ namespace WPF_StartPeer.ViewModel
     class StartPeerViewModel : TraceListener, INotifyPropertyChanged
     {
         #region Attributes
-        private string nome;
-        private EnergyType energia;
-        private float enpeak;
-        private float price;
-        private PeerStatus status;
-        string output;
+        
+        private string _name;
+        private string _address;
+        private string _admin;
+
+        private float _enPeak;
+        private float _price;
+        private float _enProduced;
+
+        private EnergyType _enType;
+        private PeerStatus _status;
+
         #endregion
 
         #region Objects
@@ -47,13 +53,13 @@ namespace WPF_StartPeer.ViewModel
         public void Start()
         {
             string nome;
-            if (status == PeerStatus.Consumer)
+            if (_status == PeerStatus.Consumer)
             {
-                Energia = EnergyType.None;
+                EnType = EnergyType.None;
             }
 
             //TODO: aggiornare costruttore
-            house = new Building(Nome, Energia, EnPeak, Price);
+            house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
 
             Trace.AutoFlush = true;
             Trace.Indent();
@@ -63,7 +69,7 @@ namespace WPF_StartPeer.ViewModel
 
         public void Producer()
         {
-            status = PeerStatus.Producer;
+            _status = PeerStatus.Producer;
         }
 
         private bool canStart
@@ -83,41 +89,71 @@ namespace WPF_StartPeer.ViewModel
 
         public string Nome
         {
-            get { return nome; }
+            get { return _name; }
             set
             {
-                nome = value;
+                _name = value;
                 this.OnPropertyChanged(new PropertyChangedEventArgs("Nome"));
             }
         }
-
-        public EnergyType Energia
+         
+        public float EnProduced
         {
-            get { return energia; }
+            get { return _enProduced; }
+            set 
+            {
+                _enProduced = value;
+                this.OnPropertyChanged(new PropertyChangedEventArgs("EnProduced"));
+            }
+        }
+
+        public EnergyType EnType
+        {
+            get { return _enType; }
             set
             {
-                energia = value;
+                _enType = value;
                 this.OnPropertyChanged(new PropertyChangedEventArgs("Energia"));
             }
         }
 
         public float EnPeak
         {
-            get { return enpeak; }
+            get { return _enPeak; }
             set
             {
-                enpeak = value;
+                _enPeak = value;
                 this.OnPropertyChanged(new PropertyChangedEventArgs("EnPeak"));
             }
         }
 
         public float Price
         {
-            get { return price; }
+            get { return _price; }
             set
             {
-                price = value;
+                _price = value;
                 this.OnPropertyChanged(new PropertyChangedEventArgs("Price"));
+            }
+        }
+
+        public string Address
+        {
+            get { return _address; }
+            set
+            {
+                _address = value;
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Address"));
+            }
+        }
+        
+        public string Admin
+        {
+            get { return _admin; }
+            set
+            {
+                _admin = value;
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Admin"));
             }
         }
 

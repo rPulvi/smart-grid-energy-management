@@ -10,6 +10,24 @@ namespace SmartGridManager.Core.Messaging
 {
     public static class MessageFactory
     {
+        public static HelloMessage CreateHelloMessage(string dest, string source, PeerStatus status, EnergyType enType, 
+            float enProduced, float enPeak, float enPrice, string address, string admin)
+        {
+            HelloMessage message = new HelloMessage()
+            {
+                header = Tools.getHeader(dest, source),
+                Status = status,
+                EnType = enType,
+                EnProduced = enProduced,
+                EnPeak = enPeak,
+                EnPrice = enPrice,
+                Address = address,
+                Admin = admin
+            };
+
+            return message;
+        }
+
         public static HelloResponseMessage createHelloResponseMessage(string dest, string source, string resName)
         {
             HelloResponseMessage message = new HelloResponseMessage()
@@ -77,17 +95,6 @@ namespace SmartGridManager.Core.Messaging
             HeartBeatMessage message = new HeartBeatMessage()
             {
                 header = Tools.getHeader("@all", source)
-            };
-
-            return message;
-        }
-
-        public static AddPeerMessage createAddPeerMessage(string source, Peer peer)
-        {
-            AddPeerMessage message = new AddPeerMessage()
-            {
-                header = Tools.getHeader("@All", source),
-                p = peer
             };
 
             return message;

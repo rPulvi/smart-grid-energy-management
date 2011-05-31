@@ -16,26 +16,10 @@ namespace SmartGridManager
         #endregion
 
         #region Constructor
-        public EnergyGenerator(EnergyType Type)
+        public EnergyGenerator(EnergyType Type, float enProduced)
         {
-            switch (Type)
-            {
-                case EnergyType.Eolic:
-                    EnergyLevel = 123;
-                    break;
-
-                case EnergyType.Hydric:
-                    EnergyLevel = 50;
-                    break;
-
-                case EnergyType.Solar:
-                    EnergyLevel = 789;
-                    break;
-
-                case EnergyType.Thermic:
-                    EnergyLevel = 101;
-                    break;
-            }            
+            this.Type = Type;
+            EnergyLevel = enProduced;
         }
         #endregion
 

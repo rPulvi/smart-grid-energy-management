@@ -10,6 +10,32 @@ using SmartGridManager.Core.Commons;
 namespace SmartGridManager.Core.Messaging
 {
     [MessageContract]
+    public class HelloMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public PeerStatus Status { get; set; }
+
+        [MessageBodyMember]
+        public EnergyType EnType { get; set; }
+
+        [MessageBodyMember]
+        public float EnProduced { get; set; }
+
+        [MessageBodyMember]
+        public float EnPeak { get; set; }
+
+        [MessageBodyMember]
+        public float EnPrice { get; set; }
+
+        [MessageBodyMember]
+        public string Address { get; set; }
+
+        [MessageBodyMember]
+        public string Admin { get; set; }
+    }
+
+
+    [MessageContract]
     public class HelloResponseMessage : PeerMessage
     {
         [MessageBodyMember]
@@ -76,14 +102,5 @@ namespace SmartGridManager.Core.Messaging
     public class HeartBeatMessage : PeerMessage
     {
         public HeartBeatMessage() { }
-    }
-
-    [MessageContract]
-    public class AddPeerMessage : PeerMessage
-    {
-        [MessageBodyMember]        
-        public Peer p { get; set; }
-        
-        public AddPeerMessage() { }
     }
 }

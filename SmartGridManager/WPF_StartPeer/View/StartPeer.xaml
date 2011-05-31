@@ -84,7 +84,7 @@
             <TextBox Text="{Binding Path=Nome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtNome" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width" BorderThickness="1,1,1,0"/>
             <CheckBox Command="{Binding SetProducer}" x:Name="chkProducer" Content="Producer" Height="23" Margin="8,0,0,4" Width="93" HorizontalAlignment="Left"/>
 
-            <ComboBox IsEnabled="{Binding ElementName=chkProducer, Path=IsChecked}" SelectedValue="{Binding Path=Energia, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" x:Name="cmbEnergyType" Height="24" Margin="8,0,0,4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="93">
+            <ComboBox IsEnabled="{Binding ElementName=chkProducer, Path=IsChecked}" SelectedValue="{Binding Path=EnType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" x:Name="cmbEnergyType" Height="24" Margin="8,0,0,4" HorizontalAlignment="Left" VerticalAlignment="Center" Width="93">
                 <ComboBoxItem Content="Solare" Tag="1"/>
                 <ComboBoxItem Content="Eolica" Tag="2"/>
                 <ComboBoxItem Content="Idrica" Tag="3"/>
@@ -93,10 +93,10 @@
             
             <TextBox Text="{Binding Path=EnPeak, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPicco" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
             <TextBox Text="{Binding Path=Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPrezzo" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
-    		<TextBox x:Name="txtEnergiaGeneratore" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
+            <TextBox Text="{Binding Path=EnProduced, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtEnergiaGeneratore" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
     	</StackPanel>
-    	<TextBox x:Name="txtIndirizzo" Grid.Column="1" Margin="8,0,8,96.994" TextWrapping="Wrap" Grid.Row="1" Height="22.744" VerticalAlignment="Bottom"/>
-    	<TextBox x:Name="txtAdministrator" Grid.Column="1" Height="23" Margin="8,0,8,69.994" TextWrapping="Wrap" VerticalAlignment="Bottom" Grid.Row="1"/>
+        <TextBox Text="{Binding Path=Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtIndirizzo" Grid.Column="1" Margin="8,0,8,96.994" TextWrapping="Wrap" Grid.Row="1" Height="22.744" VerticalAlignment="Bottom"/>
+        <TextBox Text="{Binding Path=Admin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtAdministrator" Grid.Column="1" Height="23" Margin="8,0,8,69.994" TextWrapping="Wrap" VerticalAlignment="Bottom" Grid.Row="1"/>
     	<Menu Height="20" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="Auto" Margin="0,0,-368,0">
     		<Menu.Background>
     			<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">

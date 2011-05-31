@@ -38,7 +38,7 @@ namespace SmartGridManager
 
         #region Methods
 
-        public PowerManager(String bName, EnergyGenerator generator, float energyPeak, float price)
+        public PowerManager(String bName, PeerStatus status,  EnergyGenerator generator, float energyPeak, float price)
         {
             this.MsgHandler = Connector.messageHandler;
             
@@ -52,7 +52,8 @@ namespace SmartGridManager
             _generator = generator;
             _enPeak = energyPeak;
             _name = bName;
-            
+            _peerStatus = status;
+           
             _loop = true;
             _price = price;
             _enBought = 0f;
@@ -77,9 +78,6 @@ namespace SmartGridManager
                 //Check the energy level
                 if ((getEnergyLevel() + _enBought) < _enPeak)
                 {
-                    //became Consumer
-                    _peerStatus = PeerStatus.Consumer;
-
                     if (messageSent == false)
                     {
                         float enReq = _enPeak - getEnergyLevel() + _enBought;
@@ -93,8 +91,7 @@ namespace SmartGridManager
                     }
                 }
                 else
-                {                    
-                    _peerStatus = PeerStatus.Producer;
+                {
                     messageSent = false;
                 }
             }

@@ -10,16 +10,13 @@ using System.Runtime.Serialization;
 
 namespace SmartGridManager
 {
-    [DataContract]
     public class Building : Peer
     {
-        [DataMember]
         private PowerManager _pwManager;
-        
-        [DataMember]
         private Thread peerthread;
-        
-        // TODO: Generare i costruttori per solo producer e solo consumer.
+
+        private string _address;
+        private string _adminName;
 
         /// <summary>
         /// Default Constructor
@@ -28,27 +25,23 @@ namespace SmartGridManager
         /// <param name="energy">The type of energy produced</param>
         /// <param name="energyPeak">The max energy consumed by a builiding</param>
         /// <param name="price">The energy selling price</param>
-        public Building(String Name, EnergyType energy, float energyPeak, float price)
+        public Building(String Name, PeerStatus status, EnergyType enType, float enProduced, float energyPeak, float price, string address, string adminName)
             : base(Name)
-        {            
-            _pwManager = new PowerManager(Name, new EnergyGenerator(energy), energyPeak, price);
+        {
+            _address = address;
+            _adminName = adminName;
+            _pwManager = new PowerManager(Name, status, new EnergyGenerator(enType, enProduced), energyPeak, price);
             peerthread = new Thread(_pwManager.Start) { IsBackground = true };
             peerthread.Start();
-        }
 
-        public float getEnergyLevel()
-        {
-            return _pwManager.getEnergyLevel();            
+            //send hello message
+            Connector.channel.sayHello(MessageFactory.CreateHelloMessage("@All",Name,status,enType,enProduced,
+                energyPeak,price,address,adminName));
         }
 
         public void StopEnergyProduction()
         {
             _pwManager.ShutDown();
-        }
-
-        public void setEnergyLevel(float value)
-        {
-            _pwManager.setEnergyLevel(value);
         }
     }
 }
