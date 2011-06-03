@@ -29,7 +29,7 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
-        List<TempBuilding> peerList = new List<TempBuilding>();
+        ObservableCollection<TempBuilding> peerList = new ObservableCollection<TempBuilding>();
         System.Windows.Threading.DispatcherTimer temporizzatore;
         private Thread thResolver;
         private Resolver.Resolver r;
@@ -41,6 +41,7 @@ namespace WPF_Resolver.ViewModel
         public DelegateCommand PopolaLista { get; set; }
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
+        public DelegateCommand Clear { get; set; }
         #endregion
 
         public ResolverViewModel()
@@ -57,16 +58,26 @@ namespace WPF_Resolver.ViewModel
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
             this.PopolaLista = new DelegateCommand((o) => this.Popola(), o => this.canPopola);
+            this.Clear = new DelegateCommand((o) => this.Cancella(), o => this.canCancella);
         }
 
-        public List<TempBuilding> PeerList
+        public bool canCancella
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public void Cancella()
+        {
+            peerList.Remove(peerList[0]);
+            OnPropertyChanged("PeerList");
+        }
+
+        public ObservableCollection<TempBuilding> PeerList
         {
             get { return peerList; }
-            //set
-            //{
-            //    peerList = value;
-            //    OnPropertyChanged("PeerList");
-            //}
         }
 
         private bool canPopola
@@ -76,8 +87,9 @@ namespace WPF_Resolver.ViewModel
 
         public void Popola()
         {
+            peerList.Clear();
             peerList = r.GetConnectedPeers();
-            this.OnPropertyChanged("PeerList");
+            OnPropertyChanged("PeerList");
         }
 
         private bool canStart
@@ -207,9 +219,6 @@ namespace WPF_Resolver.ViewModel
             this.OnPropertyChanged("GetOra");
             this.OnPropertyChanged("GetMinuto");
             this.OnPropertyChanged("GetSecondo");
-
-            peerList = r.GetConnectedPeers();
-            //this.OnPropertyChanged("PeerList");
         }
     }
 }
