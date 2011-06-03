@@ -23,6 +23,7 @@ namespace WPF_Resolver.ViewModel
         private string _minuto;
         private string _secondo;
         private string _peerName;
+        private EnergyType _energyType;
 
         int i = 0;
 
@@ -38,10 +39,8 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region DelegateCommands
-        public DelegateCommand PopolaLista { get; set; }
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
-        public DelegateCommand Clear { get; set; }
         #endregion
 
         public ResolverViewModel()
@@ -58,38 +57,11 @@ namespace WPF_Resolver.ViewModel
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
             this.PopolaLista = new DelegateCommand((o) => this.Popola(), o => this.canPopola);
-            this.Clear = new DelegateCommand((o) => this.Cancella(), o => this.canCancella);
-        }
-
-        public bool canCancella
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        public void Cancella()
-        {
-            peerList.Remove(peerList[0]);
-            OnPropertyChanged("PeerList");
         }
 
         public ObservableCollection<TempBuilding> PeerList
         {
             get { return peerList; }
-        }
-
-        private bool canPopola
-        {
-            get { return true; }
-        }
-
-        public void Popola()
-        {
-            peerList.Clear();
-            peerList = r.GetConnectedPeers();
-            OnPropertyChanged("PeerList");
         }
 
         private bool canStart
@@ -216,9 +188,12 @@ namespace WPF_Resolver.ViewModel
             _minuto = minuto.ToString("00") + ":";
             _secondo = secondo.ToString("00");
 
-            this.OnPropertyChanged("GetOra");
-            this.OnPropertyChanged("GetMinuto");
-            this.OnPropertyChanged("GetSecondo");
+            OnPropertyChanged("GetOra");
+            OnPropertyChanged("GetMinuto");
+            OnPropertyChanged("GetSecondo");
+
+            peerList = r.GetConnectedPeers();
+            OnPropertyChanged("PeerList");
         }
     }
 }
