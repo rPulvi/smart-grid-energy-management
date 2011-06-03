@@ -11,7 +11,7 @@
         
         <Grid.Resources>
 
-            <local:ResolverViewModel x:Key="PeerList"/>
+            <!--<local:ResolverViewModel x:Key="PeerList"/>-->
 
             <DataTemplate x:Key="NomeItemTemplate">
                 <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
@@ -388,6 +388,7 @@
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="160.502,2,0,2"/>
         </StatusBar>
-        <Button Command="{Binding PopolaLista}" Content="Button" Height="23" HorizontalAlignment="Left" Margin="546,76,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
+        <Button Command="{Binding PopolaLista}" Content="Refresh" Height="23" HorizontalAlignment="Left" Margin="546,69,0,0" Name="button1" VerticalAlignment="Top" Width="75" />
+        <Button Command="{Binding Clear}" Content="Clear" Height="23" HorizontalAlignment="Left" Margin="546,96,0,0" Name="button2" VerticalAlignment="Top" Width="75" />
     </Grid>
 </Window>
