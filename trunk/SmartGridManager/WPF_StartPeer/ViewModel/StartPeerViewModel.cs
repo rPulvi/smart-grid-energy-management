@@ -41,8 +41,10 @@ namespace WPF_StartPeer.ViewModel
         public DelegateCommand Exit { get; set; }
         #endregion
 
+
         public StartPeerViewModel()
         {
+            _status = PeerStatus.Consumer;
             this.builder = new StringBuilder();
 
             this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canStart);
