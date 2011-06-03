@@ -10,6 +10,7 @@ using SmartGridManager.Core.Utils;
 using SmartGridManager.Core.P2P;
 using SmartGridManager.Core.Messaging;
 using System.Timers;
+using System.Collections.ObjectModel;
 
 namespace Resolver
 {
@@ -27,7 +28,7 @@ namespace Resolver
         //private IPeerServices remoteChannel;
         private IRemote remoteChannel;
 
-        private List<TempBuilding> _buildings = new List<TempBuilding>();
+        private ObservableCollection<TempBuilding> _buildings = new ObservableCollection<TempBuilding>();
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
@@ -218,7 +219,7 @@ namespace Resolver
             return name;
         }
 
-        public List<TempBuilding> GetConnectedPeers()
+        public ObservableCollection<TempBuilding> GetConnectedPeers()
         {
             return _buildings;
         }
