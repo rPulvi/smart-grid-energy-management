@@ -42,6 +42,7 @@ namespace SmartGridManager
         public void StopEnergyProduction()
         {
             _pwManager.ShutDown();
+            base.StopService();
         }
     }
 }
