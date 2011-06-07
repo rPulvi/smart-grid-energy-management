@@ -32,6 +32,7 @@ namespace WPF_StartPeer.ViewModel
         #endregion
 
         #region Objects
+        private BackgroundWorker bw = new BackgroundWorker();
         private readonly StringBuilder builder;
         Building house;
         #endregion
@@ -42,9 +43,14 @@ namespace WPF_StartPeer.ViewModel
         public DelegateCommand Exit { get; set; }
         #endregion
 
-
         public StartPeerViewModel()
         {
+            bw.WorkerReportsProgress = true;
+            bw.WorkerSupportsCancellation = true;
+
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+
             _startButton = "Start";
 
             _status = PeerStatus.Consumer;
@@ -67,22 +73,10 @@ namespace WPF_StartPeer.ViewModel
 
         public void Start()
         {
-            string nome;
-
-            if (_status == PeerStatus.Consumer)
+            if (bw.IsBusy != true)
             {
-                EnType = EnergyType.None;
+                bw.RunWorkerAsync();
             }
-
-            house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
-
-            Trace.AutoFlush = true;
-            Trace.Indent();
-            nome = "Starting Peer " + Nome + "...";
-            Trace.WriteLine(nome);
-
-            _startButton = "Stop";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
         }
 
         public void Producer()
@@ -198,6 +192,29 @@ namespace WPF_StartPeer.ViewModel
             this.OnPropertyChanged(new PropertyChangedEventArgs("MyTrace"));
         }
         #endregion
+
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            if (_status == PeerStatus.Consumer)
+            {
+                EnType = EnergyType.None;
+            }
+
+            house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
+        }
+
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            string nome;
+
+            Trace.AutoFlush = true;
+            Trace.Indent();
+            nome = "Starting Peer " + Nome + "...";
+            Trace.WriteLine(nome);
+
+            _startButton = "Stop";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
