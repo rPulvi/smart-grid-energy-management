@@ -28,7 +28,7 @@ namespace Resolver
         //private IPeerServices remoteChannel;
         private IRemote remoteChannel;
 
-        private ObservableCollection<TempBuilding> _buildings = new ObservableCollection<TempBuilding>();
+        private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
@@ -219,7 +219,7 @@ namespace Resolver
             return name;
         }
 
-        public ObservableCollection<TempBuilding> GetConnectedPeers()
+        public ObservableCollectionEx<TempBuilding> GetConnectedPeers()
         {
             return _buildings;
         }
