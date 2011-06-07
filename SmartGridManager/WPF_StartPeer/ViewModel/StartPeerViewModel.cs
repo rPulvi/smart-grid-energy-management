@@ -21,6 +21,11 @@ namespace WPF_StartPeer.ViewModel
         private string _address;
         private string _admin;
         private string _startButton;
+        private string _imgPath;
+        private string _startButtonIconPath;
+        private string _peerStatus;
+
+        private bool _isStartable = true;
 
         private float _enPeak;
         private float _price;
@@ -45,11 +50,14 @@ namespace WPF_StartPeer.ViewModel
 
         public StartPeerViewModel()
         {
+            _imgPath = @"/WPF_StartPeer;component/img/offline.png";
+            _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
+            _peerStatus = "Offline...";
+
             bw.WorkerReportsProgress = true;
             bw.WorkerSupportsCancellation = true;
 
             bw.DoWork += new DoWorkEventHandler(bw_DoWork);
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
 
             _startButton = "Start";
 
@@ -169,6 +177,36 @@ namespace WPF_StartPeer.ViewModel
             }
         }
 
+        public string Path
+        {
+            get { return _imgPath; }
+            set
+            {
+                _imgPath = value;
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+            }
+        }
+
+        public string StartButtonIconPath
+        {
+            get { return _startButtonIconPath; }
+            set
+            {
+                _startButtonIconPath = value;
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+            }
+        }
+
+        public string GetPeerStatus
+        {
+            get { return _peerStatus; }
+            set
+            {
+                _peerStatus = value;
+                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+            }
+        }
+
         public void AppExit()
         {
             Application.Current.Shutdown();
@@ -195,25 +233,47 @@ namespace WPF_StartPeer.ViewModel
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
-            if (_status == PeerStatus.Consumer)
+            if (_isStartable)
             {
-                EnType = EnergyType.None;
+                if (_status == PeerStatus.Consumer)
+                {
+                    EnType = EnergyType.None;
+                }
+
+                house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
+
+                _imgPath = @"/WPF_StartPeer;component/img/online.png";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+
+                _peerStatus = "Online...";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+
+                _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+
+                _startButton = "Stop";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+
+                _isStartable = false;
             }
+            else
+            {
+                house.StopEnergyProduction();
 
-            house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
-        }
+                _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
 
-        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            string nome;
+                _imgPath = @"/WPF_StartPeer;component/img/offline.png";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
 
-            Trace.AutoFlush = true;
-            Trace.Indent();
-            nome = "Starting Peer " + Nome + "...";
-            Trace.WriteLine(nome);
+                _peerStatus = "Offline...";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
 
-            _startButton = "Stop";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+                _isStartable = true;
+
+                _startButton = "Start";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
