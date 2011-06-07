@@ -56,7 +56,7 @@ namespace Resolver
             _HBTimer = new System.Timers.Timer();
             _HBTimer.Interval = 1000;
             _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
-            _HBTimer.Enabled = false;
+            _HBTimer.Enabled = true;
 
             #region Normal Peer Activity
 
@@ -235,8 +235,7 @@ namespace Resolver
         }
 
         private void _HBTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            bool found = false;            
+        {            
             List<TempBuilding> toRemoveBuildings = new List<TempBuilding>();
 
             foreach (var b in _buildings)
@@ -244,20 +243,15 @@ namespace Resolver
                 if (b.TTE > 0)
                     b.TTE--;
                 else
-                {
-                    found = true;
                     toRemoveBuildings.Add(b);
-                }                
             }
 
-            if (found == true)
+            if (toRemoveBuildings.Count > 0)
             {
                 foreach (var b in toRemoveBuildings)
                     _buildings.Remove(b);
                 
-                toRemoveBuildings.Clear();
-                
-                found = false;
+                toRemoveBuildings.Clear();                                
             }
         }
 
