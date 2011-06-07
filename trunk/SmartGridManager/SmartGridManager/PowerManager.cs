@@ -16,8 +16,9 @@ namespace SmartGridManager
         #region Attributes
 
         private EnergyGenerator _generator;        
-        private MessageHandler MsgHandler;        
-        
+        private MessageHandler MsgHandler;
+
+        private const int TTL = 4;
         private String _name;
         private string _resolverName; ///
         private PeerStatus _peerStatus;
@@ -29,10 +30,12 @@ namespace SmartGridManager
         private Boolean _loop;
         private Boolean messageSent = false;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
-        private Dictionary<System.Timers.Timer, EnergyLink> _producers = new Dictionary<System.Timers.Timer, EnergyLink>();
-        private Dictionary<System.Timers.Timer, EnergyLink> _consumers = new Dictionary<System.Timers.Timer, EnergyLink>();
+        private List<EnergyLink> _producers = new List<EnergyLink>();
+        private List<EnergyLink> _consumers = new List<EnergyLink>();
         private System.Timers.Timer _proposalCountdown;
         private System.Timers.Timer _heartBeatTimer;
+        private System.Timers.Timer _producerCheckTimer;
+        private System.Timers.Timer _consumerCheckTimer;
 
         #endregion
 
@@ -66,9 +69,19 @@ namespace SmartGridManager
 
             _heartBeatTimer = new System.Timers.Timer();
             _heartBeatTimer.Enabled = true;
-            _heartBeatTimer.Interval = 2000;
+            _heartBeatTimer.Interval = 2121;
             _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);
             _heartBeatTimer.Start();
+
+            _producerCheckTimer = new System.Timers.Timer();
+            _producerCheckTimer.Interval = 5000;
+            _producerCheckTimer.Elapsed += new ElapsedEventHandler(_producerCheckTimer_Elapsed);
+            _producerCheckTimer.Enabled = true;
+
+            _consumerCheckTimer = new System.Timers.Timer();
+            _consumerCheckTimer.Interval = 5000;
+            _consumerCheckTimer.Elapsed += new ElapsedEventHandler(_consumerCheckTimer_Elapsed);
+            _consumerCheckTimer.Enabled = true;
         }
 
         public void Start()
@@ -192,13 +205,10 @@ namespace SmartGridManager
                 {
                     status = true;
                     _enSold += message.energy;
-
-                    System.Timers.Timer t = getLinkTimer();
-                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
                     
-                    _consumers.Add(t, link);
+                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
 
-                    t.Enabled = false;
+                    _consumers.Add(link);
                 }
 
                 EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(
@@ -222,49 +232,32 @@ namespace SmartGridManager
                 {
                     _enBought += message.energy;
 
-                    System.Timers.Timer t = getLinkTimer();
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
 
-                    _producers.Add(t, link);
-
-                    t.Enabled = false;
+                    _producers.Add(link);
                 }
             }
         }
 
-        private void heartBeatTimeout(object sender, ElapsedEventArgs e)
+        private void _producerCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (_producers.ContainsKey((System.Timers.Timer)sender))
+            for (int i = 0; i < _producers.Count; i++)
             {
-                foreach (var p in _producers)
-                {
-                    //TODO: rimuovere timer dalla memoria!!! .... ???
-
-                    if (p.Key == sender)
-                    {
-                        p.Key.Enabled = false;
-                        _enBought -= p.Value.energy;
-                        break;
-                    }
-                }
-
-                _producers.Remove((System.Timers.Timer)sender);
+                if (_producers[i].ttl > 0)
+                    _producers[i].ttl--;
+                else
+                    _producers.RemoveAt(i);
             }
-            else if (_consumers.ContainsKey((System.Timers.Timer)sender))
+        }
+
+        private void _consumerCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            for (int i = 0; i < _consumers.Count; i++)
             {
-                foreach (var c in _consumers)
-                {
-                    //TODO: rimuovere timer dalla memoria!!!
-
-                    if (c.Key == sender)
-                    {
-                        c.Key.Enabled = false;
-                        _enSold -= c.Value.energy;
-                        break;
-                    }
-                }
-
-                _consumers.Remove((System.Timers.Timer)sender);
+                if (_consumers[i].ttl > 0)
+                    _consumers[i].ttl--;
+                else
+                    _consumers.RemoveAt(i);
             }
         }
 
@@ -276,32 +269,19 @@ namespace SmartGridManager
 
         private void CheckHBProducers(HeartBeatMessage message)
         {
-            foreach (var p in _producers)
+            for (int i = 0; i < _producers.Count; i++)
             {
-                //value = producer
-                //key = timer of this producer
-                if (p.Value.peerName == message.header.Sender)
-                {
-                    //stop & restart the timer
-                    p.Key.Enabled = false;
-                    p.Key.Enabled = true;
-                    break;
-                }
+                if (_producers[i].peerName == message.header.Sender)
+                    _producers[i].ttl = TTL;
             }
         }
 
         private void CheckHBConsumers(HeartBeatMessage message)
         {
-            foreach (var c in _consumers)
+            for (int i = 0; i < _consumers.Count; i++)
             {
-                //value = consumer
-                //key = timer of this consumer
-                if (c.Value.peerName == message.header.Sender)
-                {
-                    c.Key.Enabled = false;
-                    c.Key.Enabled = true;
-                    break;
-                }
+                if (_consumers[i].peerName == message.header.Sender)
+                    _consumers[i].ttl = TTL;
             }
         }
 
@@ -324,18 +304,11 @@ namespace SmartGridManager
             _proposalCountdown.Enabled = false;
             _heartBeatTimer.Enabled = false;
 
+            _producerCheckTimer.Enabled = false;
+            _consumerCheckTimer.Enabled = false;
+
             _generator.Stop();
             _loop = false;
-        }
-
-        private System.Timers.Timer getLinkTimer()
-        {
-            System.Timers.Timer t = new System.Timers.Timer();
-            t.Enabled = true;
-            t.Interval = 10000;
-            t.Elapsed += new ElapsedEventHandler(heartBeatTimeout);
-
-            return t;
         }
 
         #endregion
@@ -344,11 +317,13 @@ namespace SmartGridManager
         {
             public string peerName { get; private set; }
             public float energy { get; private set; }
-
+            public int ttl { get; set; }
+            
             public EnergyLink(string name, float en)
             {
                 this.peerName = name;
                 this.energy = en;
+                this.ttl = TTL;
             }
         }
     }
