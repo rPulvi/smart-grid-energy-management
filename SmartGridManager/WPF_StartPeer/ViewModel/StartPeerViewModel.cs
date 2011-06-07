@@ -20,6 +20,7 @@ namespace WPF_StartPeer.ViewModel
         private string _name;
         private string _address;
         private string _admin;
+        private string _startButton;
 
         private float _enPeak;
         private float _price;
@@ -44,6 +45,8 @@ namespace WPF_StartPeer.ViewModel
 
         public StartPeerViewModel()
         {
+            _startButton = "Start";
+
             _status = PeerStatus.Consumer;
             this.builder = new StringBuilder();
 
@@ -52,9 +55,20 @@ namespace WPF_StartPeer.ViewModel
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
         }
 
+        public string StartButton
+        {
+            get { return _startButton; }
+            set
+            {
+                _startButton = value;
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+            }
+        }
+
         public void Start()
         {
             string nome;
+
             if (_status == PeerStatus.Consumer)
             {
                 EnType = EnergyType.None;
@@ -66,6 +80,9 @@ namespace WPF_StartPeer.ViewModel
             Trace.Indent();
             nome = "Starting Peer " + Nome + "...";
             Trace.WriteLine(nome);
+
+            _startButton = "Stop";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
         }
 
         public void Producer()
