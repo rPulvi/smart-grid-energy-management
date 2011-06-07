@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="WPF_StartPeer.View.MainWindow"
-        Title="Start Peer" Height="416.302" Width="768" Icon="/img/Home.ico" ResizeMode="NoResize">
+        Title="Start Peer" Height="443.539" Width="386" Icon="/img/Home.ico" ResizeMode="NoResize">
 	<Window.Resources>
 		<Style x:Key="StileTextBlock" TargetType="{x:Type TextBlock}">
 			<Setter Property="FontWeight" Value="Bold"/>
@@ -111,15 +111,9 @@
     	</Menu>
     	<Image Grid.Column="1" Margin="0,24,12,-3.744" Source="/img/Home.png" Stretch="Fill" HorizontalAlignment="Right" Width="76"/>
     	<TextBlock Margin="0,24,92,0" TextWrapping="Wrap" FontSize="32" FontWeight="Bold" TextAlignment="Center" FontFamily="Segoe WP Black" Foreground="#FF172456" HorizontalAlignment="Right" VerticalAlignment="Center" Width="284" Grid.ColumnSpan="2"><Run Language="it-it" Text="Building Setup"/></TextBlock>
-        <GroupBox Grid.Column="1" Header="Output" HorizontalAlignment="Right" Margin="0,24,-360,32.698" Width="360" Grid.RowSpan="2">
-        	<ScrollViewer Margin="0,0,0,-0.96">
-        		<TextBlock Background="#FF172456" Foreground="white" FontSize="11" 
-        			FontFamily="Courier New" Height="359" Text="{Binding MyTrace}" Width="331" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-        	</ScrollViewer>
-        </GroupBox>
 
         <Button Command="{Binding StartPeer}"
-        Height="33.296" Grid.Column="1" Margin="0,0,9.005,32.698" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="78.995">
+        Height="33.296" Grid.Column="1" Margin="0,0,9.005,30.696" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="78.995">
                 <Button.Style>
                     <Style>
                         <Style.Triggers>
@@ -141,7 +135,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <Image Source="/img/connect.png"
+                <Image Source="{Binding StartButtonIconPath}"
                Margin="1.785,1.69,1.596,1.691"
                Grid.Column="0" />
 
@@ -152,6 +146,14 @@
                 </StackPanel>
             </Grid>
         </Button>
+        
+        <StatusBar Grid.ColumnSpan="2" Height="26.237" Margin="0,0,0,-2.539" Grid.Row="1" VerticalAlignment="Bottom">
+        	<StatusBarItem>
+				<Image Name="imgPeerStatus" Source="{Binding Path}" Width="22" Height="22" Grid.Column="0" HorizontalAlignment="Left"/>
+			</StatusBarItem>
+			<Separator Margin="0" Width="0" HorizontalAlignment="Left"/>
+        	<StatusBarItem Content="{Binding GetPeerStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="52" HorizontalAlignment="Left"/>
+        </StatusBar>
         
     </Grid>
 </Window>
