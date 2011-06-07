@@ -22,8 +22,7 @@ namespace WPF_Resolver.ViewModel
         private string _resolverIP;
         private string _ora;
         private string _minuto;
-        private string _secondo;
-        private string _imgPath;
+        private string _secondo;        
 
         int i = 0;
 
@@ -58,32 +57,6 @@ namespace WPF_Resolver.ViewModel
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
         }
 
-        private void ChooseImgPath()
-        {
-            foreach (var p in peerList)
-            {
-                if (p.status.Equals(PeerStatus.Producer))
-                {
-                    _imgPath = "/img/producer.png";
-                    OnPropertyChanged("ImgPath");
-                }
-                else
-                {
-                    _imgPath = "/img/consumer.png";
-                    OnPropertyChanged("ImgPath");
-                }
-            }
-        }
-
-        public string ImgPath
-        {
-            get { return _imgPath; }
-            set
-            {
-                _imgPath = value;
-                OnPropertyChanged("_imgPath");
-            }
-        }
 
         public ObservableCollectionEx<TempBuilding> PeerList
         {
@@ -99,8 +72,7 @@ namespace WPF_Resolver.ViewModel
         { 
             _resolverName = "";
             _resolverStatus = "";
-            _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
-            _imgPath = "";
+            _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();           
 
             _resolverName = r.name;
             this.OnPropertyChanged("GetResolverName");
@@ -220,9 +192,7 @@ namespace WPF_Resolver.ViewModel
             OnPropertyChanged("GetSecondo");
 
             peerList = r.GetConnectedPeers();
-            OnPropertyChanged("PeerList");
-            
-            ChooseImgPath();
+            OnPropertyChanged("PeerList");                        
         }
     }
 }

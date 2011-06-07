@@ -193,6 +193,7 @@ namespace Resolver
             b.Name = message.header.Sender;
             b.status = message.Status;
             b.TTE = 5;
+            b.iconPath = b.status == PeerStatus.Producer ? @"img/producer.png" : @"img/consumer.png";
             #endregion
 
             _buildings.Add(b);
