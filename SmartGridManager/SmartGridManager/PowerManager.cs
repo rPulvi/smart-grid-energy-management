@@ -321,6 +321,9 @@ namespace SmartGridManager
 
         public void ShutDown()
         {
+            _proposalCountdown.Enabled = false;
+            _heartBeatTimer.Enabled = false;
+
             _generator.Stop();
             _loop = false;
         }
