@@ -54,7 +54,7 @@ namespace Resolver
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
 
             _HBTimer = new System.Timers.Timer();
-            _HBTimer.Interval = 5000;
+            _HBTimer.Interval = 1000;
             _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
             _HBTimer.Enabled = false;
 
@@ -235,12 +235,28 @@ namespace Resolver
 
         private void _HBTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            bool found = false;            
+            List<TempBuilding> toRemoveBuildings = new List<TempBuilding>();
+
             foreach (var b in _buildings)
-            {
+            {                
                 if (b.TTE > 0)
                     b.TTE--;
                 else
+                {
+                    found = true;
+                    toRemoveBuildings.Add(b);
+                }                
+            }
+
+            if (found == true)
+            {
+                foreach (var b in toRemoveBuildings)
                     _buildings.Remove(b);
+                
+                toRemoveBuildings.Clear();
+                
+                found = false;
             }
         }
 
