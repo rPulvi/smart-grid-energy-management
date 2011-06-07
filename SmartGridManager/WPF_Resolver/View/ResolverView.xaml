@@ -33,7 +33,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnType}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding EnType}" VerticalAlignment="Center" Grid.Column="1"/>
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -46,7 +46,7 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Image Source="" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding EnPeak}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding EnPeak}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -58,7 +58,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnBought}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding EnBought}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -70,7 +70,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnSold}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding EnSold}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -82,7 +82,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnProduced}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding EnProduced}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -94,7 +94,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnPrice}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding EnPrice}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -106,7 +106,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Address}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding Address}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -118,7 +118,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Admin}" VerticalAlignment="Center" Grid.Column="0" />
+                        <TextBlock Text="{Binding Admin}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
