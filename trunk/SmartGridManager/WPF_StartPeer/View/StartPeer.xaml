@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="WPF_StartPeer.View.MainWindow"
-        Title="Start Peer" Height="386" Width="768" Icon="/img/Home.ico" >
+        Title="Start Peer" Height="416.302" Width="768" Icon="/img/Home.ico" ResizeMode="NoResize">
 	<Window.Resources>
 		<Style x:Key="StileTextBlock" TargetType="{x:Type TextBlock}">
 			<Setter Property="FontWeight" Value="Bold"/>
@@ -62,7 +62,8 @@
     	<Grid.ColumnDefinitions>
     		<ColumnDefinition Width="162"/>
     		<ColumnDefinition Width="222"/>
-    	</Grid.ColumnDefinitions>
+            <ColumnDefinition Width="362*" />
+        </Grid.ColumnDefinitions>
     	<Grid.Background>
     		<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
     			<GradientStop Color="#FFF2FCFF" Offset="0"/>
@@ -79,7 +80,7 @@
     		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Indirizzo:"/></TextBlock>
     		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Administrator:"/></TextBlock>
     	</StackPanel>
-    	<Path Data="M18,216.66667 L129.096,216.66667" Height="1" Margin="13.998,0,10.994,129.071" Stretch="Fill" Stroke="Black" VerticalAlignment="Bottom" HorizontalAlignment="Center" Fill="#FFF4F4F5" Grid.Row="1"/>
+    	<Path Data="M18,216.66667 L129.096,216.66667" Height="1" Margin="15.816,0,-1.818,129.071" Stretch="Fill" Stroke="Black" VerticalAlignment="Bottom" Fill="#FFF4F4F5" Grid.Row="1"/>
     	<StackPanel x:Name="___StackPanel____DX" Grid.Column="1" Margin="0,14,0,129.071" Grid.Row="1">
             <TextBox Text="{Binding Path=Nome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtNome" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width" BorderThickness="1,1,1,0"/>
             <CheckBox Command="{Binding SetProducer}" x:Name="chkProducer" Content="Producer" Height="23" Margin="8,0,0,4" Width="93" HorizontalAlignment="Left"/>
@@ -105,17 +106,52 @@
     			</LinearGradientBrush>
     		</Menu.Background>
     		<MenuItem Header="File" Foreground="White">
-    			<MenuItem Header="Start" Foreground="Blue" Command="{Binding StartPeer}"/>
                 <MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
     		</MenuItem>
     	</Menu>
     	<Image Grid.Column="1" Margin="0,24,12,-3.744" Source="/img/Home.png" Stretch="Fill" HorizontalAlignment="Right" Width="76"/>
     	<TextBlock Margin="0,24,92,0" TextWrapping="Wrap" FontSize="32" FontWeight="Bold" TextAlignment="Center" FontFamily="Segoe WP Black" Foreground="#FF172456" HorizontalAlignment="Right" VerticalAlignment="Center" Width="284" Grid.ColumnSpan="2"><Run Language="it-it" Text="Building Setup"/></TextBlock>
-        <GroupBox Grid.Column="1" Header="Output" HorizontalAlignment="Right" Margin="0,24,-360,69.994" Width="360" Grid.RowSpan="2">
+        <GroupBox Grid.Column="1" Header="Output" HorizontalAlignment="Right" Margin="0,24,-360,32.698" Width="360" Grid.RowSpan="2">
         	<ScrollViewer Margin="0,0,0,-0.96">
         		<TextBlock Background="#FF172456" Foreground="white" FontSize="11" 
         			FontFamily="Courier New" Height="359" Text="{Binding MyTrace}" Width="331" VerticalAlignment="Top" HorizontalAlignment="Right"/>
         	</ScrollViewer>
         </GroupBox>
+
+        <Button Command="{Binding StartPeer}"
+        Height="33.296" Grid.Column="1" Margin="0,0,9.005,32.698" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="78.995">
+                <Button.Style>
+                    <Style>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=txtNome, Path=Text}" Value="">
+                                <Setter Property="Button.IsEnabled" Value="false"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            <Button.Background>
+        		<RadialGradientBrush>
+        			<GradientStop Color="#FFBDF1FF"/>
+        			<GradientStop Color="#FF1B7991" Offset="1"/>
+        		</RadialGradientBrush>
+        	</Button.Background>
+            <Grid d:IsLocked="True" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Image Source="/img/connect.png"
+               Margin="1.785,1.69,1.596,1.691"
+               Grid.Column="0" />
+
+                <StackPanel Grid.Column="1" Margin="5">
+                    <TextBlock Text="{Binding StartButton}"
+                       TextWrapping="Wrap" 
+					   FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Button>
+        
     </Grid>
 </Window>
