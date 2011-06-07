@@ -114,7 +114,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img\Home.png" />
+    <Resource Include="img\Home.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="img\Home.ico">
@@ -122,7 +124,16 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="img\connect.png">
+    <Resource Include="img\offline.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\connected.png" />
+    <Resource Include="img\disconnected.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="img\online.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
