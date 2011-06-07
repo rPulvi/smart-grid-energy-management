@@ -20,7 +20,7 @@
                             <ColumnDefinition Width="32" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding ImgPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
+                        <Image Source="{Binding Path=iconPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
