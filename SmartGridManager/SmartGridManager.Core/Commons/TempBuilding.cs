@@ -10,6 +10,7 @@ namespace SmartGridManager.Core.Commons
         public string Name { get; set; }
         public PeerStatus status { get; set; }
         public EnergyType EnType { get; set; }
+        public string iconPath { get; set; }
         public float EnProduced { get; set; }
         public float EnSold { get; set; }
         public float EnBought { get; set; }

@@ -63,7 +63,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ObservableCollectionEx.cs" />
     <Compile Include="Resolver.cs" />
     <Compile Include="CustomResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
