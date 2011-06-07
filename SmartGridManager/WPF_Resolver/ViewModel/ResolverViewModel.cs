@@ -10,6 +10,7 @@ using System.Threading;
 using System.Net;
 using SmartGridManager.Core.Commons;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
 
 namespace WPF_Resolver.ViewModel
 {
@@ -29,7 +30,7 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
-        ObservableCollection<TempBuilding> peerList = new ObservableCollection<TempBuilding>();
+        ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
         System.Windows.Threading.DispatcherTimer temporizzatore;
         private Thread thResolver;
         private Resolver.Resolver r;
@@ -84,7 +85,7 @@ namespace WPF_Resolver.ViewModel
             }
         }
 
-        public ObservableCollection<TempBuilding> PeerList
+        public ObservableCollectionEx<TempBuilding> PeerList
         {
             get { return peerList; }
         }
