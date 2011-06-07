@@ -39,7 +39,13 @@ namespace Resolver
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private Dictionary<Guid, String> _messageList = new Dictionary<Guid, String>();
 
+        private List<TempBuilding> hbrBuildingd = new List<TempBuilding>();
+
         private System.Timers.Timer _HBTimer;
+
+        private object _lLock = new object();
+        private const int TTE = 2;
+
 
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
             this.name = Tools.getResolverName();
@@ -54,7 +60,7 @@ namespace Resolver
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
 
             _HBTimer = new System.Timers.Timer();
-            _HBTimer.Interval = 1000;
+            _HBTimer.Interval = 5000;
             _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
             _HBTimer.Enabled = true;
 
@@ -192,11 +198,12 @@ namespace Resolver
             b.EnType = message.EnType;
             b.Name = message.header.Sender;
             b.status = message.Status;
-            b.TTE = 5;
+            b.TTE = TTE;
             b.iconPath = b.status == PeerStatus.Producer ? @"/WPF_Resolver;component/img/producer.png" : @"/WPF_Resolver;component/img/consumer.png";
             #endregion
 
-            _buildings.Add(b);
+            lock(_lLock)
+                _buildings.Add(b);
 
             MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName());
         }
@@ -227,33 +234,28 @@ namespace Resolver
 
         private void CheckHeartBeat(HeartBeatMessage message)
         {
-            foreach (var b in _buildings)
+            lock (_lLock)
             {
-                if (b.Name == message.header.Sender)
-                    b.TTE = 5;
+                for (int i = 0; i < _buildings.Count; i++)
+                {
+                    if (_buildings[i].Name == message.header.Sender)
+                        _buildings[i].TTE = TTE;
+                }
             }
         }
 
         private void _HBTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {            
-            List<TempBuilding> toRemoveBuildings = new List<TempBuilding>();
-
-            foreach (var b in _buildings)
-            {                
-                if (b.TTE > 0)
-                    b.TTE--;
-                else
-                    toRemoveBuildings.Add(b);
-            }
-
-            if (toRemoveBuildings.Count > 0)
+        {
+            lock (_lLock)
             {
-                foreach (var b in toRemoveBuildings)
-                    _buildings.Remove(b);
-                
-                toRemoveBuildings.Clear();                                
-            }
+                for (int i = 0; i < _buildings.Count; i++)
+                {
+                    if (_buildings[i].TTE > 0)
+                        _buildings[i].TTE--;
+                    else
+                        _buildings.RemoveAt(i);
+                }
+            }            
         }
-
     }
 }
