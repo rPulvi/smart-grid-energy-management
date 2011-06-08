@@ -7,6 +7,7 @@ using SmartGridManager.Core;
 using SmartGridManager.Core.Messaging;
 using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Utils;
+using System.Threading;
 
 namespace SmartGridManager
 {
@@ -69,7 +70,7 @@ namespace SmartGridManager
 
             _heartBeatTimer = new System.Timers.Timer();
             _heartBeatTimer.Enabled = true;
-            _heartBeatTimer.Interval = 2121;
+            _heartBeatTimer.Interval = 3000;
             _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);
             _heartBeatTimer.Start();
 
@@ -92,7 +93,7 @@ namespace SmartGridManager
                 if ((getEnergyLevel() + _enBought) < _enPeak)
                 {
                     if (messageSent == false)
-                    {
+                    {                        
                         float enReq = _enPeak - getEnergyLevel() + _enBought;
                         Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage("@All", _name, _peerStatus, enReq));
 
