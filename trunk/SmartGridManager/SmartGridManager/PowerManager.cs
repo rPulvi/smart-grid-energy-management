@@ -28,7 +28,7 @@ namespace SmartGridManager
         private float _enBought;
         private float _enSold;
         private int _proposalTimeout = 0;
-        private Boolean _loop;
+        
         private Boolean messageSent = false;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private List<EnergyLink> _producers = new List<EnergyLink>();
@@ -37,6 +37,7 @@ namespace SmartGridManager
         private System.Timers.Timer _heartBeatTimer;
         private System.Timers.Timer _producerCheckTimer;
         private System.Timers.Timer _consumerCheckTimer;
+        private System.Timers.Timer _mainTimer;
 
         #endregion
 
@@ -57,8 +58,7 @@ namespace SmartGridManager
             _enPeak = energyPeak;
             _name = bName;
             _peerStatus = status;
-           
-            _loop = true;
+                       
             _price = price;
             _enBought = 0f;
             _enSold = 0f;
@@ -83,32 +83,39 @@ namespace SmartGridManager
             _consumerCheckTimer.Interval = 5000;
             _consumerCheckTimer.Elapsed += new ElapsedEventHandler(_consumerCheckTimer_Elapsed);
             _consumerCheckTimer.Enabled = true;
+
+            _mainTimer = new System.Timers.Timer();
+            _mainTimer.Interval = 500;
+            _mainTimer.Elapsed += new ElapsedEventHandler(_mainTimer_Elapsed);
+            _mainTimer.Enabled = false;
+        }
+
+        void _mainTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //Check the energy level
+            if ((getEnergyLevel() + _enBought) < _enPeak)
+            {
+                if (messageSent == false)
+                {
+                    float enReq = _enPeak - getEnergyLevel() + _enBought;
+                    Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage("@All", _name, _peerStatus, enReq));
+
+                    //start the timer to waiting for proposals
+                    if (_proposalCountdown.Enabled == false)
+                        _proposalCountdown.Enabled = true;
+
+                    messageSent = true;
+                }
+            }
+            else
+            {
+                messageSent = false;
+            }
         }
 
         public void Start()
-        {            
-            while (_loop == true)
-            {
-                //Check the energy level
-                if ((getEnergyLevel() + _enBought) < _enPeak)
-                {
-                    if (messageSent == false)
-                    {                        
-                        float enReq = _enPeak - getEnergyLevel() + _enBought;
-                        Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage("@All", _name, _peerStatus, enReq));
-
-                        //start the timer to waiting for proposals
-                        if (_proposalCountdown.Enabled == false)
-                            _proposalCountdown.Enabled = true;
-                        
-                        messageSent = true;
-                    }
-                }
-                else
-                {
-                    messageSent = false;
-                }
-            }
+        {
+            _mainTimer.Enabled = true;
         }
 
         private void ReceiveResolverName(HelloResponseMessage message)
@@ -308,8 +315,9 @@ namespace SmartGridManager
             _producerCheckTimer.Enabled = false;
             _consumerCheckTimer.Enabled = false;
 
-            _generator.Stop();
-            _loop = false;
+            _mainTimer.Enabled = false;
+
+            _generator.Stop();            
         }
 
         #endregion
