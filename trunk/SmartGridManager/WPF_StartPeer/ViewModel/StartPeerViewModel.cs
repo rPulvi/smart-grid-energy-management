@@ -213,22 +213,22 @@ namespace WPF_StartPeer.ViewModel
         }
 
         #region Tracing Methods
-        //public string MyTrace
-        //{
-        //    get { return this.builder.ToString(); }
-        //}
+        public string MyTrace
+        {
+            get { return this.builder.ToString(); }
+        }
 
-        //public override void Write(string message)
-        //{
-        //    this.builder.Append(message);
-        //    this.OnPropertyChanged(new PropertyChangedEventArgs("MyTrace"));
-        //}
+        public override void Write(string message)
+        {
+            this.builder.Append(message);
+            this.OnPropertyChanged(new PropertyChangedEventArgs("MyTrace"));
+        }
 
-        //public override void WriteLine(string message)
-        //{
-        //    this.builder.AppendLine(message);
-        //    this.OnPropertyChanged(new PropertyChangedEventArgs("MyTrace"));
-        //}
+        public override void WriteLine(string message)
+        {
+            this.builder.AppendLine(message);
+            this.OnPropertyChanged(new PropertyChangedEventArgs("MyTrace"));
+        }
         #endregion
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
