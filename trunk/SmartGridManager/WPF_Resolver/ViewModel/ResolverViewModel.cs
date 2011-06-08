@@ -11,6 +11,7 @@ using System.Net;
 using SmartGridManager.Core.Commons;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
+using System.ComponentModel;
 
 namespace WPF_Resolver.ViewModel
 {
@@ -29,11 +30,11 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
-        ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
-        System.Windows.Threading.DispatcherTimer temporizzatore;
-        private Thread thResolver;
-        private Resolver.Resolver r;
-        Visibility vi = new Visibility();
+        private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
+        private System.Windows.Threading.DispatcherTimer temporizzatore;        
+        private BackgroundWorker bw = new BackgroundWorker();
+        private Resolver.Resolver _resolver;
+        private Visibility _visStatus = new Visibility();
         private IPHostEntry _ipHost;
         #endregion
 
@@ -44,19 +45,24 @@ namespace WPF_Resolver.ViewModel
 
         public ResolverViewModel()
         {
-            r = new Resolver.Resolver();
+            bw.WorkerReportsProgress = true;
+            bw.WorkerSupportsCancellation = true;
+
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);            
+
+            _resolver = new Resolver.Resolver();
 
             temporizzatore = new System.Windows.Threading.DispatcherTimer();
             temporizzatore.Interval = new TimeSpan(0, 0, 0, 1);
             temporizzatore.Tick += new EventHandler(Temporizzatore_Tick);
 
-            vi = Visibility.Hidden;
+            _visStatus = Visibility.Hidden;
             _ipHost = Dns.GetHostByName(Dns.GetHostName());
 
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
         }
-
 
         public ObservableCollectionEx<TempBuilding> PeerList
         {
@@ -72,27 +78,15 @@ namespace WPF_Resolver.ViewModel
         { 
             _resolverName = "";
             _resolverStatus = "";
-            _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();           
+            _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
 
-            _resolverName = r.name;
+            _resolverName = "Connecting...";
             this.OnPropertyChanged("GetResolverName");
 
-            thResolver = new Thread(r.Connect) { IsBackground = true };
-            thResolver.Start();
-            thResolver.Join();
-
-            temporizzatore.Start();
-
-            _resolverStatus = "Online...";
-            vi = Visibility.Visible;
-            
-
-            this.OnPropertyChanged("GetResolverStatus");
-            this.OnPropertyChanged("ImgVisibility");
-            this.OnPropertyChanged("GetResolverIP");
-
-            Console.WriteLine("Press [ENTER] to exit.");
-            Console.ReadLine();
+            if (bw.IsBusy != true)
+            {
+                bw.RunWorkerAsync();
+            }
         }
 
         private bool canExit
@@ -127,10 +121,10 @@ namespace WPF_Resolver.ViewModel
 
         public Visibility ImgVisibility
         {
-            get { return vi; }
+            get { return _visStatus; }
             set
             {
-                vi = value;
+                _visStatus = value;
                 OnPropertyChanged("ImgVisibility");
             }
         }
@@ -191,8 +185,28 @@ namespace WPF_Resolver.ViewModel
             OnPropertyChanged("GetMinuto");
             OnPropertyChanged("GetSecondo");
 
-            peerList = r.GetConnectedPeers();
+            peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");                        
+        }
+
+        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        {            
+            _resolver.Connect();
+        }
+
+        private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            _resolverName = _resolver.name;
+            this.OnPropertyChanged("GetResolverName");
+
+            temporizzatore.Start();
+
+            _resolverStatus = "Online...";
+            _visStatus = Visibility.Visible;
+
+            this.OnPropertyChanged("GetResolverStatus");
+            this.OnPropertyChanged("ImgVisibility");
+            this.OnPropertyChanged("GetResolverIP");            
         }
     }
 }
