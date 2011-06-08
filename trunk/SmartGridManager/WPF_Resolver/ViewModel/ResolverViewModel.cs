@@ -31,8 +31,9 @@ namespace WPF_Resolver.ViewModel
 
         #region Objects
         private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
-        private System.Windows.Threading.DispatcherTimer temporizzatore;        
+        private DispatcherTimer temporizzatore;
         private BackgroundWorker bw = new BackgroundWorker();
+        private BackgroundWorker _backgroundTimer = new BackgroundWorker();
         private Resolver.Resolver _resolver;
         private Visibility _visStatus = new Visibility();
         private IPHostEntry _ipHost;
@@ -49,12 +50,17 @@ namespace WPF_Resolver.ViewModel
             bw.WorkerSupportsCancellation = true;
 
             bw.DoWork += new DoWorkEventHandler(bw_DoWork);
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);            
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+
+            _backgroundTimer.WorkerReportsProgress = true;
+            _backgroundTimer.WorkerSupportsCancellation = true;
+
+            _backgroundTimer.DoWork += new DoWorkEventHandler(_backgroundTimer_DoWork);
 
             _resolver = new Resolver.Resolver();
 
-            temporizzatore = new System.Windows.Threading.DispatcherTimer();
-            temporizzatore.Interval = new TimeSpan(0, 0, 0, 1);
+            temporizzatore = new DispatcherTimer();
+            temporizzatore.Interval = new TimeSpan(0, 0, 5);
             temporizzatore.Tick += new EventHandler(Temporizzatore_Tick);
 
             _visStatus = Visibility.Hidden;
@@ -62,6 +68,13 @@ namespace WPF_Resolver.ViewModel
 
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
+        }
+
+        void _backgroundTimer_DoWork(object sender, DoWorkEventArgs e)
+        {
+            DispatcherTimer clockBar = new DispatcherTimer();
+            temporizzatore.Interval = new TimeSpan(0, 0, 1);
+            temporizzatore.Tick += new EventHandler(cloBar_Tick);
         }
 
         public ObservableCollectionEx<TempBuilding> PeerList
@@ -169,9 +182,17 @@ namespace WPF_Resolver.ViewModel
             }
         }
 
-        public void Temporizzatore_Tick(object sender, EventArgs e)
+        private void Temporizzatore_Tick(object sender, EventArgs e)
         {
-            i += 1;
+            peerList = _resolver.GetConnectedPeers();
+            OnPropertyChanged("PeerList");                        
+        }
+
+
+        private void cloBar_Tick(object sender, EventArgs e)
+        {
+            //i += 1;
+            i++;
 
             int ora = i / 3600;
             int minuto = i / 60;
@@ -184,9 +205,6 @@ namespace WPF_Resolver.ViewModel
             OnPropertyChanged("GetOra");
             OnPropertyChanged("GetMinuto");
             OnPropertyChanged("GetSecondo");
-
-            peerList = _resolver.GetConnectedPeers();
-            OnPropertyChanged("PeerList");                        
         }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
@@ -198,6 +216,11 @@ namespace WPF_Resolver.ViewModel
         {
             _resolverName = _resolver.name;
             this.OnPropertyChanged("GetResolverName");
+
+            if (bw.IsBusy != true)
+            {
+                _backgroundTimer.RunWorkerAsync();
+            }
 
             temporizzatore.Start();
 
