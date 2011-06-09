@@ -217,6 +217,8 @@ namespace SmartGridManager
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
 
                     _consumers.Add(link);
+
+                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
                 }
 
                 EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(
@@ -243,6 +245,8 @@ namespace SmartGridManager
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
 
                     _producers.Add(link);
+
+                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
                 }
             }
         }
@@ -254,7 +258,11 @@ namespace SmartGridManager
                 if (_producers[i].ttl > 0)
                     _producers[i].ttl--;
                 else
+                {
+                    _enBought = _enBought - _producers[i].energy;
                     _producers.RemoveAt(i);
+                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
+                }
             }
         }
 
@@ -265,7 +273,11 @@ namespace SmartGridManager
                 if (_consumers[i].ttl > 0)
                     _consumers[i].ttl--;
                 else
+                {
+                    _enSold = _enSold - _consumers[i].energy;
                     _consumers.RemoveAt(i);
+                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
+                }
             }
         }
 
@@ -302,21 +314,15 @@ namespace SmartGridManager
         public float getEnergyLevel() { return _generator.EnergyLevel; }
 
         // TODO: Spostare il metodo da un'altra parte
-        public void setEnergyLevel(float value)
-        {
-            _generator.EnergyLevel = value;
-        }
+        public void setEnergyLevel(float value) { _generator.EnergyLevel = value; }
 
         public void ShutDown()
         {
             _proposalCountdown.Enabled = false;
             _heartBeatTimer.Enabled = false;
-
             _producerCheckTimer.Enabled = false;
             _consumerCheckTimer.Enabled = false;
-
             _mainTimer.Enabled = false;
-
             _generator.Stop();            
         }
 
