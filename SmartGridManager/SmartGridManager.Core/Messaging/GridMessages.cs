@@ -103,4 +103,16 @@ namespace SmartGridManager.Core.Messaging
     {
         public HeartBeatMessage() { }
     }
+
+    [MessageContract]
+    public class UpdateStatusMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public float energySold { get; set; }
+        
+        [MessageBodyMember]
+        public float energyBought { get; set; }
+        
+        public UpdateStatusMessage() { }
+    }
 }
