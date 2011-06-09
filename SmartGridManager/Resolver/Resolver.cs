@@ -72,6 +72,7 @@ namespace Resolver
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
             MsgHandler.OnSayHello += new sayHello(HelloResponse);
             MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
+            MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);
 
             #endregion
         }
@@ -256,6 +257,24 @@ namespace Resolver
                         _buildings.RemoveAt(i);
                 }
             }            
+        }
+
+        void UpdatePeerStatus(UpdateStatusMessage message)
+        {
+
+            if (message.header.Receiver == this.name)
+            {
+                for (int i = 0; i < _buildings.Count; i++)
+                {
+                    if (_buildings[i].Name == message.header.Sender)
+                    {
+                        _buildings[i].EnBought = message.energyBought;
+                        _buildings[i].EnSold = message.energySold;
+
+                        break;
+                    }
+                }
+            }
         }
     }
 }
