@@ -261,17 +261,19 @@ namespace Resolver
 
         void UpdatePeerStatus(UpdateStatusMessage message)
         {
-
             if (message.header.Receiver == this.name)
             {
-                for (int i = 0; i < _buildings.Count; i++)
+                lock (_lLock)
                 {
-                    if (_buildings[i].Name == message.header.Sender)
+                    for (int i = 0; i < _buildings.Count; i++)
                     {
-                        _buildings[i].EnBought = message.energyBought;
-                        _buildings[i].EnSold = message.energySold;
+                        if (_buildings[i].Name == message.header.Sender)
+                        {
+                            _buildings[i].EnBought = message.energyBought;
+                            _buildings[i].EnSold = message.energySold;
 
-                        break;
+                            break;
+                        }
                     }
                 }
             }
