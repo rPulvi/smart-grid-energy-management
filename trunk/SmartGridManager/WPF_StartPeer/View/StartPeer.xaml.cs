@@ -12,7 +12,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WPF_StartPeer.ViewModel;
-using System.Diagnostics;
 
 namespace WPF_StartPeer.View
 {
@@ -32,8 +31,6 @@ namespace WPF_StartPeer.View
 
             //associo Datasource
             base.DataContext = myvm;
-
-            Trace.Listeners.Add(myvm);
         }
     }
 }
