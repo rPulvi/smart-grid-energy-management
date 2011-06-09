@@ -99,5 +99,17 @@ namespace SmartGridManager.Core.Messaging
 
             return message;
         }
+
+        public static UpdateStatusMessage createUpdateStatusMessage(string dest, string source, float enSold, float enBought)
+        {
+            UpdateStatusMessage message = new UpdateStatusMessage()
+            {
+                header = Tools.getHeader(dest,source),                
+                energySold = enSold,
+                energyBought = enBought
+            };
+
+            return message;
+        }
     }
 }

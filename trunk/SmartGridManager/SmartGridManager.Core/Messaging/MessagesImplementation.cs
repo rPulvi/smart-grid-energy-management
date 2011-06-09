@@ -94,5 +94,10 @@ namespace SmartGridManager.Core.Messaging
             Console.ResetColor();
         }
 
+        public virtual void updateEnergyStatus(UpdateStatusMessage message)
+        {
+            Console.WriteLine("Peer {0} - Energy Sold: {1}", message.header.Sender, message.energySold);
+            Console.WriteLine("Peer {0} - Energy Bought: {1}", message.header.Sender, message.energyBought);
+        }
     }
 }

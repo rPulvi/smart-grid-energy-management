@@ -15,7 +15,8 @@ namespace SmartGridManager.Core.Messaging
     public delegate void endProposal (EndProposalMessage m);
     public delegate void heartBeat (HeartBeatMessage m);
     public delegate void remoteAdv (StatusNotifyMessage m);
-    public delegate void forwardLocalMessage (PeerMessage m);   
+    public delegate void forwardLocalMessage (PeerMessage m);
+    public delegate void updateStatus (UpdateStatusMessage m);
     #endregion
 
     public class MessageHandler : MessagesImplementation
@@ -29,7 +30,8 @@ namespace SmartGridManager.Core.Messaging
         public event endProposal OnEndProposalArrived;
         public event heartBeat OnHeartBeat;
         public event remoteAdv OnRemoteAdv;
-        public event forwardLocalMessage OnForwardLocalMessage;        
+        public event forwardLocalMessage OnForwardLocalMessage;
+        public event updateStatus OnUpdateStatus;
         #endregion
 
         public override void sayHello(HelloMessage message)
@@ -102,6 +104,14 @@ namespace SmartGridManager.Core.Messaging
                 OnForwardLocalMessage(message);
             
             base.forwardLocalMessage(message);
+        }
+
+        public override void updateEnergyStatus(UpdateStatusMessage message)
+        {
+            if (OnUpdateStatus != null)
+                OnUpdateStatus(message);
+
+            base.updateEnergyStatus(message);
         }
     }
 }
