@@ -23,13 +23,16 @@ namespace WPF_Resolver.ViewModel
         private string _resolverIP;
         private string _ora;
         private string _minuto;
-        private string _secondo;        
+        private string _secondo;
 
+        private int _numProducers = 0;
+        private int _numConsumers = 0;
         int i = 0;
 
         #endregion
 
         #region Objects
+        private ObservableCollectionEx<PieItem> _pieList = new ObservableCollectionEx<PieItem>();
         private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
         private DispatcherTimer temporizzatore;
         private BackgroundWorker bw = new BackgroundWorker();
@@ -46,6 +49,11 @@ namespace WPF_Resolver.ViewModel
 
         public ResolverViewModel()
         {
+            _pieList.Add(new PieItem(){key = "Producers", value = 0});
+            _pieList.Add(new PieItem() { key = "Consumers", value = 0 });
+            OnPropertyChanged("GetPieChartData");
+
+            #region BackGroundWorkers
             bw.WorkerReportsProgress = true;
             bw.WorkerSupportsCancellation = true;
 
@@ -58,10 +66,13 @@ namespace WPF_Resolver.ViewModel
             _backgroundTimer.DoWork += new DoWorkEventHandler(_backgroundTimer_DoWork);
 
             _resolver = new Resolver.Resolver();
+            #endregion
 
+            #region timing
             temporizzatore = new DispatcherTimer();
             temporizzatore.Interval = new TimeSpan(0, 0, 5);
             temporizzatore.Tick += new EventHandler(Temporizzatore_Tick);
+            #endregion
 
             _visStatus = Visibility.Hidden;
             _ipHost = Dns.GetHostByName(Dns.GetHostName());
@@ -75,6 +86,16 @@ namespace WPF_Resolver.ViewModel
             DispatcherTimer clockBar = new DispatcherTimer();
             temporizzatore.Interval = new TimeSpan(0, 0, 1);
             temporizzatore.Tick += new EventHandler(cloBar_Tick);
+        }
+
+        public ObservableCollectionEx<PieItem> GetPieChartData
+        {
+            get { return _pieList; }
+            set
+            {
+                _pieList = value;
+                OnPropertyChanged("GetPieChartData");
+            }
         }
 
         public ObservableCollectionEx<TempBuilding> PeerList
@@ -184,14 +205,52 @@ namespace WPF_Resolver.ViewModel
 
         private void Temporizzatore_Tick(object sender, EventArgs e)
         {
-            peerList = _resolver.GetConnectedPeers();
-            OnPropertyChanged("PeerList");                        
-        }
+            _numProducers = 0;
+            _numConsumers = 0;
 
+            peerList = _resolver.GetConnectedPeers();
+            OnPropertyChanged("PeerList");
+
+            //foreach (var p in peerList)
+            //{
+            //    if (p.status == PeerStatus.Producer)
+            //    {
+            //        _numProducers++;
+
+            //        _pieList["Producers"] = _numProducers;
+            //    }
+
+            //    if (p.status == PeerStatus.Consumer)
+            //    {
+            //        _numConsumers++;
+
+            //        _pieList["Consumers"] = _numConsumers;
+            //    }
+            //}
+
+            for (int j = 0; j < peerList.Count(); j++)
+            {
+                if (peerList[j].status == PeerStatus.Producer)
+                {
+                    _numProducers++;
+
+                    //_pieList["Producers"] = _numProducers;
+                    _pieList[0].value = _numProducers;
+                }
+
+                if (peerList[j].status == PeerStatus.Consumer)
+                {
+                    _numConsumers++;
+
+                    _pieList[1].value = _numConsumers;
+                }
+            }
+
+            OnPropertyChanged("GetPieChartData");
+        }
 
         private void cloBar_Tick(object sender, EventArgs e)
         {
-            //i += 1;
             i++;
 
             int ora = i / 3600;
@@ -231,5 +290,11 @@ namespace WPF_Resolver.ViewModel
             this.OnPropertyChanged("ImgVisibility");
             this.OnPropertyChanged("GetResolverIP");            
         }
+    }
+
+    public class PieItem
+    {
+        public string key { get; set; }
+        public int value { get; set; }
     }
 }
