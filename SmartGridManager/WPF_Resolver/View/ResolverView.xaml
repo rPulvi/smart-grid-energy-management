@@ -421,8 +421,8 @@
                             <DVC:Chart.Series>
                                 <DVC:PieSeries
                                     ItemsSource="{Binding GetPieChartData}"
-                                    IndependentValueBinding="{Binding Path=key}"
-                                    DependentValueBinding="{Binding Path=value}">
+                                    IndependentValueBinding="{Binding Path=Key}"
+                                    DependentValueBinding="{Binding Path=Value}">
                                 </DVC:PieSeries>
                             </DVC:Chart.Series>
                         </DVC:Chart>
