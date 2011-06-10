@@ -192,10 +192,10 @@ namespace Resolver
             b.Address = message.Address;
             b.Admin = message.Admin;
             b.EnBought = 0;
+            b.EnSold = 0;
             b.EnPeak = message.EnPeak;
             b.EnPrice = message.EnPrice;
-            b.EnProduced = message.EnProduced;
-            b.EnSold = 0;
+            b.EnProduced = message.EnProduced;            
             b.EnType = message.EnType;
             b.Name = message.header.Sender;
             b.status = message.Status;
@@ -206,7 +206,7 @@ namespace Resolver
             lock(_lLock)
                 _buildings.Add(b);
 
-            MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName());
+            Connector.channel.HelloResponse(MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName()));
         }
 
         private string getNameByID(Guid ID)
