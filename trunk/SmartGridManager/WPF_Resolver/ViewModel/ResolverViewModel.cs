@@ -212,34 +212,13 @@ namespace WPF_Resolver.ViewModel
             peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");
 
-            //foreach (var p in peerList)
-            //{
-            //    if (p.status == PeerStatus.Producer)
-            //    {
-            //        _numProducers++;
-
-            //        _pieList["Producers"] = _numProducers;
-            //    }
-
-            //    if (p.status == PeerStatus.Consumer)
-            //    {
-            //        _numConsumers++;
-
-            //        _pieList["Consumers"] = _numConsumers;
-            //    }
-            //}
-
-            for (int j = 0; j < peerList.Count(); j++)
+            foreach (var p in peerList)
             {
-                if (peerList[j].status == PeerStatus.Producer)
-                {
-                    _numProducers++;                    
-                }
+                if (p.status == PeerStatus.Producer)
+                    _numProducers++;
 
-                if (peerList[j].status == PeerStatus.Consumer)
-                {
-                    _numConsumers++;                    
-                }
+                if (p.status == PeerStatus.Consumer)
+                    _numConsumers++;
             }
 
             _pieList["Producers"] = _numProducers;
