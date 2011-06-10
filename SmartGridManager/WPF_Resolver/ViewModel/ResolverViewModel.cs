@@ -115,8 +115,9 @@ namespace WPF_Resolver.ViewModel
             _resolverStatus = "";
             _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
 
-            _resolverName = "Connecting...";
+            _resolverName = "Starting...";
             this.OnPropertyChanged("GetResolverName");
+            
 
             if (bw.IsBusy != true)
             {
@@ -266,7 +267,7 @@ namespace WPF_Resolver.ViewModel
 
             this.OnPropertyChanged("GetResolverStatus");
             this.OnPropertyChanged("ImgVisibility");
-            this.OnPropertyChanged("GetResolverIP");            
+            this.OnPropertyChanged("GetResolverIP");          
         }
     }
 }
