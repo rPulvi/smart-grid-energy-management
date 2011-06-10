@@ -416,8 +416,13 @@
 							</GridView>
 						</ListView.View>
 					</ListView>
-					<UniformGrid Margin="0" Rows="1" Columns="2">
-						<GroupBox Header="Producers/Consumers" FontWeight="Bold" Margin="0">
+					<Grid Margin="0" >
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<GroupBox Header="Producers/Consumers" FontWeight="Bold" Margin="0" HorizontalAlignment="Left">
                         
 							<DVC:Chart>
 								<DVC:PieSeries
@@ -427,8 +432,25 @@
 							</DVC:Chart>
                         
 						</GroupBox>
-						<GroupBox Header="Charts B" Margin="0" d:LayoutOverrides="GridBox"/>
-					</UniformGrid>
+						<GroupBox Header="Statistics" Margin="0" Grid.Column="1">
+							<Grid Margin="0">
+								<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition/>
+								</Grid.RowDefinitions>
+								<TextBlock TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								
+								<DVC:Chart Margin="0" Title="Energy Throughput" Grid.Row="1">
+									<DVC:BarSeries 
+									IndependentValueBinding="{Binding Key}"
+									DependentValueBinding="{Binding Value}"  
+									ItemsSource="{Binding GetBarChartData}" Title=""/>
+								</DVC:Chart>
+								
+							</Grid>
+						</GroupBox>
+						<GroupBox Header="Charts B" Margin="0" d:LayoutOverrides="GridBox" Grid.Column="2" Grid.ColumnSpan="3"/>
+					</Grid>
 				</UniformGrid>
 			</TabItem>
 			<TabItem Header="Remote" FontWeight="Bold" Foreground="DarkBlue">
