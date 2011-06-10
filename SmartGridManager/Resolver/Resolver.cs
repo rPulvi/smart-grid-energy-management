@@ -44,7 +44,8 @@ namespace Resolver
         private System.Timers.Timer _HBTimer;
 
         private object _lLock = new object();
-        private const int TTE = 2;
+
+        private const int TTL = 2;
 
 
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
@@ -186,6 +187,7 @@ namespace Resolver
 
         private void HelloResponse(HelloMessage message)
         {
+            //Elaborate the Hello Message
             TempBuilding b = new TempBuilding();
 
             #region setting fields
@@ -199,13 +201,14 @@ namespace Resolver
             b.EnType = message.EnType;
             b.Name = message.header.Sender;
             b.status = message.Status;
-            b.TTE = TTE;
+            b.TTL = TTL;
             b.iconPath = b.status == PeerStatus.Producer ? @"/WPF_Resolver;component/img/producer.png" : @"/WPF_Resolver;component/img/consumer.png";
             #endregion
 
             lock(_lLock)
                 _buildings.Add(b);
 
+            //Be polite! Send an HelloResponse
             Connector.channel.HelloResponse(MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName()));
         }
 
@@ -240,7 +243,7 @@ namespace Resolver
                 for (int i = 0; i < _buildings.Count; i++)
                 {
                     if (_buildings[i].Name == message.header.Sender)
-                        _buildings[i].TTE = TTE;
+                        _buildings[i].TTL = TTL;
                 }
             }
         }
@@ -251,10 +254,14 @@ namespace Resolver
             {
                 for (int i = 0; i < _buildings.Count; i++)
                 {
-                    if (_buildings[i].TTE > 0)
-                        _buildings[i].TTE--;
+                    if (_buildings[i].TTL > 0)
+                        _buildings[i].TTL--;
                     else
+                    {
+                        //Remove the deadly peer and alert the folks.
                         _buildings.RemoveAt(i);
+                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                    }
                 }
             }            
         }
@@ -263,16 +270,24 @@ namespace Resolver
         {
             if (message.header.Receiver == this.name)
             {
+                TempBuilding b;
+
                 lock (_lLock)
                 {
                     for (int i = 0; i < _buildings.Count; i++)
                     {
                         if (_buildings[i].Name == message.header.Sender)
                         {
-                            _buildings[i].EnBought = message.energyBought;
-                            _buildings[i].EnSold = message.energySold;
+                            //Workaround for observable issue...
+                            b = _buildings[i];
 
-                            break;
+                            b.EnBought = message.energyBought;
+                            b.EnSold = message.energySold;
+
+                            _buildings.RemoveAt(i);
+                            _buildings.Add(b);
+
+                            break;                                        
                         }
                     }
                 }
