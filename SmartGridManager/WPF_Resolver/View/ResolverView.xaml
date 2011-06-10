@@ -8,480 +8,484 @@
         xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Name="window" mc:Ignorable="d" x:Class="WPF_Resolver.MainWindow"
         xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
-        Title="Resolver" Height="541.5" Width="749"
-        WindowState="Maximized" Icon="/img/Energy-icon.ico"
-        ResizeMode="NoResize">
-    <Grid x:Name="grid">
+        Title="Resolver"
+        WindowState="Maximized" Icon="/img/Energy-icon.ico">
+    <Grid Height="{Binding ElementName=window, Path=Height}">
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition/>	
+		</Grid.ColumnDefinitions>
+		
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
         
-        <Grid.Resources>
+		<Grid.Resources>
 
-            <!--<local:ResolverViewModel x:Key="PeerList"/>-->
+			<DataTemplate x:Key="NomeItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<Image Source="{Binding iconPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
+						<TextBlock Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="NomeItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Image Source="{Binding iconPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="EnergiaItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding EnType}" VerticalAlignment="Center" Grid.Column="1"/>
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="EnergiaItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnType}" VerticalAlignment="Center" Grid.Column="1"/>
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="PeakItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<Image Source="" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
+						<TextBlock Text="{Binding EnPeak}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="PeakItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <Image Source="" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding EnPeak}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="EnergyBoughtItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding EnBought}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="EnergyBoughtItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnBought}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="EnergySoldItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding EnSold}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="EnergySoldItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnSold}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="EnergyProducedItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding EnProduced}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="EnergyProducedItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnProduced}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="EnergyPriceItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding EnPrice}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="EnergyPriceItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding EnPrice}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="AddressItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding Address}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="AddressItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Address}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<DataTemplate x:Key="AdminItemTemplate">
+				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="32" />
+							<ColumnDefinition />
+						</Grid.ColumnDefinitions>
+						<TextBlock Text="{Binding Admin}" VerticalAlignment="Center" Grid.Column="1" />
+					</Grid>
+				</Border>
+			</DataTemplate>
 
-            <DataTemplate x:Key="AdminItemTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="32" />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding Admin}" VerticalAlignment="Center" Grid.Column="1" />
-                    </Grid>
-                </Border>
-            </DataTemplate>
+			<Style x:Key="ListViewItemContainerStyle" TargetType="{x:Type ListViewItem}">
+				<Setter Property="Background" Value="#ffffff" />
+				<Setter Property="HorizontalContentAlignment" Value="Left" />
+				<Setter Property="VerticalContentAlignment" Value="Center" />
+				<Setter Property="Foreground" Value="Black" />
+				<Setter Property="Margin" Value="0,0,0,0" />
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ListViewItem}">
+							<Border x:Name="Bd" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" BorderThickness="0,0,0,1" BorderBrush="#6FBDE8">
+								<GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+							</Border>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsSelected"  Value="true">
+									<Setter TargetName="Bd" Property="BorderBrush" Value="#FF143c65" />
+									<Setter Property="Background" TargetName="Bd">
+										<Setter.Value>
+											<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+												<LinearGradientBrush.GradientStops>
+													<GradientStopCollection>
+														<GradientStop Color="#FF75aac7" Offset="0"/>
+														<GradientStop Color="#FF143c65" Offset="1"/>
+													</GradientStopCollection>
+												</LinearGradientBrush.GradientStops>
+											</LinearGradientBrush>
+										</Setter.Value>
+									</Setter>
+								</Trigger>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter TargetName="Bd" Property="Background" Value="#e0eff8" />
+								</Trigger>
+								<MultiTrigger>
+									<MultiTrigger.Conditions>
+										<Condition Property="IsSelected" Value="true" />
+										<Condition Property="Selector.IsSelectionActive" Value="True" />
+									</MultiTrigger.Conditions>
+									<Setter Property="Background" TargetName="Bd">
+										<Setter.Value>
+											<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+												<LinearGradientBrush.GradientStops>
+													<GradientStopCollection>
+														<GradientStop Color="#FF75aac7" Offset="0"/>
+														<GradientStop Color="#FF143c65" Offset="1"/>
+													</GradientStopCollection>
+												</LinearGradientBrush.GradientStops>
+											</LinearGradientBrush>
+										</Setter.Value>
+									</Setter>
+									<Setter Property="BorderBrush" TargetName="Bd" Value="#FF143c65"/>
+									<Setter Property="Foreground" Value="White"/>
+								</MultiTrigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 
-            <Style x:Key="ListViewItemContainerStyle" TargetType="{x:Type ListViewItem}">
-                <Setter Property="Background" Value="#ffffff" />
-                <Setter Property="HorizontalContentAlignment" Value="Left" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Foreground" Value="Black" />
-                <Setter Property="Margin" Value="0,0,0,0" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListViewItem}">
-                            <Border x:Name="Bd" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" BorderThickness="0,0,0,1" BorderBrush="#6FBDE8">
-                                <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsSelected"  Value="true">
-                                    <Setter TargetName="Bd" Property="BorderBrush" Value="#FF143c65" />
-                                    <Setter Property="Background" TargetName="Bd">
-                                        <Setter.Value>
-                                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                                <LinearGradientBrush.GradientStops>
-                                                    <GradientStopCollection>
-                                                        <GradientStop Color="#FF75aac7" Offset="0"/>
-                                                        <GradientStop Color="#FF143c65" Offset="1"/>
-                                                    </GradientStopCollection>
-                                                </LinearGradientBrush.GradientStops>
-                                            </LinearGradientBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="Bd" Property="Background" Value="#e0eff8" />
-                                </Trigger>
-                                <MultiTrigger>
-                                    <MultiTrigger.Conditions>
-                                        <Condition Property="IsSelected" Value="true" />
-                                        <Condition Property="Selector.IsSelectionActive" Value="True" />
-                                    </MultiTrigger.Conditions>
-                                    <Setter Property="Background" TargetName="Bd">
-                                        <Setter.Value>
-                                            <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
-                                                <LinearGradientBrush.GradientStops>
-                                                    <GradientStopCollection>
-                                                        <GradientStop Color="#FF75aac7" Offset="0"/>
-                                                        <GradientStop Color="#FF143c65" Offset="1"/>
-                                                    </GradientStopCollection>
-                                                </LinearGradientBrush.GradientStops>
-                                            </LinearGradientBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Setter Property="BorderBrush" TargetName="Bd" Value="#FF143c65"/>
-                                    <Setter Property="Foreground" Value="White"/>
-                                </MultiTrigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+			<LinearGradientBrush x:Key="BackgroundBrush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+				<LinearGradientBrush.GradientStops>
+					<GradientStopCollection>
+						<GradientStop Color="#FF212121"/>
+						<GradientStop Color="White" Offset="1"/>
+						<GradientStop Color="#FF7F7F7F" Offset="0.737"/>
+					</GradientStopCollection>
+				</LinearGradientBrush.GradientStops>
+			</LinearGradientBrush>
 
-            <LinearGradientBrush x:Key="BackgroundBrush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                <LinearGradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FF212121"/>
-                        <GradientStop Color="White" Offset="1"/>
-                        <GradientStop Color="#FF7F7F7F" Offset="0.737"/>
-                    </GradientStopCollection>
-                </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
+			<LinearGradientBrush x:Key="HighlightBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+				<LinearGradientBrush.GradientStops>
+					<GradientStopCollection>
+						<GradientStop Color="#FF97d3f3" Offset="0"/>
+						<GradientStop Color="#FF4385BE" Offset="1"/>
+					</GradientStopCollection>
+				</LinearGradientBrush.GradientStops>
+			</LinearGradientBrush>
 
-            <LinearGradientBrush x:Key="HighlightBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
-                <LinearGradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FF97d3f3" Offset="0"/>
-                        <GradientStop Color="#FF4385BE" Offset="1"/>
-                    </GradientStopCollection>
-                </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
+			<LinearGradientBrush x:Key="BorderBrush" StartPoint="0,0" EndPoint="0,1">
+				<LinearGradientBrush.GradientStops>
+					<GradientStopCollection>
+						<GradientStop Color="#FFAFDDF6" Offset="0"/>
+						<GradientStop Color="#FF2969AA" Offset="1"/>
+					</GradientStopCollection>
+				</LinearGradientBrush.GradientStops>
+			</LinearGradientBrush>
 
-            <LinearGradientBrush x:Key="BorderBrush" StartPoint="0,0" EndPoint="0,1">
-                <LinearGradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FFAFDDF6" Offset="0"/>
-                        <GradientStop Color="#FF2969AA" Offset="1"/>
-                    </GradientStopCollection>
-                </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
+			<LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1">
+				<LinearGradientBrush.GradientStops>
+					<GradientStopCollection>
+						<GradientStop Color="#FF75aac7" Offset="0"/>
+						<GradientStop Color="#FF143c65" Offset="1"/>
+					</GradientStopCollection>
+				</LinearGradientBrush.GradientStops>
+			</LinearGradientBrush>
 
-            <LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1">
-                <LinearGradientBrush.GradientStops>
-                    <GradientStopCollection>
-                        <GradientStop Color="#FF75aac7" Offset="0"/>
-                        <GradientStop Color="#FF143c65" Offset="1"/>
-                    </GradientStopCollection>
-                </LinearGradientBrush.GradientStops>
-            </LinearGradientBrush>
+			<Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
+				<Setter Property="Width" Value="14"/>
+				<Setter Property="Background" Value="#2e566b"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type Thumb}">
+							<Border Padding="{TemplateBinding Padding}" Background="Transparent">
+								<Rectangle HorizontalAlignment="Center" Width="1" Fill="{TemplateBinding Background}"/>
+							</Border>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 
-            <Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
-                <Setter Property="Width" Value="14"/>
-                <Setter Property="Background" Value="#2e566b"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Thumb}">
-                            <Border Padding="{TemplateBinding Padding}" Background="Transparent">
-                                <Rectangle HorizontalAlignment="Center" Width="1" Fill="{TemplateBinding Background}"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+			<Style x:Key="{x:Type GridViewColumnHeader}" TargetType="{x:Type GridViewColumnHeader}">
+				<Setter Property="HorizontalContentAlignment" Value="Center"/>
+				<Setter Property="VerticalContentAlignment" Value="Center"/>
+				<Setter Property="Foreground" Value="#FFFFFF" />
+				<Setter Property="Padding" Value="8"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+							<Grid>
+								<Border x:Name="HeaderBorder" Padding="{TemplateBinding Padding}" BorderThickness="0,1,0,1" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource BackgroundBrush}">
+									<ContentPresenter x:Name="HeaderContent" Margin="0,0,0,1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+								</Border>
+								<Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right" Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}"/>
+							</Grid>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsMouseOver" Value="true">
+									<Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource HighlightBackgroundBrush}"/>
+								</Trigger>
+								<Trigger Property="IsPressed" Value="true">
+									<Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource PressedBorderBrush}"/>
+									<Setter TargetName="HeaderContent" Property="Margin" Value="1,1,0,0"/>
+								</Trigger>
+								<Trigger Property="IsEnabled" Value="false">
+									<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+				<Style.Triggers>
+					<Trigger Property="Role" Value="Floating">
+						<Setter Property="Opacity" Value="0.7"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+									<Canvas x:Name="PART_FloatingHeaderCanvas">
+										<Rectangle Fill="#60000000" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}"/>
+									</Canvas>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+					<Trigger Property="Role" Value="Padding">
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+									<Border x:Name="HeaderBorder" BorderThickness="0,1,0,1" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource BackgroundBrush}"/>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Trigger>
+				</Style.Triggers>
+			</Style>
 
-            <Style x:Key="{x:Type GridViewColumnHeader}" TargetType="{x:Type GridViewColumnHeader}">
-                <Setter Property="HorizontalContentAlignment" Value="Center"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Foreground" Value="#FFFFFF" />
-                <Setter Property="Padding" Value="8"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                            <Grid>
-                                <Border x:Name="HeaderBorder" Padding="{TemplateBinding Padding}" BorderThickness="0,1,0,1" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource BackgroundBrush}">
-                                    <ContentPresenter x:Name="HeaderContent" Margin="0,0,0,1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                </Border>
-                                <Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right" Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}"/>
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="true">
-                                    <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource HighlightBackgroundBrush}"/>
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="true">
-                                    <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource PressedBorderBrush}"/>
-                                    <Setter TargetName="HeaderContent" Property="Margin" Value="1,1,0,0"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="false">
-                                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-                <Style.Triggers>
-                    <Trigger Property="Role" Value="Floating">
-                        <Setter Property="Opacity" Value="0.7"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                                    <Canvas x:Name="PART_FloatingHeaderCanvas">
-                                        <Rectangle Fill="#60000000" Width="{TemplateBinding ActualWidth}" Height="{TemplateBinding ActualHeight}"/>
-                                    </Canvas>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                    <Trigger Property="Role" Value="Padding">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                                    <Border x:Name="HeaderBorder" BorderThickness="0,1,0,1" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource BackgroundBrush}"/>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-
-            <Style x:Key="{x:Static GridView.GridViewScrollViewerStyleKey}" TargetType="{x:Type ScrollViewer}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ScrollViewer}">
-                            <Grid Background="{TemplateBinding Background}">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <DockPanel Margin="{TemplateBinding Padding}">
-                                    <ScrollViewer DockPanel.Dock="Top" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Focusable="false">
-                                        <GridViewHeaderRowPresenter Margin="0,0,0,0" Columns="{Binding TemplatedParent.View.Columns, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderContainerStyle="{Binding TemplatedParent.View.ColumnHeaderContainerStyle, RelativeSource={RelativeSource TemplatedParent}}" 
+			<Style x:Key="{x:Static GridView.GridViewScrollViewerStyleKey}" TargetType="{x:Type ScrollViewer}">
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ScrollViewer}">
+							<Grid Background="{TemplateBinding Background}">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="*"/>
+									<ColumnDefinition Width="Auto"/>
+								</Grid.ColumnDefinitions>
+								<Grid.RowDefinitions>
+									<RowDefinition Height="*"/>
+									<RowDefinition Height="Auto"/>
+								</Grid.RowDefinitions>
+								<DockPanel Margin="{TemplateBinding Padding}">
+									<ScrollViewer DockPanel.Dock="Top" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Focusable="false">
+										<GridViewHeaderRowPresenter Margin="0,0,0,0" Columns="{Binding TemplatedParent.View.Columns, RelativeSource={RelativeSource TemplatedParent}}" ColumnHeaderContainerStyle="{Binding TemplatedParent.View.ColumnHeaderContainerStyle, RelativeSource={RelativeSource TemplatedParent}}" 
 											ColumnHeaderTemplate="{Binding TemplatedParent.View.ColumnHeaderTemplate, RelativeSource={RelativeSource TemplatedParent}}" 
 											ColumnHeaderTemplateSelector="{Binding TemplatedParent.View.ColumnHeaderTemplateSelector, RelativeSource={RelativeSource TemplatedParent}}" 
 											AllowsColumnReorder="{Binding TemplatedParent.View.AllowsColumnReorder, RelativeSource={RelativeSource TemplatedParent}}"
 											ColumnHeaderContextMenu="{Binding TemplatedParent.View.ColumnHeaderContextMenu, RelativeSource={RelativeSource TemplatedParent}}" 
 											ColumnHeaderToolTip="{Binding TemplatedParent.View.ColumnHeaderToolTip, RelativeSource={RelativeSource TemplatedParent}}" 
 											SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                                    </ScrollViewer>
-                                    <ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
-											KeyboardNavigation.DirectionalNavigation="Local"
-											CanContentScroll="True" CanHorizontallyScroll="False" 
-											CanVerticallyScroll="False"/>
-                                </DockPanel>
-                                <ScrollBar x:Name="PART_HorizontalScrollBar" Orientation="Horizontal" Grid.Row="1" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}" Value="{TemplateBinding HorizontalOffset}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
-                                <ScrollBar x:Name="PART_VerticalScrollBar" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Value="{TemplateBinding VerticalOffset}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
-                            </Grid>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+									</ScrollViewer>
+									<ScrollContentPresenter x:Name="PART_ScrollContentPresenter"
+										KeyboardNavigation.DirectionalNavigation="Local"
+										CanContentScroll="True" CanHorizontallyScroll="False" 
+										CanVerticallyScroll="False"/>
+								</DockPanel>
+								<ScrollBar x:Name="PART_HorizontalScrollBar" Orientation="Horizontal" Grid.Row="1" Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}" Value="{TemplateBinding HorizontalOffset}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}"/>
+								<ScrollBar x:Name="PART_VerticalScrollBar" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" ViewportSize="{TemplateBinding ViewportHeight}" Value="{TemplateBinding VerticalOffset}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+							</Grid>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 
-            <Style x:Key="{x:Type ListView}" TargetType="{x:Type ListView}">
-                <Setter Property="SnapsToDevicePixels" Value="true"/>
-                <Setter Property="OverridesDefaultStyle" Value="true"/>
-                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-                <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListView}">
-                            <Border x:Name="Border" BorderThickness="1" BorderBrush="#999999" Background="#DFDFDF">
-                                <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
-                                    <ItemsPresenter />
-                                </ScrollViewer>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsGrouping" Value="true">
-                                    <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="false">
-                                    <Setter TargetName="Border" Property="Background" Value="#BBBBBB"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+			<Style x:Key="{x:Type ListView}" TargetType="{x:Type ListView}">
+				<Setter Property="SnapsToDevicePixels" Value="true"/>
+				<Setter Property="OverridesDefaultStyle" Value="true"/>
+				<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+				<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+				<Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+				<Setter Property="VerticalContentAlignment" Value="Center"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type ListView}">
+							<Border x:Name="Border" BorderThickness="1" BorderBrush="#999999" Background="#DFDFDF">
+								<ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+									<ItemsPresenter />
+								</ScrollViewer>
+							</Border>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsGrouping" Value="true">
+									<Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+								</Trigger>
+								<Trigger Property="IsEnabled" Value="false">
+									<Setter TargetName="Border" Property="Background" Value="#BBBBBB"/>
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 
-        </Grid.Resources>
+		</Grid.Resources>
         
-        <Grid.RowDefinitions>
-    		<RowDefinition Height="127.385"/>
-    		<RowDefinition/>
-    	</Grid.RowDefinitions>
-    	<Grid.ColumnDefinitions>
-    		<ColumnDefinition/>
-    	</Grid.ColumnDefinitions>
-        <Grid.Background>
-        	<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-        		<GradientStop Color="#FFF2FCFF"/>
-        		<GradientStop Color="#FF184466" Offset="1"/>
-        	</LinearGradientBrush>
-        </Grid.Background>
-    	<Menu Height="20" VerticalAlignment="Top" Width="auto">
-    		<Menu.Background>
-    			<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-    				<GradientStop Color="#FF24396A" Offset="1"/>
-    				<GradientStop Color="#FF9EB6F1"/>
-    			</LinearGradientBrush>
-    		</Menu.Background>
-    		<MenuItem Header="File" Foreground="White">
-                <MenuItem Header="Start" Foreground="Blue" Command="{Binding StartResolver}"/>
-                <MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
-    		</MenuItem>
-    	</Menu>
-    	<TabControl Margin="8,2.975,8,26" Grid.Row="1">
-    		<TabItem Header="Local" FontWeight="Bold" Foreground="DarkBlue">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                        <GradientStop Color="#FF24396A" Offset="1"/>
-                        <GradientStop Color="#FF9EB6F1"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
-                        <Grid>
-                        	<Grid.RowDefinitions>
-                        		<RowDefinition Height="0.523*"/>
-                        		<RowDefinition Height="0.477*"/>
-                        	</Grid.RowDefinitions>
-                            
-                            <!--.:LISTA:.-->
-                            <ListView Margin="8,8,350.663,5" Grid.RowSpan="2" x:Name="ListView"
-                              ItemsSource="{Binding PeerList}"
-                              ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
-                              util:GridViewSort.AutoSort="True"
-	                          util:GridViewSort.SortGlyphAscending="/img/up.png"
-                              util:GridViewSort.SortGlyphDescending="/img/down.png">
-                                <ListView.View>
-                                    <GridView>
-                                        <GridViewColumn CellTemplate="{StaticResource NomeItemTemplate}" Header="Nome" util:GridViewSort.PropertyName="Name"/>
-                                        <GridViewColumn CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energia" util:GridViewSort.PropertyName="Energia"/>
-                                        <GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="Energia Prodotta" util:GridViewSort.PropertyName="EnProduced"/>
-                                        <GridViewColumn CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="Energia Venduta" util:GridViewSort.PropertyName="EnSold"/>
-                                        <GridViewColumn CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="Energia Comprata" util:GridViewSort.PropertyName="EnBought"/>
-                                        <GridViewColumn CellTemplate="{StaticResource PeakItemTemplate}" Header="Picco Energia" util:GridViewSort.PropertyName="EnPeak"/>
-                                        <GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="Energia Prodotta" util:GridViewSort.PropertyName="EnProduced"/>
-                                        <GridViewColumn CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Prezzo" util:GridViewSort.PropertyName="EnPrice"/>
-                                        <GridViewColumn CellTemplate="{StaticResource AddressItemTemplate}" Header="Indirizzo" util:GridViewSort.PropertyName="Address"/>
-                                        <GridViewColumn CellTemplate="{StaticResource AdminItemTemplate}" Header="Administrator" util:GridViewSort.PropertyName="Admin"/>
-                                    </GridView>
-                                </ListView.View>
-                             </ListView>
-                    <GroupBox Header="Producers/Consumers" FontWeight="Bold" HorizontalAlignment="Right" Margin="0,8,8,8" Width="338.663">
-                        
-                        <DVC:Chart>
-                            <DVC:Chart.Series>
-                                <DVC:PieSeries
-                                    ItemsSource="{Binding GetPieChartData}"
-                                    IndependentValueBinding="{Binding Path=Key}"
-                                    DependentValueBinding="{Binding Path=Value}">
-                                </DVC:PieSeries>
-                            </DVC:Chart.Series>
-                        </DVC:Chart>
-                        
-                    </GroupBox>
-                        	<GroupBox Header="Charts B" HorizontalAlignment="Right" Margin="0,-8,8,4.339" Grid.Row="1" Width="338.663" d:LayoutOverrides="GridBox"/>
-                    </Grid>
-    		</TabItem>
-            <TabItem Header="Remote" FontWeight="Bold" Foreground="DarkBlue">
-                <TabItem.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                        <GradientStop Color="#FF24396A" Offset="1"/>
-                        <GradientStop Color="#FF9EB6F1"/>
-                    </LinearGradientBrush>
-                </TabItem.Background>
-                <Grid Opacity="0.135" Background="#FFB9CBD0"/>
-    		</TabItem>
-    	</TabControl>
-        <TextBlock Margin="107,48.169,0,8" TextWrapping="Wrap" FontSize="40" FontWeight="Bold" Foreground="#FF184466" HorizontalAlignment="Left" Width="295"><Run Language="it-it" Text="{Binding GetResolverName}"/></TextBlock>
-    	<Image Margin="8,24,0,1.025" Source="/WPF_Resolver;component/img/resolver.png" Stretch="Fill" HorizontalAlignment="Left" Width="93"/>
+		<Grid.Background>
+			<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+				<GradientStop Color="#FFF2FCFF"/>
+				<GradientStop Color="#FF184466" Offset="1"/>
+			</LinearGradientBrush>
+		</Grid.Background>
+		<Menu Width="auto" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment">
+			<Menu.Background>
+				<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+					<GradientStop Color="#FF24396A" Offset="1"/>
+					<GradientStop Color="#FF9EB6F1"/>
+				</LinearGradientBrush>
+			</Menu.Background>
+			<MenuItem Header="File" Foreground="White">
+				<MenuItem Header="Start" Foreground="Blue" Command="{Binding StartResolver}"/>
+				<MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
+			</MenuItem>
+		</Menu>
+		<StackPanel Margin="0" Orientation="Horizontal" d:LayoutOverrides="Width" Grid.Row="1">
+			<Image Source="/WPF_Resolver;component/img/resolver.png" Stretch="None"/>
         
-        <StatusBar VerticalAlignment="Bottom" Grid.Row="1">
-            <StatusBar.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="4*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                    </Grid>
-                </ItemsPanelTemplate>
-            </StatusBar.ItemsPanel>
-            <StatusBarItem Margin="23,0,0,0" HorizontalAlignment="Left" Width="56.517" d:LayoutOverrides="HorizontalAlignment">
-                <TextBlock  x:Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="52"/>
-            </StatusBarItem>
-            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
-            <StatusBarItem Margin="0,0,-244.333,0">
-                <Image x:Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center"/>
-            </StatusBarItem>
-            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
-			<StatusBarItem Margin="94.5,0,370.9,0">
-                <TextBlock x:Name="Ora" Text="{Binding GetOra}" FontWeight="Bold" Foreground="DarkBlue" Width="19"/>
-            </StatusBarItem>
-			<StatusBarItem Margin="112,0,353.15,0">
-                <TextBlock x:Name="Minuto" Text="{Binding GetMinuto}" FontWeight="Bold" Foreground="DarkBlue" Width="18.723"/>
-            </StatusBarItem>
-			<StatusBarItem Margin="129.5,0,335.65,0">
-                <TextBlock x:Name="Secondo" Text="{Binding GetSecondo}" FontWeight="Bold" Foreground="DarkBlue" Width="18.723"/>
-            </StatusBarItem>
-            <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="160.502,2,0,2"/>
-            <StatusBarItem Margin="0,0,-572.833,0" HorizontalContentAlignment="Right" d:LayoutOverrides="HorizontalAlignment">
-            	<TextBlock Text="{Binding GetResolverIP}" FontWeight="Bold" Foreground="DarkBlue" Width="200" HorizontalAlignment="Center"/>
-            </StatusBarItem>
-        </StatusBar>
-    </Grid>
+			<TextBlock Margin="0" TextWrapping="Wrap" FontSize="40" FontWeight="Bold" Foreground="#FF184466" HorizontalAlignment="Left" VerticalAlignment="Center"><Run Language="it-it" Text="{Binding GetResolverName}"/></TextBlock>
+		</StackPanel>
+		<TabControl Margin="0" d:LayoutOverrides="Height" Grid.Row="2">
+			<TabItem Header="Local" FontWeight="Bold" Foreground="DarkBlue">
+				<TabItem.Background>
+					<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+						<GradientStop Color="#FF24396A" Offset="1"/>
+						<GradientStop Color="#FF9EB6F1"/>
+					</LinearGradientBrush>
+				</TabItem.Background>
+				<UniformGrid Rows="2" Columns="1">
+<!--.:LISTA:.-->
+					<ListView Margin="8,8,0,0" x:Name="ListView"
+						ItemsSource="{Binding PeerList}"
+						ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
+						util:GridViewSort.AutoSort="True"
+						util:GridViewSort.SortGlyphAscending="/img/up.png"
+						util:GridViewSort.SortGlyphDescending="/img/down.png">
+						<ListView.View>
+							<GridView>
+								<GridViewColumn CellTemplate="{StaticResource NomeItemTemplate}" Header="Nome" util:GridViewSort.PropertyName="Name"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energia" util:GridViewSort.PropertyName="Energia"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="Energia Prodotta" util:GridViewSort.PropertyName="EnProduced"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="Energia Venduta" util:GridViewSort.PropertyName="EnSold"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="Energia Comprata" util:GridViewSort.PropertyName="EnBought"/>
+								<GridViewColumn CellTemplate="{StaticResource PeakItemTemplate}" Header="Picco Energia" util:GridViewSort.PropertyName="EnPeak"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="Energia Prodotta" util:GridViewSort.PropertyName="EnProduced"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Prezzo" util:GridViewSort.PropertyName="EnPrice"/>
+								<GridViewColumn CellTemplate="{StaticResource AddressItemTemplate}" Header="Indirizzo" util:GridViewSort.PropertyName="Address"/>
+								<GridViewColumn CellTemplate="{StaticResource AdminItemTemplate}" Header="Administrator" util:GridViewSort.PropertyName="Admin"/>
+							</GridView>
+						</ListView.View>
+					</ListView>
+					<UniformGrid Margin="0" Rows="1" Columns="2">
+						<GroupBox Header="Producers/Consumers" FontWeight="Bold" Margin="0">
+                        
+							<DVC:Chart>
+								<DVC:PieSeries
+									ItemsSource="{Binding GetPieChartData}"
+									IndependentValueBinding="{Binding Key}"
+									DependentValueBinding="{Binding Value}"/>
+							</DVC:Chart>
+                        
+						</GroupBox>
+						<GroupBox Header="Charts B" Margin="0" d:LayoutOverrides="GridBox"/>
+					</UniformGrid>
+				</UniformGrid>
+			</TabItem>
+			<TabItem Header="Remote" FontWeight="Bold" Foreground="DarkBlue">
+				<TabItem.Background>
+					<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+						<GradientStop Color="#FF24396A" Offset="1"/>
+						<GradientStop Color="#FF9EB6F1"/>
+					</LinearGradientBrush>
+				</TabItem.Background>
+				<Grid Opacity="0.135" Background="#FFB9CBD0"/>
+			</TabItem>
+		</TabControl>
+        
+		<StatusBar VerticalAlignment="Bottom" Margin="0" d:LayoutOverrides="VerticalAlignment" Grid.Row="3">
+			<StatusBar.ItemsPanel>
+				<ItemsPanelTemplate>
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="4*"/>
+							<ColumnDefinition Width="Auto"/>
+							<ColumnDefinition Width="*"/>
+							<ColumnDefinition Width="*"/>
+						</Grid.ColumnDefinitions>
+					</Grid>
+				</ItemsPanelTemplate>
+			</StatusBar.ItemsPanel>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<StatusBarItem Margin="0" d:LayoutOverrides="Width, Height" HorizontalContentAlignment="Center">
+					<Image x:Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
+				</StatusBarItem>
+				<StatusBarItem Margin="0" HorizontalAlignment="Right" d:LayoutOverrides="Height" Grid.Column="1" HorizontalContentAlignment="Center">
+					<TextBlock  x:Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue"/>
+				</StatusBarItem>
+				<Separator Background="Gray" Margin="0" Grid.Column="2"/>
+				<StatusBarItem Margin="0" d:LayoutOverrides="Height" Grid.Column="3" HorizontalContentAlignment="Center">
+					<UniformGrid Rows="1" Columns="3">
+						<TextBlock x:Name="Ora" Text="{Binding GetOra}" FontWeight="Bold" Foreground="DarkBlue"/>
+						<TextBlock x:Name="Minuto" Text="{Binding GetMinuto}" FontWeight="Bold" Foreground="DarkBlue"/>
+						<TextBlock x:Name="Secondo" Text="{Binding GetSecondo}" FontWeight="Bold" Foreground="DarkBlue"/>
+					</UniformGrid>
+				</StatusBarItem>
+				<Separator Background="Gray" Margin="0" Grid.Column="4"/>
+				<StatusBarItem HorizontalContentAlignment="Right" d:LayoutOverrides="Height" Grid.Column="5">
+					<TextBlock Text="{Binding GetResolverIP}" FontWeight="Bold" Foreground="DarkBlue" HorizontalAlignment="Right"/>
+				</StatusBarItem>
+			</Grid>
+		</StatusBar>
+	</Grid>
 </Window>
