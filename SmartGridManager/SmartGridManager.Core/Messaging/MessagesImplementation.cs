@@ -29,75 +29,62 @@ namespace SmartGridManager.Core.Messaging
         {
             if(message.status == PeerStatus.Consumer)
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Ricevuta richiesta di {0}kW di energia da parte di {1}",
                     message.energyReq,                
-                    message.header.Sender);
-                Console.ResetColor();
+                    message.header.Sender);                
             }
         }
 
         public virtual void energyProposal(EnergyProposalMessage message)
-        {
-            Console.ForegroundColor = ConsoleColor.Yellow;
+        {            
             Console.WriteLine("Proposta di vendita di {0}kW di energia. Prezzo{1}. Mittente {2}",
                 message.energyAvailable,                
                 message.price,
-                message.header.Sender);
-            Console.ResetColor();
+                message.header.Sender);         
         }
 
         public virtual void acceptProposal(EnergyAcceptMessage message)
         {
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
             Console.WriteLine("Proposta accettata - Energia richiesta {0}",
                 message.energy);
-            Console.ResetColor();
         }
 
         public virtual void endProposal(EndProposalMessage message)
         {
             String s;
-            if (message.endStatus == true)
-            {
-                s = "Confermata";
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-            else
-            {
+            if (message.endStatus == true)            
+                s = "Confermata";                
+            
+            else            
                 s = "Rifiutata";
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
 
             Console.WriteLine("Offerta " + s);
-            Console.ResetColor();
         }
 
         public virtual void heartBeat(HeartBeatMessage message)
         {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine("heartBeat di {0}, ricevuto alle {1}", message.header.Sender, message.header.TimeStamp);
-            Console.ResetColor();
         }
 
         public virtual void remoteAdv(StatusNotifyMessage message)
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            Console.WriteLine("Remote request sent to Resolver");
-            Console.ResetColor();
+            Console.WriteLine("Remote request sent to Resolver");         
         }
 
         public virtual void forwardLocalMessage(PeerMessage message)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Peer {0} is forwarding a message..", message.header.Sender);
-            Console.ResetColor();
         }
 
         public virtual void updateEnergyStatus(UpdateStatusMessage message)
         {
             Console.WriteLine("Peer {0} - Energy Sold: {1}", message.header.Sender, message.energySold);
             Console.WriteLine("Peer {0} - Energy Bought: {1}", message.header.Sender, message.energyBought);
+        }
+
+        public virtual void peerDown(PeerIsDownMessage message)
+        {
+            Console.WriteLine("Peer {0} is down...", message.peerName);
         }
     }
 }

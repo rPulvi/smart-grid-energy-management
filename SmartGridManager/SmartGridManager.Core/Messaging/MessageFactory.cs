@@ -111,5 +111,16 @@ namespace SmartGridManager.Core.Messaging
 
             return message;
         }
+
+        public static PeerIsDownMessage createPeerIsDownMessage(string dest, string source, string peerDownName)
+        {
+            PeerIsDownMessage message = new PeerIsDownMessage()
+            {
+                header = Tools.getHeader(dest, source),
+                peerName = peerDownName
+            };
+
+            return message;
+        }
     }
 }

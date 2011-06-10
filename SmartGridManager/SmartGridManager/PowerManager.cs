@@ -35,8 +35,6 @@ namespace SmartGridManager
         private List<EnergyLink> _consumers = new List<EnergyLink>();
         private System.Timers.Timer _proposalCountdown;
         private System.Timers.Timer _heartBeatTimer;
-        private System.Timers.Timer _producerCheckTimer;
-        private System.Timers.Timer _consumerCheckTimer;
         private System.Timers.Timer _mainTimer;
 
         #endregion
@@ -51,8 +49,8 @@ namespace SmartGridManager
             MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
             MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
             MsgHandler.OnProposalAccepted += new acceptProposal(ProposalAccepted);
-            MsgHandler.OnEndProposalArrived += new endProposal(EndProposal);
-            MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
+            MsgHandler.OnEndProposalArrived += new endProposal(EndProposal);            
+            MsgHandler.OnPeerDown += new alertPeerDown(LookForPeerDown);
 
             _generator = generator;
             _enPeak = energyPeak;
@@ -73,16 +71,6 @@ namespace SmartGridManager
             _heartBeatTimer.Interval = 3000;
             _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);
             _heartBeatTimer.Start();
-
-            _producerCheckTimer = new System.Timers.Timer();
-            _producerCheckTimer.Interval = 5000;
-            _producerCheckTimer.Elapsed += new ElapsedEventHandler(_producerCheckTimer_Elapsed);
-            _producerCheckTimer.Enabled = true;
-
-            _consumerCheckTimer = new System.Timers.Timer();
-            _consumerCheckTimer.Interval = 5000;
-            _consumerCheckTimer.Elapsed += new ElapsedEventHandler(_consumerCheckTimer_Elapsed);
-            _consumerCheckTimer.Enabled = true;
 
             _mainTimer = new System.Timers.Timer();
             _mainTimer.Interval = 500;
@@ -251,64 +239,37 @@ namespace SmartGridManager
             }
         }
 
-        private void _producerCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            for (int i = 0; i < _producers.Count; i++)
-            {
-                if (_producers[i].ttl > 0)
-                    _producers[i].ttl--;
-                else
-                {
-                    _enBought = _enBought - _producers[i].energy;
-                    _producers.RemoveAt(i);
-                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
-                }
-            }
-        }
-
-        private void _consumerCheckTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            for (int i = 0; i < _consumers.Count; i++)
-            {
-                if (_consumers[i].ttl > 0)
-                    _consumers[i].ttl--;
-                else
-                {
-                    _enSold = _enSold - _consumers[i].energy;
-                    _consumers.RemoveAt(i);
-                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
-                }
-            }
-        }
-
-        private void CheckHeartBeat(HeartBeatMessage message)
-        {
-            CheckHBProducers(message);
-            CheckHBConsumers(message);
-        }
-
-        private void CheckHBProducers(HeartBeatMessage message)
-        {
-            for (int i = 0; i < _producers.Count; i++)
-            {
-                if (_producers[i].peerName == message.header.Sender)
-                    _producers[i].ttl = TTL;
-            }
-        }
-
-        private void CheckHBConsumers(HeartBeatMessage message)
-        {
-            for (int i = 0; i < _consumers.Count; i++)
-            {
-                if (_consumers[i].peerName == message.header.Sender)
-                    _consumers[i].ttl = TTL;
-            }
-        }
-
         private void _heartBeatTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             // ???
             Connector.channel.heartBeat(MessageFactory.createHeartBeatMessage(_name));
+        }
+
+        private void LookForPeerDown(PeerIsDownMessage message)
+        { 
+            //Update my Energy Consumers List
+            for (int i = 0; i < _consumers.Count; i++)
+            {
+                if (_consumers[i].peerName == message.peerName)
+                {
+                    _enSold = _enSold - _consumers[i].energy;
+                    _consumers.RemoveAt(i);
+                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
+                    break;
+                }
+            }
+
+            //Update my Energy Producers (Suppliers) List
+            for (int i = 0; i < _producers.Count; i++)
+            {
+                if (_producers[i].peerName == message.peerName)
+                {
+                    _enBought = _enBought - _producers[i].energy;
+                    _producers.RemoveAt(i);
+                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
+                    break;
+                }
+            }
         }
 
         public float getEnergyLevel() { return _generator.EnergyLevel; }
@@ -320,8 +281,6 @@ namespace SmartGridManager
         {
             _proposalCountdown.Enabled = false;
             _heartBeatTimer.Enabled = false;
-            _producerCheckTimer.Enabled = false;
-            _consumerCheckTimer.Enabled = false;
             _mainTimer.Enabled = false;
             _generator.Stop();            
         }
@@ -331,14 +290,12 @@ namespace SmartGridManager
         private class EnergyLink
         {
             public string peerName { get; private set; }
-            public float energy { get; private set; }
-            public int ttl { get; set; }
+            public float energy { get; private set; }            
             
             public EnergyLink(string name, float en)
             {
                 this.peerName = name;
-                this.energy = en;
-                this.ttl = TTL;
+                this.energy = en;               
             }
         }
     }

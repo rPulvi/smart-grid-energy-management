@@ -17,6 +17,7 @@ namespace SmartGridManager.Core.Messaging
     public delegate void remoteAdv (StatusNotifyMessage m);
     public delegate void forwardLocalMessage (PeerMessage m);
     public delegate void updateStatus (UpdateStatusMessage m);
+    public delegate void alertPeerDown (PeerIsDownMessage m);
     #endregion
 
     public class MessageHandler : MessagesImplementation
@@ -32,6 +33,7 @@ namespace SmartGridManager.Core.Messaging
         public event remoteAdv OnRemoteAdv;
         public event forwardLocalMessage OnForwardLocalMessage;
         public event updateStatus OnUpdateStatus;
+        public event alertPeerDown OnPeerDown;
         #endregion
 
         public override void sayHello(HelloMessage message)
@@ -112,6 +114,14 @@ namespace SmartGridManager.Core.Messaging
                 OnUpdateStatus(message);
 
             base.updateEnergyStatus(message);
+        }
+
+        public override void peerDown(PeerIsDownMessage message)
+        {
+            if (OnPeerDown != null)
+                OnPeerDown(message);
+
+            base.peerDown(message);
         }
     }
 }
