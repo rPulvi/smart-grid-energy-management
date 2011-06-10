@@ -464,7 +464,7 @@
                 <TextBlock  x:Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue" Width="52"/>
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
-            <StatusBarItem>
+            <StatusBarItem Margin="0,0,-244.333,0">
                 <Image x:Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center"/>
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="80.833,2,0,2"/>
@@ -478,6 +478,9 @@
                 <TextBlock x:Name="Secondo" Text="{Binding GetSecondo}" FontWeight="Bold" Foreground="DarkBlue" Width="18.723"/>
             </StatusBarItem>
             <Separator Width="1" Background="Gray" HorizontalAlignment="Left" Margin="160.502,2,0,2"/>
+            <StatusBarItem Margin="0,0,-572.833,0" HorizontalContentAlignment="Right" d:LayoutOverrides="HorizontalAlignment">
+            	<TextBlock Text="{Binding GetResolverIP}" FontWeight="Bold" Foreground="DarkBlue" Width="200" HorizontalAlignment="Center"/>
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </Window>
