@@ -9,7 +9,8 @@
         xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         Title="Resolver" Height="541.5" Width="749"
-        WindowState="Maximized" Icon="/img/Energy-icon.ico">
+        WindowState="Maximized" Icon="/img/Energy-icon.ico"
+        ResizeMode="NoResize">
     <Grid x:Name="grid">
         
         <Grid.Resources>
