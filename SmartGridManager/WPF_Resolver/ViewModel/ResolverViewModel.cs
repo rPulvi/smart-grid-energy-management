@@ -29,10 +29,13 @@ namespace WPF_Resolver.ViewModel
         private int _numConsumers = 0;
         int i = 0;
 
+        private float _enProduced;
+        private float _enConsumed;
+
         #endregion
 
         #region Objects
-        //private ObservableCollectionEx<PieItem> _pieList = new ObservableCollectionEx<PieItem>();
+        private ObservableDictionary<string, float> _barList = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
         private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
         private DispatcherTimer temporizzatore;
@@ -53,6 +56,10 @@ namespace WPF_Resolver.ViewModel
             _pieList.Add("Producers", 0);
             _pieList.Add("Consumers", 0);
             OnPropertyChanged("GetPieChartData");
+
+            _barList.Add("Energy Produced", 0f);
+            _barList.Add("Energy Consumed", 0f);
+            OnPropertyChanged("GetBarChartData");
 
             #region BackGroundWorkers
             bw.WorkerReportsProgress = true;
@@ -89,13 +96,23 @@ namespace WPF_Resolver.ViewModel
             temporizzatore.Tick += new EventHandler(cloBar_Tick);
         }
 
-        public ObservableDictionary<string,int> GetPieChartData
+        public ObservableDictionary<string, int> GetPieChartData
         {
             get { return _pieList; }
             set
             {
                 _pieList = value;
                 OnPropertyChanged("GetPieChartData");
+            }
+        }
+
+        public ObservableDictionary<string, float> GetBarChartData
+        {
+            get { return _barList; }
+            set
+            {
+                _barList = value;
+                OnPropertyChanged("GetBarChartData");
             }
         }
 
@@ -110,14 +127,14 @@ namespace WPF_Resolver.ViewModel
         }
 
         public void Start()
-        { 
+        {
             _resolverName = "";
             _resolverStatus = "";
             _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
 
             _resolverName = "Starting...";
             this.OnPropertyChanged("GetResolverName");
-            
+
 
             if (bw.IsBusy != true)
             {
@@ -209,23 +226,35 @@ namespace WPF_Resolver.ViewModel
         {
             _numProducers = 0;
             _numConsumers = 0;
-            
+
+            _enProduced = 0;
+            _enConsumed = 0;
+
             peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");
 
             foreach (var p in peerList)
             {
+                _enProduced += _enProduced + p.EnProduced;
+                _enConsumed += _enConsumed + p.EnPeak;
+
+                #region checkStatus
                 if (p.status == PeerStatus.Producer)
                     _numProducers++;
 
                 if (p.status == PeerStatus.Consumer)
                     _numConsumers++;
+                #endregion
             }
 
             _pieList["Producers"] = _numProducers;
             _pieList["Consumers"] = _numConsumers;
 
+            _barList["Energy Produced"] = _enProduced;
+            _barList["Energy Consumed"] = _enConsumed;
+
             OnPropertyChanged("GetPieChartData");
+            OnPropertyChanged("GetBarChartData");
         }
 
         private void cloBar_Tick(object sender, EventArgs e)
@@ -246,7 +275,7 @@ namespace WPF_Resolver.ViewModel
         }
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
-        {            
+        {
             _resolver.Connect();
         }
 
@@ -267,7 +296,7 @@ namespace WPF_Resolver.ViewModel
 
             this.OnPropertyChanged("GetResolverStatus");
             this.OnPropertyChanged("ImgVisibility");
-            this.OnPropertyChanged("GetResolverIP");          
+            this.OnPropertyChanged("GetResolverIP");
         }
     }
 }
