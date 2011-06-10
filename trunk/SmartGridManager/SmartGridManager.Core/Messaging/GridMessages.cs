@@ -115,4 +115,13 @@ namespace SmartGridManager.Core.Messaging
         
         public UpdateStatusMessage() { }
     }
+
+    [MessageContract]
+    public class PeerIsDownMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public string peerName { get; set; }
+
+        public PeerIsDownMessage() { }
+    }
 }

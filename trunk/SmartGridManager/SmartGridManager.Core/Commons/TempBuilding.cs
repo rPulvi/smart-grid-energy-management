@@ -18,6 +18,6 @@ namespace SmartGridManager.Core.Commons
         public float EnPrice { get; set; }
         public string Address { get; set; }
         public string Admin { get; set; }
-        public int TTE { get; set; }
+        public int TTL { get; set; } //Time To Live
     }
 }
