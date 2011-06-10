@@ -32,7 +32,8 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
-        private ObservableCollectionEx<PieItem> _pieList = new ObservableCollectionEx<PieItem>();
+        //private ObservableCollectionEx<PieItem> _pieList = new ObservableCollectionEx<PieItem>();
+        private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
         private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
         private DispatcherTimer temporizzatore;
         private BackgroundWorker bw = new BackgroundWorker();
@@ -49,8 +50,8 @@ namespace WPF_Resolver.ViewModel
 
         public ResolverViewModel()
         {
-            _pieList.Add(new PieItem(){key = "Producers", value = 0});
-            _pieList.Add(new PieItem() { key = "Consumers", value = 0 });
+            _pieList.Add("Producers", 0);
+            _pieList.Add("Consumers", 0);
             OnPropertyChanged("GetPieChartData");
 
             #region BackGroundWorkers
@@ -88,7 +89,7 @@ namespace WPF_Resolver.ViewModel
             temporizzatore.Tick += new EventHandler(cloBar_Tick);
         }
 
-        public ObservableCollectionEx<PieItem> GetPieChartData
+        public ObservableDictionary<string,int> GetPieChartData
         {
             get { return _pieList; }
             set
@@ -232,19 +233,17 @@ namespace WPF_Resolver.ViewModel
             {
                 if (peerList[j].status == PeerStatus.Producer)
                 {
-                    _numProducers++;
-
-                    //_pieList["Producers"] = _numProducers;
-                    _pieList[0].value = _numProducers;
+                    _numProducers++;                    
                 }
 
                 if (peerList[j].status == PeerStatus.Consumer)
                 {
-                    _numConsumers++;
-
-                    _pieList[1].value = _numConsumers;
+                    _numConsumers++;                    
                 }
             }
+
+            _pieList["Producers"] = _numProducers;
+            _pieList["Consumers"] = _numConsumers;
 
             OnPropertyChanged("GetPieChartData");
         }
@@ -290,11 +289,5 @@ namespace WPF_Resolver.ViewModel
             this.OnPropertyChanged("ImgVisibility");
             this.OnPropertyChanged("GetResolverIP");            
         }
-    }
-
-    public class PieItem
-    {
-        public string key { get; set; }
-        public int value { get; set; }
     }
 }
