@@ -209,7 +209,7 @@ namespace WPF_Resolver.ViewModel
         {
             _numProducers = 0;
             _numConsumers = 0;
-
+            
             peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");
 
