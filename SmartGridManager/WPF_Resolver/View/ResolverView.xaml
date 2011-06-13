@@ -411,7 +411,7 @@
 									<RowDefinition Height="Auto"/>
 									<RowDefinition/>
 								</Grid.RowDefinitions>
-								<TextBlock TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+								<TextBlock TextWrapping="Wrap" Text="{Binding EnThroughput}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 								
 								<DVC:Chart Margin="0" Title="Energy Throughput" Grid.Row="1">
                                     <DVC:BarSeries 
