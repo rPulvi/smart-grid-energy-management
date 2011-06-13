@@ -25,6 +25,7 @@ namespace WPF_Resolver.ViewModel
         private string _minuto;
         private string _secondo;
         private string _enTh;
+        private string _imgPath;
 
         private int _numProducers = 0;
         private int _numConsumers = 0;
@@ -48,7 +49,6 @@ namespace WPF_Resolver.ViewModel
         private DispatcherTimer _clockBar;
         private BackgroundWorker _bw = new BackgroundWorker();                
         private Resolver.Resolver _resolver;
-        private Visibility _visStatus = new Visibility();
         private IPHostEntry _ipHost;
         #endregion
 
@@ -59,6 +59,13 @@ namespace WPF_Resolver.ViewModel
 
         public ResolverViewModel()
         {
+            #region init
+            _imgPath = @"/WPF_Resolver;component/img/offline.png";
+            OnPropertyChanged("GetImgPath");
+
+            _resolverStatus = "Offline...";
+            OnPropertyChanged("GetResolverStatus");
+
             _enTimeLine.Add(DateTime.Now, 0f);
             OnPropertyChanged("GetPointTimeLine");
 
@@ -74,9 +81,10 @@ namespace WPF_Resolver.ViewModel
             
             OnPropertyChanged("GetEnProducedBar");
             OnPropertyChanged("GetEnConsumedBar");
+            #endregion
 
             #region BackGroundWorkers
-            
+
             _bw.WorkerReportsProgress = true;
             _bw.WorkerSupportsCancellation = true;
 
@@ -100,7 +108,6 @@ namespace WPF_Resolver.ViewModel
             _clockBar.Tick += new EventHandler(clockBar_Tick);
             #endregion
 
-            _visStatus = Visibility.Hidden;
             _ipHost = Dns.GetHostByName(Dns.GetHostName());
 
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
@@ -170,7 +177,6 @@ namespace WPF_Resolver.ViewModel
         public void Start()
         {
             _resolverName = "";
-            _resolverStatus = "";
             _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
 
             _resolverName = "Starting...";
@@ -193,6 +199,16 @@ namespace WPF_Resolver.ViewModel
             Application.Current.Shutdown();
         }
 
+        public string GetImgPath
+        {
+            get { return _imgPath; }
+            set
+            {
+                _imgPath = value;
+                OnPropertyChanged("GetImgPath");
+            }
+        }
+
         public string GetResolverName
         {
             get { return _resolverName; }
@@ -210,16 +226,6 @@ namespace WPF_Resolver.ViewModel
             {
                 _resolverStatus = value;
                 OnPropertyChanged("GetResolverStatus");
-            }
-        }
-
-        public Visibility ImgVisibility
-        {
-            get { return _visStatus; }
-            set
-            {
-                _visStatus = value;
-                OnPropertyChanged("ImgVisibility");
             }
         }
 
@@ -355,11 +361,12 @@ namespace WPF_Resolver.ViewModel
 
             _resolverName = _resolver.name;
             _resolverStatus = "Online...";
-            _visStatus = Visibility.Visible;
 
+            _imgPath = @"/WPF_Resolver;component/img/resolver_ok.png";
+
+            this.OnPropertyChanged("GetImgPath");
             this.OnPropertyChanged("GetResolverName");         
             this.OnPropertyChanged("GetResolverStatus");
-            this.OnPropertyChanged("ImgVisibility");
             this.OnPropertyChanged("GetResolverIP");
         }
     }
