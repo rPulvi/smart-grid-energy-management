@@ -413,7 +413,7 @@
 								</Grid.RowDefinitions>
 								<TextBlock TextWrapping="Wrap" Text="{Binding EnThroughput}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 								
-								<DVC:Chart Margin="0" Title="Energy Throughput" Grid.Row="1">
+								<DVC:Chart Margin="0" Grid.Row="1">
                                     <DVC:BarSeries 
 									IndependentValueBinding="{Binding Key}"
 									DependentValueBinding="{Binding Value}"  
@@ -426,7 +426,16 @@
 								
 							</Grid>
 						</GroupBox>
-						<GroupBox Header="Charts B" Margin="0" d:LayoutOverrides="GridBox" Grid.Column="2" Grid.ColumnSpan="3"/>
+						<GroupBox Header="TimeLine" Margin="0" d:LayoutOverrides="GridBox" Grid.Column="2" Grid.ColumnSpan="3">
+							<ScrollViewer>
+								<DVC:Chart>
+									<DVC:LineSeries 
+                                    IndependentValueBinding="{Binding Key}"
+									DependentValueBinding="{Binding Value}"  
+									ItemsSource="{Binding GetPointTimeLine}" Title="En. Produced"/>
+								</DVC:Chart>
+							</ScrollViewer>
+						</GroupBox>
 					</Grid>
 				</UniformGrid>
 			</TabItem>
