@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPF_Resolver.ViewModel"
         xmlns:util="clr-namespace:WPF_Resolver.Util"
-        xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Name="window" mc:Ignorable="d" x:Class="WPF_Resolver.MainWindow"
+        xmlns:chartingToolkit="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit" x:Name="window" mc:Ignorable="d" x:Class="WPF_Resolver.MainWindow"        
         xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         Title="Resolver"
         WindowState="Maximized" Icon="/img/Energy-icon.ico">
+    
     <Grid Height="{Binding ElementName=window, Path=Height}">
     	<Grid.ColumnDefinitions>
     		<ColumnDefinition/>	
@@ -399,26 +400,25 @@
                         
 							<DVC:Chart>
                                 <DVC:PieSeries
-									ItemsSource="{Binding GetPieConsumersData}"
+									ItemsSource="{Binding GetPieChartData}"
 									IndependentValueBinding="{Binding Key}"
-									DependentValueBinding="{Binding Value}">
-                                    <DVC:PieSeries.DataPointStyle>
-                                        <Style TargetType="DVC:PieDataPoint">
-                                            <Setter Property="Background" Value="Red"/>
-                                        </Style>
-                                    </DVC:PieSeries.DataPointStyle>
-                                </DVC:PieSeries>
-                                
-                                <DVC:PieSeries
-									ItemsSource="{Binding GetPieProducersData}"
-									IndependentValueBinding="{Binding Key}"
-									DependentValueBinding="{Binding Value}">
-                                    <DVC:PieSeries.DataPointStyle>
-                                        <Style TargetType="DVC:PieDataPoint">
-                                            <Setter Property="Background" Value="Green"/>
-                                        </Style>
-                                    </DVC:PieSeries.DataPointStyle>
-                                </DVC:PieSeries>                                    
+									DependentValueBinding="{Binding Value}">                                    
+                                    <DVC:PieSeries.Palette>
+                                        <DV:ResourceDictionaryCollection>
+                                            <ResourceDictionary>
+                                                <Style x:Key="DataPointStyle" TargetType="Control">
+                                                    <Setter Property="Background" Value="Green"/>
+                                                </Style>
+                                            </ResourceDictionary>
+                                            <ResourceDictionary>
+                                                <Style x:Key="DataPointStyle" TargetType="Control">
+                                                    <Setter Property="Background" Value="Red"/>
+                                                </Style>
+                                            </ResourceDictionary>                                            
+                                        </DV:ResourceDictionaryCollection>
+                                    </DVC:PieSeries.Palette>
+                                        
+                                </DVC:PieSeries>                                
                             </DVC:Chart>
                         
 						</GroupBox>
@@ -532,4 +532,5 @@
 			</Grid>
 		</StatusBar>
 	</Grid>
+        
 </Window>
