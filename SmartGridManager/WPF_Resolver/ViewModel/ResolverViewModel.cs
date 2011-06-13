@@ -58,8 +58,8 @@ namespace WPF_Resolver.ViewModel
             _pieList.Add("Consumers", 0);
             OnPropertyChanged("GetPieChartData");
 
-            _enProdBar.Add("Energy Produced", 0f);
-            _enConsBar.Add("Energy Consumed", 0f);
+            _enProdBar.Add("En.Prod.", 0f);
+            _enConsBar.Add("En.Cons.", 0f);
             
             OnPropertyChanged("GetEnProducedBar");
             OnPropertyChanged("GetEnConsumedBar");
@@ -245,17 +245,17 @@ namespace WPF_Resolver.ViewModel
 
             peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");
-
-            foreach (var p in peerList)
+            
+            for(int i=0;i< peerList.Count;i++)
             {
-                _enProduced += _enProduced + p.EnProduced;
-                _enConsumed += _enConsumed + p.EnPeak;
+                _enProduced += peerList[i].EnProduced;
+                _enConsumed += peerList[i].EnPeak;
 
                 #region checkStatus
-                if (p.status == PeerStatus.Producer)
+                if (peerList[i].status == PeerStatus.Producer)
                     _numProducers++;
 
-                if (p.status == PeerStatus.Consumer)
+                if (peerList[i].status == PeerStatus.Consumer)
                     _numConsumers++;
                 #endregion
             }
@@ -263,8 +263,8 @@ namespace WPF_Resolver.ViewModel
             _pieList["Producers"] = _numProducers;
             _pieList["Consumers"] = _numConsumers;
 
-            _enProdBar["Energy Produced"] = _enProduced;
-            _enConsBar["Energy Consumed"] = _enConsumed;
+            _enProdBar["En.Prod."] = _enProduced;
+            _enConsBar["En.Cons."] = _enConsumed;
 
             OnPropertyChanged("GetPieChartData");
             OnPropertyChanged("GetEnProducedBar");
