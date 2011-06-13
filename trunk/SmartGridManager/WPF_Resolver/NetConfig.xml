@@ -3,6 +3,7 @@
   <Name>Resolver1</Name>
   <RemoteHosts>
     <Host>
+      <Name>Locale</Name>
       <IP>localhost</IP>
       <Port>8082</Port>
     </Host>
