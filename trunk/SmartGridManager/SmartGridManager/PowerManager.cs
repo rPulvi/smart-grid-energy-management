@@ -13,45 +13,58 @@ namespace SmartGridManager
 {
     class PowerManager
     {
+        #region CONSTs HERE
+        /********************************/
+        private const int TTL = 4;
+        /********************************/
+        #endregion
 
         #region Attributes
 
         private EnergyGenerator _generator;        
         private MessageHandler MsgHandler;
+        
+        private string _name;
+        private string _resolverName;
 
-        private const int TTL = 4;
-        private String _name;
-        private string _resolverName; ///
-        private PeerStatus _peerStatus;
+        private int _proposalTimeout = 0;
         private float _enPeak;
         private float _price;
         private float _enBought;
-        private float _enSold;
-        private int _proposalTimeout = 0;
+        private float _enSold;               
         
         private Boolean messageSent = false;
+        
+        private PeerStatus _peerStatus;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private List<EnergyLink> _producers = new List<EnergyLink>();
         private List<EnergyLink> _consumers = new List<EnergyLink>();
-        private System.Timers.Timer _proposalCountdown;
-        private System.Timers.Timer _heartBeatTimer;
-        private System.Timers.Timer _mainTimer;
+
+        #region Timers
+        private System.Timers.Timer _proposalCountdown; //Countdown to elaborate the incoming proposal
+        private System.Timers.Timer _heartBeatTimer; //Heartbeat frequency 
+        private System.Timers.Timer _mainTimer; //The main cycle
+        #endregion
 
         #endregion
 
         #region Methods
 
         public PowerManager(String bName, PeerStatus status,  EnergyGenerator generator, float energyPeak, float price)
-        {
-            this.MsgHandler = Connector.messageHandler;
-            
+        {                        
+            #region EventListeners
             MsgHandler.OnHelloResponse += new HelloResponse(ReceiveResolverName);
             MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
             MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
             MsgHandler.OnProposalAccepted += new acceptProposal(ProposalAccepted);
             MsgHandler.OnEndProposalArrived += new endProposal(EndProposal);            
-            MsgHandler.OnPeerDown += new alertPeerDown(LookForPeerDown);
+            MsgHandler.OnPeerDown += new alertPeerDown(SomePeerIsDown);
+            #endregion
 
+            #region Init Session
+            
+            this.MsgHandler = Connector.messageHandler;
+            
             _generator = generator;
             _enPeak = energyPeak;
             _name = bName;
@@ -61,6 +74,7 @@ namespace SmartGridManager
             _enBought = 0f;
             _enSold = 0f;
 
+            #region Timing Zone
             _proposalCountdown = new System.Timers.Timer();            
             _proposalCountdown.Interval = 5000;
             _proposalCountdown.Elapsed += new ElapsedEventHandler(_proposalCountdown_Elapsed);
@@ -76,35 +90,43 @@ namespace SmartGridManager
             _mainTimer.Interval = 500;
             _mainTimer.Elapsed += new ElapsedEventHandler(_mainTimer_Elapsed);
             _mainTimer.Enabled = false;
-        }
-
-        void _mainTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            //Check the energy level
-            if ((getEnergyLevel() + _enBought) < _enPeak)
-            {
-                if (messageSent == false)
-                {
-                    float enReq = _enPeak - getEnergyLevel() + _enBought;
-                    Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage("@All", _name, _peerStatus, enReq));
-
-                    //start the timer to waiting for proposals
-                    if (_proposalCountdown.Enabled == false)
-                        _proposalCountdown.Enabled = true;
-
-                    messageSent = true;
-                }
-            }
-            else
-            {
-                messageSent = false;
-            }
+            #endregion
+            
+            #endregion
         }
 
         public void Start()
         {
             _mainTimer.Enabled = true;
         }
+
+        /// <summary>
+        /// This Event manages the main Application Lifecycle.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _mainTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            //Check the energy level
+            if ((getEnergyLevel() + _enBought) < _enPeak)
+            {
+                if (messageSent == false)
+                {
+                    float enReq = _enPeak - (getEnergyLevel() + _enBought);
+                    Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage("@All", _name, _peerStatus, enReq));
+
+                    messageSent = true;
+
+                    //start the timer to waiting for proposals
+                    if (_proposalCountdown.Enabled == false)
+                        _proposalCountdown.Enabled = true;                    
+                }
+            }
+            else
+            {
+                messageSent = false;
+            }
+        }        
 
         private void ReceiveResolverName(HelloResponseMessage message)
         {            
@@ -117,7 +139,7 @@ namespace SmartGridManager
             {
                 if (_peerStatus == PeerStatus.Producer)
                 {
-                    float enAvailable = getEnergyLevel() - _enPeak - _enSold;
+                    float enAvailable = getEnergyLevel() - (_enPeak - _enSold);
 
                     if (enAvailable >= message.energyReq)
                     {
@@ -127,9 +149,10 @@ namespace SmartGridManager
                             message.energyReq,
                             _price);
 
-                        if (message.header.Sender == _resolverName)
+                        //Check if the request is Local or Remote
+                        if (message.header.Sender == _resolverName) //Remote
                             Connector.channel.forwardLocalMessage(respMessage);
-                        else
+                        else //Local
                             Connector.channel.energyProposal(respMessage);
                     }
                 }
@@ -155,15 +178,20 @@ namespace SmartGridManager
             }
             else
             {
-                Console.WriteLine("Nessuna offerta energetica ricevuta");
-                messageSent = false; //send the request message again
                 _proposalTimeout++;
 
-                if (_proposalTimeout == 3)  //Go Outbound
+                if (_proposalTimeout > 3)  //Go Outbound
                 {
+                    float enReq = _enPeak - (getEnergyLevel() + _enBought);
+                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq));
                     messageSent = true;
-                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, _enPeak - getEnergyLevel() + _enBought));
+
                     _proposalTimeout = 0;
+                }
+                else
+                {
+                    Console.WriteLine("Nessuna offerta energetica ricevuta");
+                    messageSent = false; //send the request message again                
                 }
             }
         }
@@ -173,22 +201,19 @@ namespace SmartGridManager
             var m = (from element in _proposalList
                     orderby element.price ascending
                     select element).First();
-
-            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            
             Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);
-            Console.ResetColor();
 
             EnergyAcceptMessage respMessage = MessageFactory.createEnergyAcceptMessage(
                     m.header.Sender,
                     _name,
-                    _enPeak - getEnergyLevel() + _enBought);
+                    _enPeak - (getEnergyLevel() + _enBought));
             
+            //Check if the message is Local or Remote
             if (m.header.Sender == _resolverName)
                 Connector.channel.forwardLocalMessage(respMessage);
             else
-                Connector.channel.acceptProposal(respMessage);
-
-            _proposalList.Clear();
+                Connector.channel.acceptProposal(respMessage);            
         }
 
         private void ProposalAccepted(EnergyAcceptMessage message)
@@ -197,15 +222,16 @@ namespace SmartGridManager
             {
                 Boolean status = false;
 
-                if (message.energy <= (getEnergyLevel() - _enPeak - _enSold))
+                if (message.energy <= (getEnergyLevel() - (_enPeak - _enSold)))
                 {
                     status = true;
                     _enSold += message.energy;
                     
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
-
                     _consumers.Add(link);
 
+                    //Advise the Local Resolver About the energy status change.
+                    //and the remote?
                     Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
                 }
 
@@ -215,9 +241,10 @@ namespace SmartGridManager
                     status,
                     message.energy);
 
-                if (message.header.Sender == _resolverName)
+                //Check if the Confirm has to be sent to a Local or Remote Resolver
+                if (message.header.Sender == _resolverName) //Remote
                     Connector.channel.forwardLocalMessage(respMessage);
-                else
+                else //Local
                     Connector.channel.endProposal(respMessage);
             }
         }
@@ -231,10 +258,30 @@ namespace SmartGridManager
                     _enBought += message.energy;
 
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
-
                     _producers.Add(link);
 
-                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
+                    //Advise the Local Resolver About the energy status change.
+                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
+
+                    _proposalList.Clear();
+                }
+                else
+                {
+                    //Nothing to do..Erase this Producer and go on with the next.
+                    for (int i = 0; i < _proposalList.Count; i++)
+                    {
+                        if (_proposalList[i].header.Sender == message.header.Sender)
+                        {
+                            _proposalList.RemoveAt(i);
+                            break;
+                        }
+                    }
+
+                    //More Proposal? Evaluate it or Start again
+                    if (_proposalList.Count > 0)
+                        EvaluateProposal();
+                    else
+                        messageSent = false;
                 }
             }
         }
@@ -245,7 +292,7 @@ namespace SmartGridManager
             Connector.channel.heartBeat(MessageFactory.createHeartBeatMessage(_name));
         }
 
-        private void LookForPeerDown(PeerIsDownMessage message)
+        private void SomePeerIsDown(PeerIsDownMessage message)
         { 
             //Update my Energy Consumers List
             for (int i = 0; i < _consumers.Count; i++)
@@ -273,8 +320,7 @@ namespace SmartGridManager
         }
 
         public float getEnergyLevel() { return _generator.EnergyLevel; }
-
-        // TODO: Spostare il metodo da un'altra parte
+        
         public void setEnergyLevel(float value) { _generator.EnergyLevel = value; }
 
         public void ShutDown()
@@ -287,6 +333,7 @@ namespace SmartGridManager
 
         #endregion
 
+        #region EnergyLink Class
         private class EnergyLink
         {
             public string peerName { get; private set; }
@@ -298,6 +345,7 @@ namespace SmartGridManager
                 this.energy = en;               
             }
         }
+        #endregion
     }
 }
 
