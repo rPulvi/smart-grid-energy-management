@@ -21,6 +21,13 @@ namespace Resolver
 
     public class Resolver : Peer
     {
+        #region CONSTs HERE
+        /********************************/
+        private const int TTL = 2;
+        /********************************/
+        #endregion
+
+        #region Attributes
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
         
@@ -44,10 +51,10 @@ namespace Resolver
         private System.Timers.Timer _HBTimer;
 
         private object _lLock = new object();
+        #endregion
 
-        private const int TTL = 2;
-
-
+        #region Methods
+        
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
             this.name = Tools.getResolverName();
             this._peerStatus = PeerStatus.Resolver;
@@ -58,22 +65,28 @@ namespace Resolver
             StartLocalResolver();
             StartRemoteConnection();                
             
+            //To handle the remote traffic
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
 
+            #region HeartBeat Timer
+            //This timer manage the peer's HB to check the online status
             _HBTimer = new System.Timers.Timer();
             _HBTimer.Interval = 5000;
             _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
             _HBTimer.Enabled = true;
+            #endregion
 
             #region Normal Peer Activity
 
             base.StartService();
             MsgHandler = Connector.messageHandler;
-            
+
+            #region Event Listeners
             MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
             MsgHandler.OnSayHello += new sayHello(HelloResponse);
             MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
             MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);
+            #endregion
 
             #endregion
         }
@@ -157,10 +170,13 @@ namespace Resolver
         //To Resolver
         private void ForwardLocalMessage(PeerMessage message)   
         {
-            message.header.Sender = getNameByID(message.header.MessageID);
-            _messageList.Remove(message.header.MessageID);
+            if (_messageList.Count > 0)
+            {
+                message.header.Sender = getNameByID(message.header.MessageID);
+                _messageList.Remove(message.header.MessageID);
+            }
 
-            remoteChannel.ManageRemoteMessages(message);            
+            remoteChannel.ManageRemoteMessages(message);
         }
 
         //From Resolver
@@ -171,7 +187,7 @@ namespace Resolver
             message.header.Sender = name;
 
             if (message.header.Receiver == "Resolver")
-                message.header.Receiver = "@all";
+                message.header.Receiver = "@All";
 
             if (message is StatusNotifyMessage)
                 Connector.channel.statusAdv((StatusNotifyMessage)message);
@@ -183,6 +199,8 @@ namespace Resolver
                 Connector.channel.endProposal((EndProposalMessage)message);
             else if (message is HeartBeatMessage)
                 Connector.channel.heartBeat((HeartBeatMessage)message);
+            else if (message is PeerIsDownMessage)
+                Connector.channel.peerDown((PeerIsDownMessage)message);
         }
 
         private void HelloResponse(HelloMessage message)
@@ -259,7 +277,9 @@ namespace Resolver
                     else
                     {
                         //Remove the deadly peer but first alert the folks.
-                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));                        
+                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        remoteChannel.ManageRemoteMessages(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        
                         _buildings.RemoveAt(i);                        
                     }
                 }
@@ -293,5 +313,6 @@ namespace Resolver
                 }
             }
         }
+        #endregion
     }
 }
