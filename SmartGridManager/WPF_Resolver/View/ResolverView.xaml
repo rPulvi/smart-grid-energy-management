@@ -573,7 +573,7 @@
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<StatusBarItem Margin="0" d:LayoutOverrides="Width, Height" HorizontalContentAlignment="Center" d:IsLocked="True">
-					<Image x:Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
+                    <Image x:Name="imgResolverStatus" Source="{Binding GetImgPath}" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
 				</StatusBarItem>
 				<StatusBarItem Margin="0" HorizontalAlignment="Right" d:LayoutOverrides="Height" Grid.Column="1" HorizontalContentAlignment="Center" d:IsLocked="True">
 					<TextBlock  x:Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue"/>
