@@ -71,14 +71,14 @@
     		</LinearGradientBrush>
     	</Grid.Background>
     	<StackPanel x:Name="___StackPanel____SX" HorizontalAlignment="Right" Width="162" Margin="0,14,-19,53.994" Grid.Row="1">
-    		<TextBlock Margin="27,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Nome:"/></TextBlock>
-    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}" FontSize="13.333"><Run Language="it-it" Text="ProduttoreEnergia:"/></TextBlock>
-    		<TextBlock Margin="27,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Tipo Energia:"/></TextBlock>
-    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Picco Consumo En. :"/></TextBlock>
-    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Prezzo:"/></TextBlock>
-    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Q.tà En. generatore:"/><LineBreak/><Run Language="it-it"/></TextBlock>
-    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Indirizzo:"/></TextBlock>
-    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Administrator:"/></TextBlock>
+    		<TextBlock Margin="27,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Name:"/></TextBlock>
+    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}" FontSize="13.333"><Run Language="it-it" Text="State:"/></TextBlock>
+    		<TextBlock Margin="27,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Energy Type:"/></TextBlock>
+    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Energy Peak:"/></TextBlock>
+    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Price:"/></TextBlock>
+    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Energy Produced:"/><LineBreak/><Run Language="it-it"/></TextBlock>
+    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Address:"/></TextBlock>
+    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Admin:"/></TextBlock>
     	</StackPanel>
     	<Path Data="M18,216.66667 L129.096,216.66667" Height="1" Margin="15.816,0,-1.818,129.071" Stretch="Fill" Stroke="Black" VerticalAlignment="Bottom" Fill="#FFF4F4F5" Grid.Row="1"/>
     	<StackPanel x:Name="___StackPanel____DX" Grid.Column="1" Margin="0,14,0,129.071" Grid.Row="1">
