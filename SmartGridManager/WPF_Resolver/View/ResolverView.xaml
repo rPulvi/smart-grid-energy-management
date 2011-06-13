@@ -333,8 +333,38 @@
 					</Setter.Value>
 				</Setter>
 			</Style>
+            
+            <!--Template for ListView_REMOTE-->
+            <DataTemplate x:Key="RemoteHostNameTemplate">
+                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="32" />
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding iconPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
+                        <TextBlock TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
 
-		</Grid.Resources>
+            <DataTemplate x:Key="RemoteHostContactedTemplate">
+                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+                    <Grid>
+                        <TextBlock Text="{Binding Contacted}" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RemoteHostContactedByTemplate">
+                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+                    <Grid>
+                        <TextBlock Text="{Binding ContactedBy}" VerticalAlignment="Center" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+        </Grid.Resources>
         
 		<Grid.Background>
 			<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
@@ -493,7 +523,27 @@
 						<GradientStop Color="#FF9EB6F1"/>
 					</LinearGradientBrush>
 				</TabItem.Background>
-				<Grid Opacity="0.135" Background="#FFB9CBD0"/>
+                
+				<Grid>
+					<ListView Margin="0" x:Name="ListViewRemote"
+						ItemsSource="{Binding }"
+						ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
+						util:GridViewSort.AutoSort="True"
+						util:GridViewSort.SortGlyphAscending="/WPF_Resolver;component/img/up.png"
+						util:GridViewSort.SortGlyphDescending="/WPF_Resolver;component/img/down.png" Height="134.04" VerticalAlignment="Top">
+						<ListView.View>
+							<GridView>
+                                <GridViewColumn CellTemplate="{StaticResource RemoteHostNameTemplate}" 
+                                                Header="Name" util:GridViewSort.PropertyName="Name" Width="300"/>
+                                <GridViewColumn CellTemplate="{StaticResource RemoteHostContactedTemplate}" 
+                                                Header="Contacted" util:GridViewSort.PropertyName="TODO" Width="200"/>
+                                <GridViewColumn CellTemplate="{StaticResource RemoteHostContactedByTemplate}" 
+                                                Header="By" util:GridViewSort.PropertyName="TODO" Width="200"/>
+							</GridView>
+						</ListView.View>
+					</ListView>
+				</Grid>
+                
 			</TabItem>
 		</TabControl>
         
