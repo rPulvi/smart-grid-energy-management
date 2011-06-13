@@ -414,11 +414,15 @@
 								<TextBlock TextWrapping="Wrap" Text="TextBlock" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 								
 								<DVC:Chart Margin="0" Title="Energy Throughput" Grid.Row="1">
-									<DVC:BarSeries 
+                                    <DVC:BarSeries 
 									IndependentValueBinding="{Binding Key}"
 									DependentValueBinding="{Binding Value}"  
-									ItemsSource="{Binding GetBarChartData}" Title=""/>
-								</DVC:Chart>
+									ItemsSource="{Binding GetEnProducedBar}" Title="En. Produced"/>
+                                    <DVC:BarSeries 
+									IndependentValueBinding="{Binding Key}"
+									DependentValueBinding="{Binding Value}"  
+									ItemsSource="{Binding GetEnConsumedBar}" Title="En. Consumed"/>
+                                </DVC:Chart>
 								
 							</Grid>
 						</GroupBox>

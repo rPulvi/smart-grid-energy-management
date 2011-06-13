@@ -35,7 +35,8 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
-        private ObservableDictionary<string, float> _barList = new ObservableDictionary<string, float>();
+        private ObservableDictionary<string, float> _enProdBar = new ObservableDictionary<string, float>();
+        private ObservableDictionary<string, float> _enConsBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
         private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
         private DispatcherTimer temporizzatore;
@@ -57,9 +58,11 @@ namespace WPF_Resolver.ViewModel
             _pieList.Add("Consumers", 0);
             OnPropertyChanged("GetPieChartData");
 
-            _barList.Add("Energy Produced", 0f);
-            _barList.Add("Energy Consumed", 0f);
-            OnPropertyChanged("GetBarChartData");
+            _enProdBar.Add("Energy Produced", 0f);
+            _enConsBar.Add("Energy Consumed", 0f);
+            
+            OnPropertyChanged("GetEnProducedBar");
+            OnPropertyChanged("GetEnConsumedBar");
 
             #region BackGroundWorkers
             bw.WorkerReportsProgress = true;
@@ -106,13 +109,23 @@ namespace WPF_Resolver.ViewModel
             }
         }
 
-        public ObservableDictionary<string, float> GetBarChartData
+        public ObservableDictionary<string, float> GetEnProducedBar
         {
-            get { return _barList; }
+            get { return _enProdBar; }
             set
             {
-                _barList = value;
-                OnPropertyChanged("GetBarChartData");
+                _enProdBar = value;
+                OnPropertyChanged("GetEnProducedBar");
+            }
+        }
+
+        public ObservableDictionary<string, float> GetEnConsumedBar
+        {
+            get { return _enConsBar; }
+            set 
+            {
+                _enConsBar = value;
+                OnPropertyChanged("GetEnConsumedBar");
             }
         }
 
@@ -250,11 +263,12 @@ namespace WPF_Resolver.ViewModel
             _pieList["Producers"] = _numProducers;
             _pieList["Consumers"] = _numConsumers;
 
-            _barList["Energy Produced"] = _enProduced;
-            _barList["Energy Consumed"] = _enConsumed;
+            _enProdBar["Energy Produced"] = _enProduced;
+            _enConsBar["Energy Consumed"] = _enConsumed;
 
             OnPropertyChanged("GetPieChartData");
-            OnPropertyChanged("GetBarChartData");
+            OnPropertyChanged("GetEnProducedBar");
+            OnPropertyChanged("GetEnConsumedBar");
         }
 
         private void cloBar_Tick(object sender, EventArgs e)
