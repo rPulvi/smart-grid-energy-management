@@ -51,7 +51,9 @@ namespace SmartGridManager
         #region Methods
 
         public PowerManager(String bName, PeerStatus status,  EnergyGenerator generator, float energyPeak, float price)
-        {                        
+        {
+            this.MsgHandler = Connector.messageHandler;
+
             #region EventListeners
             MsgHandler.OnHelloResponse += new HelloResponse(ReceiveResolverName);
             MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
@@ -61,9 +63,7 @@ namespace SmartGridManager
             MsgHandler.OnPeerDown += new alertPeerDown(SomePeerIsDown);
             #endregion
 
-            #region Init Session
-            
-            this.MsgHandler = Connector.messageHandler;
+            #region Init Session                        
             
             _generator = generator;
             _enPeak = energyPeak;
