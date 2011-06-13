@@ -397,7 +397,7 @@
 							<ColumnDefinition/>
 						</Grid.ColumnDefinitions>
 						<GroupBox Header="Producers/Consumers" FontWeight="Bold" Margin="0" HorizontalAlignment="Left">
-                        
+                            
 							<DVC:Chart>
                                 <DVC:PieSeries
 									ItemsSource="{Binding GetPieChartData}"
@@ -406,18 +406,29 @@
                                     <DVC:PieSeries.Palette>
                                         <DV:ResourceDictionaryCollection>
                                             <ResourceDictionary>
-                                                <Style x:Key="DataPointStyle" TargetType="Control">
-                                                    <Setter Property="Background" Value="Green"/>
+                                                <LinearGradientBrush x:Key="Prod" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.914,-0.203">
+                                                    <GradientStop Color="#FF005A23" Offset="1"/>
+                                                    <GradientStop Color="#FF00FF04"/>
+                                                </LinearGradientBrush>                                                
+                                                <Style x:Key="DataPointStyle" TargetType="chartingToolkit:DataPoint" >
+                                                    <Setter Property="Background" Value="{StaticResource Prod}"/>
+                                                    <Setter Property="BorderBrush" Value="Black"/>
+                                                    <Setter Property="BorderThickness" Value="20"/>
                                                 </Style>
                                             </ResourceDictionary>
                                             <ResourceDictionary>
-                                                <Style x:Key="DataPointStyle" TargetType="Control">
-                                                    <Setter Property="Background" Value="Red"/>
+                                                <LinearGradientBrush x:Key="Cons" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+                                                    <GradientStop Color="#FF290A0A" Offset="1"/>
+                                                    <GradientStop Color="Red"/>
+                                                </LinearGradientBrush>
+                                                <Style x:Key="DataPointStyle" TargetType="chartingToolkit:DataPoint" >
+                                                    <Setter Property="Background" Value="{StaticResource Cons}"/>
+                                                    <Setter Property="BorderBrush" Value="Black"/>
+                                                    <Setter Property="BorderThickness" Value="20"/>
                                                 </Style>
-                                            </ResourceDictionary>                                            
+                                            </ResourceDictionary>
                                         </DV:ResourceDictionaryCollection>
-                                    </DVC:PieSeries.Palette>
-                                        
+                                    </DVC:PieSeries.Palette>                                        
                                 </DVC:PieSeries>                                
                             </DVC:Chart>
                         
@@ -434,7 +445,7 @@
                                     <DVC:BarSeries 
 									IndependentValueBinding="{Binding Key}"
 									DependentValueBinding="{Binding Value}"  
-									ItemsSource="{Binding GetEnProducedBar}" Title="En. Produced">
+									ItemsSource="{Binding GetEnProducedBar}" Title="En. Produced">                                        
                                         <DVC:BarSeries.DataPointStyle>
                                             <Style TargetType="DVC:BarDataPoint">
                                                 <Setter Property="Background" Value="Green"/>
