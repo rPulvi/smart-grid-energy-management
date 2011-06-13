@@ -62,12 +62,13 @@ namespace Resolver
 
         public void Connect()
         {
+            StartLocalResolver();
+            StartRemoteConnection();
+
             //To handle the remote traffic            
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
+   
 
-            StartLocalResolver();
-            StartRemoteConnection();                
-            
             #region HeartBeat Timer
             //This timer manage the peer's HB to check the online status
             _HBTimer = new System.Timers.Timer();
