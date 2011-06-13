@@ -258,9 +258,9 @@ namespace Resolver
                         _buildings[i].TTL--;
                     else
                     {
-                        //Remove the deadly peer and alert the folks.
-                        _buildings.RemoveAt(i);
-                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        //Remove the deadly peer but first alert the folks.
+                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));                        
+                        _buildings.RemoveAt(i);                        
                     }
                 }
             }            
