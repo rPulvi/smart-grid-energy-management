@@ -38,7 +38,8 @@ namespace WPF_StartPeer.ViewModel
         #region Objects
         private BackgroundWorker bw = new BackgroundWorker();
         private readonly StringBuilder builder;
-        Building house;
+        private Building house;
+        private List<ErrorMap> _errorMessages = new List<ErrorMap>();
         #endregion
 
         #region DelegateCommands
@@ -49,6 +50,8 @@ namespace WPF_StartPeer.ViewModel
 
         public StartPeerViewModel()
         {
+            SetErrorMessages();
+
             _imgPath = @"/WPF_StartPeer;component/img/offline.png";
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
             _peerStatus = "Offline...";
@@ -215,26 +218,33 @@ namespace WPF_StartPeer.ViewModel
         {
             if (_isStartable)
             {
-                if (_status == PeerStatus.Consumer)
+                if (checkFields() == true)
                 {
-                    EnType = EnergyType.None;
+                    if (_status == PeerStatus.Consumer)
+                    {
+                        EnType = EnergyType.None;
+                    }
+
+                    house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
+
+                    _imgPath = @"/WPF_StartPeer;component/img/online.png";
+                    this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+
+                    _peerStatus = "Online...";
+                    this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+
+                    _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
+                    this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+
+                    _startButton = "Stop";
+                    this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+
+                    _isStartable = false;
                 }
-
-                house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
-
-                _imgPath = @"/WPF_StartPeer;component/img/online.png";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
-
-                _peerStatus = "Online...";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
-
-                _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
-
-                _startButton = "Stop";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
-
-                _isStartable = false;
+                else
+                {                    
+                    MessageBox.Show(getErrorMessages(), "Check your input", MessageBoxButton.OK,MessageBoxImage.Exclamation);
+                }
             }
             else
             {
@@ -266,5 +276,87 @@ namespace WPF_StartPeer.ViewModel
                 handler(this, e);
             }
         }
+
+        private bool checkFields()
+        {
+            bool bRet = true;
+
+            for (int i = 0; i < _errorMessages.Count; i++)
+                _errorMessages[i].nCheck = 0;
+
+            if ((Nome.Trim()).Length == 0)
+            {
+                _errorMessages[0].nCheck = 1;
+                bRet = false;
+            }
+            if (_status == PeerStatus.Producer && (EnType == EnergyType.None))
+            {
+                _errorMessages[1].nCheck = 1;
+                bRet = false;
+            }
+            if (EnPeak == 0)
+            {
+                _errorMessages[2].nCheck = 1;
+                bRet = false;
+            }
+            if (Price == 0)
+            {
+                _errorMessages[3].nCheck = 1;
+                bRet = false;
+            }
+            if (_status == PeerStatus.Producer && EnProduced == 0)
+            {
+                _errorMessages[4].nCheck = 1;
+                bRet = false;
+            }
+            if (Address == null || (Address.Trim()).Length == 0)
+            {
+                _errorMessages[5].nCheck = 1;
+                bRet = false;
+            }
+            if (Admin == null || (Admin.Trim()).Length == 0)
+            {
+                _errorMessages[6].nCheck = 1;
+                bRet = false;
+            }
+
+            return bRet;
+        }
+
+        private void SetErrorMessages()
+        { 
+            _errorMessages.Add(new ErrorMap(0, @"Insert a valid Name.")); //0
+            _errorMessages.Add(new ErrorMap(0, @"Fill the 'Energy Type' field." )); //1
+            _errorMessages.Add(new ErrorMap(0, @"Insert a valid value for 'Energy Peak'.")); //2
+            _errorMessages.Add(new ErrorMap(0, @"Insert a valid value for 'Price'.")); //3
+            _errorMessages.Add(new ErrorMap(0, @"Insert a valid value for 'Energy Produced'.")); //4
+            _errorMessages.Add(new ErrorMap(0, @"Insert a valid Address.")); //5
+            _errorMessages.Add(new ErrorMap(0, @"Insert a valid value for 'Admin'.")); //6
+        }
+
+        private string getErrorMessages()
+        {
+            string sRet = "";
+
+            foreach (var m in _errorMessages)
+            {
+                if (m.nCheck > 0)
+                    sRet += m.ErrorMessage + "\n";
+            }
+
+            return sRet;
+        }
+
+        private class ErrorMap
+        {
+            public int nCheck { get; set; }
+            public string ErrorMessage { get; set; }
+
+            public ErrorMap(int n, string s)
+            {
+                this.nCheck = n;
+                this.ErrorMessage = s;
+            }            
+        }      
     }
 }
