@@ -29,10 +29,10 @@
 					<Grid>
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
+							<ColumnDefinition Width="200"/>
 						</Grid.ColumnDefinitions>
 						<Image Source="{Binding iconPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
-						<TextBlock Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
+						<TextBlock TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -40,11 +40,7 @@
 			<DataTemplate x:Key="EnergiaItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding EnType}" VerticalAlignment="Center" Grid.Column="1"/>
+						<TextBlock Text="{Binding EnType}" VerticalAlignment="Center" />
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -52,12 +48,7 @@
 			<DataTemplate x:Key="PeakItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<Image Source="" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
-						<TextBlock Text="{Binding EnPeak}" VerticalAlignment="Center" Grid.Column="1" />
+						<TextBlock Text="{Binding EnPeak}" VerticalAlignment="Center" />
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -65,11 +56,7 @@
 			<DataTemplate x:Key="EnergyBoughtItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding EnBought}" VerticalAlignment="Center" Grid.Column="1" />
+						<TextBlock Text="{Binding EnBought}" VerticalAlignment="Center"/>
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -77,11 +64,7 @@
 			<DataTemplate x:Key="EnergySoldItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding EnSold}" VerticalAlignment="Center" Grid.Column="1" />
+						<TextBlock Text="{Binding EnSold}" VerticalAlignment="Center" />
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -89,11 +72,7 @@
 			<DataTemplate x:Key="EnergyProducedItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding EnProduced}" VerticalAlignment="Center" Grid.Column="1" />
+						<TextBlock Text="{Binding EnProduced}" VerticalAlignment="Center"/>
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -101,11 +80,7 @@
 			<DataTemplate x:Key="EnergyPriceItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding EnPrice}" VerticalAlignment="Center" Grid.Column="1" />
+						<TextBlock Text="{Binding EnPrice}" VerticalAlignment="Center"/>
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -113,11 +88,10 @@
 			<DataTemplate x:Key="AddressItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding Address}" VerticalAlignment="Center" Grid.Column="1" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Text="{Binding Address}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -125,11 +99,10 @@
 			<DataTemplate x:Key="AdminItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition />
-						</Grid.ColumnDefinitions>
-						<TextBlock Text="{Binding Admin}" VerticalAlignment="Center" Grid.Column="1" />
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Text="{Binding Admin}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
 					</Grid>
 				</Border>
 			</DataTemplate>
@@ -394,7 +367,8 @@
 					</LinearGradientBrush>
 				</TabItem.Background>
 				<UniformGrid Rows="2" Columns="1">
-<!--.:LISTA:.-->
+                    
+                    <!--.:LISTA:.-->
 					<ListView Margin="8,8,0,0" x:Name="ListView"
 						ItemsSource="{Binding PeerList}"
 						ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
@@ -403,16 +377,15 @@
 						util:GridViewSort.SortGlyphDescending="/img/down.png">
 						<ListView.View>
 							<GridView>
-								<GridViewColumn CellTemplate="{StaticResource NomeItemTemplate}" Header="Nome" util:GridViewSort.PropertyName="Name"/>
-								<GridViewColumn CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energia" util:GridViewSort.PropertyName="Energia"/>
-								<GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="Energia Prodotta" util:GridViewSort.PropertyName="EnProduced"/>
-								<GridViewColumn CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="Energia Venduta" util:GridViewSort.PropertyName="EnSold"/>
-								<GridViewColumn CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="Energia Comprata" util:GridViewSort.PropertyName="EnBought"/>
-								<GridViewColumn CellTemplate="{StaticResource PeakItemTemplate}" Header="Picco Energia" util:GridViewSort.PropertyName="EnPeak"/>
-								<GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="Energia Prodotta" util:GridViewSort.PropertyName="EnProduced"/>
-								<GridViewColumn CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Prezzo" util:GridViewSort.PropertyName="EnPrice"/>
-								<GridViewColumn CellTemplate="{StaticResource AddressItemTemplate}" Header="Indirizzo" util:GridViewSort.PropertyName="Address"/>
-								<GridViewColumn CellTemplate="{StaticResource AdminItemTemplate}" Header="Administrator" util:GridViewSort.PropertyName="Admin"/>
+								<GridViewColumn CellTemplate="{StaticResource NomeItemTemplate}" Header="Name" util:GridViewSort.PropertyName="Name" Width="300"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="Energia"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="En. Produced" util:GridViewSort.PropertyName="EnProduced"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="En. Sold" util:GridViewSort.PropertyName="EnSold"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="En. Bought" util:GridViewSort.PropertyName="EnBought"/>
+								<GridViewColumn CellTemplate="{StaticResource PeakItemTemplate}" Header="En. Peak" util:GridViewSort.PropertyName="EnPeak"/>
+								<GridViewColumn CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Price €" util:GridViewSort.PropertyName="EnPrice" Width="100"/>
+								<GridViewColumn CellTemplate="{StaticResource AddressItemTemplate}" Header="Address" util:GridViewSort.PropertyName="Address" Width="300"/>
+								<GridViewColumn CellTemplate="{StaticResource AdminItemTemplate}" Header="Admin" util:GridViewSort.PropertyName="Admin" Width="200"/>
 							</GridView>
 						</ListView.View>
 					</ListView>
@@ -464,7 +437,7 @@
 			</TabItem>
 		</TabControl>
         
-		<StatusBar VerticalAlignment="Bottom" Margin="0" d:LayoutOverrides="VerticalAlignment" Grid.Row="3">
+		<StatusBar x:Name="statusBar" VerticalAlignment="Bottom" Margin="0" d:LayoutOverrides="VerticalAlignment" Grid.Row="3">
 			<StatusBar.ItemsPanel>
 				<ItemsPanelTemplate>
 					<Grid>
@@ -489,14 +462,14 @@
 					<ColumnDefinition/>
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
-				<StatusBarItem Margin="0" d:LayoutOverrides="Width, Height" HorizontalContentAlignment="Center">
+				<StatusBarItem Margin="0" d:LayoutOverrides="Width, Height" HorizontalContentAlignment="Center" d:IsLocked="True">
 					<Image x:Name="imgResolverStatus" Visibility="{Binding ImgVisibility}" Source="/img/resolver_ok.png" Width="20" Height="20" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Fill"/>
 				</StatusBarItem>
-				<StatusBarItem Margin="0" HorizontalAlignment="Right" d:LayoutOverrides="Height" Grid.Column="1" HorizontalContentAlignment="Center">
+				<StatusBarItem Margin="0" HorizontalAlignment="Right" d:LayoutOverrides="Height" Grid.Column="1" HorizontalContentAlignment="Center" d:IsLocked="True">
 					<TextBlock  x:Name="tbResolverStatus" Text="{Binding GetResolverStatus}" FontWeight="Bold" Foreground="DarkBlue"/>
 				</StatusBarItem>
-				<Separator Background="Gray" Margin="0" Grid.Column="2"/>
-				<StatusBarItem Margin="0" d:LayoutOverrides="Height" Grid.Column="3" HorizontalContentAlignment="Center">
+				<Separator Margin="0" Width="0.875" HorizontalAlignment="Left" Height="{Binding Height, ElementName=statusBar}" Grid.Column="2"/>
+				<StatusBarItem Margin="0" d:LayoutOverrides="Height" Grid.Column="3" HorizontalContentAlignment="Center" d:IsLocked="True">
 					<UniformGrid Rows="1" Columns="3">
 						<TextBlock x:Name="Ora" Text="{Binding GetOra}" FontWeight="Bold" Foreground="DarkBlue"/>
 						<TextBlock x:Name="Minuto" Text="{Binding GetMinuto}" FontWeight="Bold" Foreground="DarkBlue"/>
@@ -504,7 +477,7 @@
 					</UniformGrid>
 				</StatusBarItem>
 				<Separator Background="Gray" Margin="0" Grid.Column="4"/>
-				<StatusBarItem HorizontalContentAlignment="Right" d:LayoutOverrides="Height" Grid.Column="5">
+				<StatusBarItem HorizontalContentAlignment="Right" d:LayoutOverrides="Height" Grid.Column="5" d:IsLocked="True">
 					<TextBlock Text="{Binding GetResolverIP}" FontWeight="Bold" Foreground="DarkBlue" HorizontalAlignment="Right"/>
 				</StatusBarItem>
 			</Grid>
