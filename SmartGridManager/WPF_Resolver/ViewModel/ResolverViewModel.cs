@@ -24,6 +24,7 @@ namespace WPF_Resolver.ViewModel
         private string _ora;
         private string _minuto;
         private string _secondo;
+        private string _enTh;
 
         private int _numProducers = 0;
         private int _numConsumers = 0;
@@ -31,17 +32,20 @@ namespace WPF_Resolver.ViewModel
 
         private float _enProduced;
         private float _enConsumed;
+        private double _enThroughput;
 
         #endregion
 
         #region Objects
+        private ObservableDictionary<DateTime, float> _enTimeLine = new ObservableDictionary<DateTime, float>();
         private ObservableDictionary<string, float> _enProdBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, float> _enConsBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
         private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
-        private DispatcherTimer temporizzatore;
-        private BackgroundWorker bw = new BackgroundWorker();
-        private BackgroundWorker _backgroundTimer = new BackgroundWorker();
+        private DispatcherTimer _timelineTemp;
+        private DispatcherTimer _UIRefresh;
+        private DispatcherTimer _clockBar;
+        private BackgroundWorker _bw = new BackgroundWorker();                
         private Resolver.Resolver _resolver;
         private Visibility _visStatus = new Visibility();
         private IPHostEntry _ipHost;
@@ -54,6 +58,12 @@ namespace WPF_Resolver.ViewModel
 
         public ResolverViewModel()
         {
+            _enTimeLine.Add(DateTime.Now, 0f);
+            OnPropertyChanged("GetPointTimeLine");
+
+            _enTh = "En. Throughput: 0%";
+            OnPropertyChanged("EnThroughput");
+
             _pieList.Add("Producers", 0);
             _pieList.Add("Consumers", 0);
             OnPropertyChanged("GetPieChartData");
@@ -65,24 +75,28 @@ namespace WPF_Resolver.ViewModel
             OnPropertyChanged("GetEnConsumedBar");
 
             #region BackGroundWorkers
-            bw.WorkerReportsProgress = true;
-            bw.WorkerSupportsCancellation = true;
+            
+            _bw.WorkerReportsProgress = true;
+            _bw.WorkerSupportsCancellation = true;
 
-            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
-
-            _backgroundTimer.WorkerReportsProgress = true;
-            _backgroundTimer.WorkerSupportsCancellation = true;
-
-            _backgroundTimer.DoWork += new DoWorkEventHandler(_backgroundTimer_DoWork);
+            _bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            _bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
 
             _resolver = new Resolver.Resolver();
             #endregion
 
             #region timing
-            temporizzatore = new DispatcherTimer();
-            temporizzatore.Interval = new TimeSpan(0, 0, 5);
-            temporizzatore.Tick += new EventHandler(Temporizzatore_Tick);
+            _UIRefresh = new DispatcherTimer();
+            _UIRefresh.Interval = new TimeSpan(0, 0, 5);
+            _UIRefresh.Tick += new EventHandler(Temporizzatore_Tick);
+
+            _timelineTemp = new DispatcherTimer();
+            _timelineTemp.Interval = new TimeSpan(0, 0, 10);
+            _timelineTemp.Tick += new EventHandler(TimeLine_Tick);
+
+            _clockBar = new DispatcherTimer();
+            _clockBar.Interval = new TimeSpan(0, 0, 1);
+            _clockBar.Tick += new EventHandler(clockBar_Tick);
             #endregion
 
             _visStatus = Visibility.Hidden;
@@ -90,13 +104,6 @@ namespace WPF_Resolver.ViewModel
 
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
-        }
-
-        void _backgroundTimer_DoWork(object sender, DoWorkEventArgs e)
-        {
-            DispatcherTimer clockBar = new DispatcherTimer();
-            temporizzatore.Interval = new TimeSpan(0, 0, 1);
-            temporizzatore.Tick += new EventHandler(cloBar_Tick);
         }
 
         public ObservableDictionary<string, int> GetPieChartData
@@ -134,6 +141,26 @@ namespace WPF_Resolver.ViewModel
             get { return peerList; }
         }
 
+        public ObservableDictionary<DateTime, float> GetPointTimeLine
+        {
+            get { return _enTimeLine; }
+            set
+            {
+                _enTimeLine = value;
+                OnPropertyChanged("GetPointTimeLine");
+            }
+        }
+
+        public string EnThroughput
+        {
+            get { return _enTh; }
+            set
+            {
+                _enTh = value;
+                OnPropertyChanged("EnThroughput");
+            }
+        }
+
         private bool canStart
         {
             get { return true; }
@@ -149,9 +176,9 @@ namespace WPF_Resolver.ViewModel
             this.OnPropertyChanged("GetResolverName");
 
 
-            if (bw.IsBusy != true)
+            if (_bw.IsBusy != true)
             {
-                bw.RunWorkerAsync();
+                _bw.RunWorkerAsync();
             }
         }
 
@@ -243,6 +270,8 @@ namespace WPF_Resolver.ViewModel
             _enProduced = 0;
             _enConsumed = 0;
 
+            _enThroughput = 0f;
+
             peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");
             
@@ -260,6 +289,13 @@ namespace WPF_Resolver.ViewModel
                 #endregion
             }
 
+            if (_enConsumed > 0)
+                _enThroughput = (_enProduced / _enConsumed) * 100;
+            else
+                _enThroughput = 0;
+
+            _enTh ="En. Throughput: " + Math.Round(_enThroughput, 2) + "%";
+
             _pieList["Producers"] = _numProducers;
             _pieList["Consumers"] = _numConsumers;
 
@@ -269,9 +305,25 @@ namespace WPF_Resolver.ViewModel
             OnPropertyChanged("GetPieChartData");
             OnPropertyChanged("GetEnProducedBar");
             OnPropertyChanged("GetEnConsumedBar");
+
+            OnPropertyChanged("EnThroughput");
         }
 
-        private void cloBar_Tick(object sender, EventArgs e)
+        private void TimeLine_Tick(object sender, EventArgs e)
+        {
+            float enProd = 0f;
+
+            for(int i=0;i< peerList.Count;i++)
+            {
+                enProd += peerList[i].EnProduced;
+            }
+
+            _enTimeLine.Add(DateTime.Now, enProd);
+
+            OnPropertyChanged("GetPointTimeLine");
+        }
+
+        private void clockBar_Tick(object sender, EventArgs e)
         {
             i++;
 
@@ -295,19 +347,15 @@ namespace WPF_Resolver.ViewModel
 
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            _clockBar.Start();
+            _UIRefresh.Start();
+            _timelineTemp.Start();
+
             _resolverName = _resolver.name;
-            this.OnPropertyChanged("GetResolverName");
-
-            if (bw.IsBusy != true)
-            {
-                _backgroundTimer.RunWorkerAsync();
-            }
-
-            temporizzatore.Start();
-
             _resolverStatus = "Online...";
             _visStatus = Visibility.Visible;
 
+            this.OnPropertyChanged("GetResolverName");         
             this.OnPropertyChanged("GetResolverStatus");
             this.OnPropertyChanged("ImgVisibility");
             this.OnPropertyChanged("GetResolverIP");
