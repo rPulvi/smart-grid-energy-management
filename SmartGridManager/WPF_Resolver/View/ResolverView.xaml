@@ -398,11 +398,28 @@
 						<GroupBox Header="Producers/Consumers" FontWeight="Bold" Margin="0" HorizontalAlignment="Left">
                         
 							<DVC:Chart>
-								<DVC:PieSeries
-									ItemsSource="{Binding GetPieChartData}"
+                                <DVC:PieSeries
+									ItemsSource="{Binding GetPieConsumersData}"
 									IndependentValueBinding="{Binding Key}"
-									DependentValueBinding="{Binding Value}"/>
-							</DVC:Chart>
+									DependentValueBinding="{Binding Value}">
+                                    <DVC:PieSeries.DataPointStyle>
+                                        <Style TargetType="DVC:PieDataPoint">
+                                            <Setter Property="Background" Value="Red"/>
+                                        </Style>
+                                    </DVC:PieSeries.DataPointStyle>
+                                </DVC:PieSeries>
+                                
+                                <DVC:PieSeries
+									ItemsSource="{Binding GetPieProducersData}"
+									IndependentValueBinding="{Binding Key}"
+									DependentValueBinding="{Binding Value}">
+                                    <DVC:PieSeries.DataPointStyle>
+                                        <Style TargetType="DVC:PieDataPoint">
+                                            <Setter Property="Background" Value="Green"/>
+                                        </Style>
+                                    </DVC:PieSeries.DataPointStyle>
+                                </DVC:PieSeries>                                    
+                            </DVC:Chart>
                         
 						</GroupBox>
 						<GroupBox Header="Statistics" Margin="0" Grid.Column="1">
@@ -412,28 +429,47 @@
 									<RowDefinition/>
 								</Grid.RowDefinitions>
 								<TextBlock TextWrapping="Wrap" Text="{Binding EnThroughput}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-								
-								<DVC:Chart Margin="0" Grid.Row="1">
+
+                                <DVC:Chart Margin="0" Grid.Row="1">
                                     <DVC:BarSeries 
 									IndependentValueBinding="{Binding Key}"
 									DependentValueBinding="{Binding Value}"  
-									ItemsSource="{Binding GetEnProducedBar}" Title="En. Produced"/>
+									ItemsSource="{Binding GetEnProducedBar}" Title="En. Produced">
+                                        <DVC:BarSeries.DataPointStyle>
+                                            <Style TargetType="DVC:BarDataPoint">
+                                                <Setter Property="Background" Value="Green"/>
+                                            </Style>
+                                        </DVC:BarSeries.DataPointStyle>
+                                    </DVC:BarSeries>
+                                    
                                     <DVC:BarSeries 
 									IndependentValueBinding="{Binding Key}"
 									DependentValueBinding="{Binding Value}"  
-									ItemsSource="{Binding GetEnConsumedBar}" Title="En. Consumed"/>
+									ItemsSource="{Binding GetEnConsumedBar}" Title="En. Consumed">
+                                        <DVC:BarSeries.DataPointStyle>
+                                            <Style TargetType="DVC:BarDataPoint">
+                                                <Setter Property="Background" Value="Red"/>
+                                            </Style>
+                                        </DVC:BarSeries.DataPointStyle>
+                                    </DVC:BarSeries>
                                 </DVC:Chart>
-								
-							</Grid>
+                                
+                            </Grid>
 						</GroupBox>
 						<GroupBox Header="TimeLine" Margin="0" d:LayoutOverrides="GridBox" Grid.Column="2" Grid.ColumnSpan="3">
 							<ScrollViewer>
 								<DVC:Chart>
-									<DVC:LineSeries 
+                                    <DVC:LineSeries 
                                     IndependentValueBinding="{Binding Key}"
 									DependentValueBinding="{Binding Value}"  
-									ItemsSource="{Binding GetPointTimeLine}" Title="En. Produced"/>
-								</DVC:Chart>
+									ItemsSource="{Binding GetPointTimeLine}" Title="En. Produced">
+                                        <DVC:LineSeries.DataPointStyle>
+                                            <Style TargetType="DVC:LineDataPoint">
+                                                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                                            </Style>
+                                        </DVC:LineSeries.DataPointStyle>
+                                    </DVC:LineSeries>
+                                </DVC:Chart>
 							</ScrollViewer>
 						</GroupBox>
 					</Grid>

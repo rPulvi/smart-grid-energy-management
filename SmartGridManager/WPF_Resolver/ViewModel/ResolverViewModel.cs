@@ -40,7 +40,8 @@ namespace WPF_Resolver.ViewModel
         private ObservableDictionary<DateTime, float> _enTimeLine = new ObservableDictionary<DateTime, float>();
         private ObservableDictionary<string, float> _enProdBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, float> _enConsBar = new ObservableDictionary<string, float>();
-        private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
+        private ObservableDictionary<string, int> _pieConsumers = new ObservableDictionary<string, int>();
+        private ObservableDictionary<string, int> _pieProducers = new ObservableDictionary<string, int>();
         private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
         private DispatcherTimer _timelineTemp;
         private DispatcherTimer _UIRefresh;
@@ -64,9 +65,10 @@ namespace WPF_Resolver.ViewModel
             _enTh = "En. Throughput: 0%";
             OnPropertyChanged("EnThroughput");
 
-            _pieList.Add("Producers", 0);
-            _pieList.Add("Consumers", 0);
-            OnPropertyChanged("GetPieChartData");
+            _pieProducers.Add("Producers", 0);
+            _pieConsumers.Add("Consumers", 0);
+            OnPropertyChanged("GetPieConsumersData");
+            OnPropertyChanged("GetPieProducersData");
 
             _enProdBar.Add("En.Prod.", 0f);
             _enConsBar.Add("En.Cons.", 0f);
@@ -106,13 +108,23 @@ namespace WPF_Resolver.ViewModel
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
         }
 
-        public ObservableDictionary<string, int> GetPieChartData
+        public ObservableDictionary<string, int> GetPieConsumersData
         {
-            get { return _pieList; }
+            get { return _pieConsumers; }
             set
             {
-                _pieList = value;
-                OnPropertyChanged("GetPieChartData");
+                _pieConsumers = value;
+                OnPropertyChanged("GetPieConsumersData");
+            }
+        }
+
+        public ObservableDictionary<string, int> GetPieProducersData
+        {
+            get { return _pieProducers; }
+            set
+            {
+                _pieProducers = value;
+                OnPropertyChanged("GetPieProducersData");
             }
         }
 
@@ -296,13 +308,14 @@ namespace WPF_Resolver.ViewModel
 
             _enTh ="En. Throughput: " + Math.Round(_enThroughput, 2) + "%";
 
-            _pieList["Producers"] = _numProducers;
-            _pieList["Consumers"] = _numConsumers;
+            _pieProducers["Producers"] = _numProducers;
+            _pieConsumers["Consumers"] = _numConsumers;
 
             _enProdBar["En.Prod."] = _enProduced;
             _enConsBar["En.Cons."] = _enConsumed;
 
-            OnPropertyChanged("GetPieChartData");
+            OnPropertyChanged("GetPieConsumersData");
+            OnPropertyChanged("GetPieProducersData");
             OnPropertyChanged("GetEnProducedBar");
             OnPropertyChanged("GetEnConsumedBar");
 
