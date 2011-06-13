@@ -50,6 +50,7 @@ namespace SmartGridManager.Core.Utils
             {
                 RemoteHost h = new RemoteHost();
 
+                h.name = host.Element("Name").Value;
                 h.IP = host.Element("IP").Value;
                 h.port = host.Element("Port").Value;
                 h.netAddress = address + h.IP + ":" + h.port + @"/Remote";
@@ -64,7 +65,8 @@ namespace SmartGridManager.Core.Utils
         {
             XDocument xmlList = XDocument.Load("NetConfig.xml");
 
-            xmlList.Element("RemoteHosts").Add(new XElement("Host", 
+            xmlList.Element("RemoteHosts").Add(new XElement("Host",
+                                                            new XElement("Name",h.name),
                                                             new XElement("IP",h.IP),
                                                             new XElement("Port",h.port))
                                                             );
