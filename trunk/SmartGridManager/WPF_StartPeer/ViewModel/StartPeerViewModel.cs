@@ -299,7 +299,7 @@ namespace WPF_StartPeer.ViewModel
                 _errorMessages[2].nCheck = 1;
                 bRet = false;
             }
-            if (Price == 0)
+            if (_status == PeerStatus.Producer && Price == 0)
             {
                 _errorMessages[3].nCheck = 1;
                 bRet = false;
