@@ -44,7 +44,7 @@ namespace Resolver
         private PeerStatus _peerStatus;     
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
-        private Dictionary<Guid, String> _messageList = new Dictionary<Guid, String>();
+        private List<TransactionField> _messageList = new List<TransactionField>();
 
         private List<TempBuilding> hbrBuildingd = new List<TempBuilding>();
 
@@ -173,8 +173,13 @@ namespace Resolver
         {
             if (_messageList.Count > 0)
             {
-                message.header.Sender = getNameByID(message.header.MessageID);
-                _messageList.Remove(message.header.MessageID);
+                TransactionField t = getMessageByID(message.header.MessageID);
+                
+                if (t != null)
+                {
+                    message.header.Sender = t.peerName;
+                    _messageList.Remove(t);
+                }
             }
 
             remoteChannel.ManageRemoteMessages(message);
@@ -183,7 +188,11 @@ namespace Resolver
         //From Resolver
         private void ForwardRemoteMessage(PeerMessage message)  
         {
-            _messageList.Add(message.header.MessageID, message.header.Sender);
+            TransactionField t = new TransactionField();
+            t.ID = message.header.MessageID;
+            t.peerName = message.header.Sender;
+            
+            _messageList.Add(t);
             
             message.header.Sender = name;
 
@@ -231,23 +240,20 @@ namespace Resolver
             Connector.channel.HelloResponse(MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName()));
         }
 
-        private string getNameByID(Guid ID)
-        { 
-            string name = "";
+        private TransactionField getMessageByID(Guid ID)
+        {
+            TransactionField t = null;
 
-            if (_messageList.ContainsKey((Guid)ID))
+            for (int i = 0; i < _messageList.Count; i++)
             {
-                foreach (var k in _messageList)
+                if (_messageList[i].ID == ID)
                 {
-                    if (k.Key == ID)
-                    {
-                        name = k.Value;
-                        break;
-                    }
+                    t = _messageList[i];
+                    break;
                 }
             }
 
-            return name;
+            return t;
         }
 
         public ObservableCollectionEx<TempBuilding> GetConnectedPeers()
@@ -315,5 +321,11 @@ namespace Resolver
             }
         }
         #endregion
+
+        private class TransactionField
+        {
+            public Guid ID;
+            public string peerName;
+        }
     }
 }
