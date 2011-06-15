@@ -81,7 +81,7 @@
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
 					
-					<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.745" RadiusX="15" RadiusY="15" Grid.Row="1"/>
+					<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.745" RadiusX="15" RadiusY="15" Grid.Row="1" Margin="0,0,0,5"/>
 					
 					<Grid Margin="0,15" Grid.Row="1">
 						<Grid.ColumnDefinitions>
@@ -403,7 +403,7 @@
 									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
 								
-								<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.75" RadiusX="15" RadiusY="15" Grid.Row="0"/>
+								<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.75" RadiusX="15" RadiusY="15" Grid.Row="0" Margin="0,0,0,5"/>
 								
 								<TextBlock TextWrapping="Wrap" Text="{Binding EnThroughput}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="0"/>
 								
@@ -730,7 +730,7 @@
 									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
 								
-								<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.75" RadiusX="15" RadiusY="15" Grid.Row="1"/>
+								<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.75" RadiusX="15" RadiusY="15" Grid.Row="1" Margin="0,0,0,5"/>
 								
 								<Grid Margin="0,15" Grid.Row="1">
 									<Grid.ColumnDefinitions>
