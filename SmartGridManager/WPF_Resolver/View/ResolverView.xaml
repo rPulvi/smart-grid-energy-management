@@ -17,10 +17,15 @@
         <Style x:Key="ColTextHeaderStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
-            <Setter Property="Foreground" Value="white"/>
+            <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="TextAlignment" Value="Left"/>
             <Setter Property="Width" Value="100"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="Orange"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <DataTemplate x:Key="NameColHeader">
@@ -51,7 +56,6 @@
             <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}"/>
         </DataTemplate>
 
-
         <Style x:Key="myMenu" TargetType="{x:Type TextBlock}">
             <Setter Property="Effect">
                 <Setter.Value>
@@ -66,7 +70,7 @@
 				<Trigger Property="IsMouseOver" Value="true">
 					<Setter Property="Foreground" Value="Orange"/>
 				</Trigger>
-			</Style.Triggers>
+            </Style.Triggers>
         </Style>
 		
 		<ControlTemplate x:Key="ChartControlTemplate1" TargetType="{x:Type DVC:Chart}">
@@ -899,7 +903,7 @@
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type ListViewItem}">
-							<Border x:Name="Bd" Background="{TemplateBinding Background}" SnapsToDevicePixels="true" BorderThickness="0,0,0,1" BorderBrush="#6FBDE8">
+							<Border x:Name="Bd" Background="Transparent" SnapsToDevicePixels="true">
 								<GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
 							</Border>
 							<ControlTemplate.Triggers>
@@ -947,14 +951,7 @@
 				</Setter>
 			</Style>
 
-			<LinearGradientBrush x:Key="BackgroundBrush" EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-				<LinearGradientBrush.GradientStops>
-					<GradientStopCollection>
-						<GradientStop Color="#FF212121"/>
-						<GradientStop Color="White" Offset="1"/>
-						<GradientStop Color="#FF7F7F7F" Offset="0.737"/>
-					</GradientStopCollection>
-				</LinearGradientBrush.GradientStops>
+			<LinearGradientBrush x:Key="BackgroundBrush">
 			</LinearGradientBrush>
 
 			<LinearGradientBrush x:Key="HighlightBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
@@ -966,23 +963,11 @@
 				</LinearGradientBrush.GradientStops>
 			</LinearGradientBrush>
 
-			<LinearGradientBrush x:Key="BorderBrush" StartPoint="0,0" EndPoint="0,1">
-				<LinearGradientBrush.GradientStops>
-					<GradientStopCollection>
-						<GradientStop Color="#FFAFDDF6" Offset="0"/>
-						<GradientStop Color="#FF2969AA" Offset="1"/>
-					</GradientStopCollection>
-				</LinearGradientBrush.GradientStops>
-			</LinearGradientBrush>
+            <LinearGradientBrush x:Key="BorderBrush">
+            </LinearGradientBrush>
 
-			<LinearGradientBrush x:Key="PressedBorderBrush" StartPoint="0,0" EndPoint="0,1">
-				<LinearGradientBrush.GradientStops>
-					<GradientStopCollection>
-						<GradientStop Color="#FF75aac7" Offset="0"/>
-						<GradientStop Color="#FF143c65" Offset="1"/>
-					</GradientStopCollection>
-				</LinearGradientBrush.GradientStops>
-			</LinearGradientBrush>
+            <LinearGradientBrush x:Key="PressedBorderBrush">
+            </LinearGradientBrush>
 
 			<Style x:Key="GridViewColumnHeaderGripper" TargetType="{x:Type Thumb}">
 				<Setter Property="Width" Value="14"/>
@@ -1001,20 +986,18 @@
 			<Style x:Key="{x:Type GridViewColumnHeader}" TargetType="{x:Type GridViewColumnHeader}">
 				<Setter Property="HorizontalContentAlignment" Value="Center"/>
 				<Setter Property="VerticalContentAlignment" Value="Center"/>
-				<Setter Property="Foreground" Value="#FFFFFF" />
-				<Setter Property="Padding" Value="8"/>
+				<Setter Property="Padding" Value="4"/>
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
 							<Grid>
-								<Border x:Name="HeaderBorder" Padding="{TemplateBinding Padding}" BorderThickness="0,1,0,1" BorderBrush="{StaticResource BorderBrush}" Background="{StaticResource BackgroundBrush}">
+								<Border x:Name="HeaderBorder" Padding="{TemplateBinding Padding}">
 									<ContentPresenter x:Name="HeaderContent" Margin="0,0,0,1" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
 								</Border>
-								<Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right" Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}"/>
 							</Grid>
 							<ControlTemplate.Triggers>
 								<Trigger Property="IsMouseOver" Value="true">
-									<Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource HighlightBackgroundBrush}"/>
+									<Setter TargetName="HeaderBorder" Property="Background" Value="Transparent"/>
 								</Trigger>
 								<Trigger Property="IsPressed" Value="true">
 									<Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource PressedBorderBrush}"/>
@@ -1098,7 +1081,7 @@
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="{x:Type ListView}">
-							<Border x:Name="Border" BorderThickness="1" BorderBrush="#999999" Background="#DFDFDF">
+							<Border x:Name="Border">
 								<ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
 									<ItemsPresenter />
 								</ScrollViewer>
