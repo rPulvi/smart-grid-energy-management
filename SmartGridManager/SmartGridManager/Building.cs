@@ -18,6 +18,7 @@ namespace SmartGridManager
         private string _address;
         private string _adminName;
 
+        private bool isConnected = false;
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -32,7 +33,8 @@ namespace SmartGridManager
             _adminName = adminName;
             _pwManager = new PowerManager(Name, status, new EnergyGenerator(enType, enProduced), energyPeak, price);
             peerthread = new Thread(_pwManager.Start) { IsBackground = true };
-            peerthread.Start();
+            
+            peerthread.Start();            
 
             //send hello message
             Connector.channel.sayHello(MessageFactory.CreateHelloMessage("@All",Name,status,enType,enProduced,
@@ -41,7 +43,7 @@ namespace SmartGridManager
 
         public void StopEnergyProduction()
         {
-            _pwManager.ShutDown();
+            _pwManager.ShutDown();                       
             base.StopService();
         }
     }
