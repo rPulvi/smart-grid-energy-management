@@ -19,8 +19,7 @@
             <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="TextAlignment" Value="Left"/>
-            <Setter Property="Width" Value="100"/>
+            <Setter Property="TextAlignment" Value="Left"/>            
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="true">
                     <Setter Property="Foreground" Value="Orange"/>
@@ -29,31 +28,31 @@
         </Style>
 
         <DataTemplate x:Key="NameColHeader">
-            <TextBlock Text="Name" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="Name" Style="{StaticResource ColTextHeaderStyle}" Width="250"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergyTypeColHeader">
-            <TextBlock Text="Energy Type" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="Energy Type" Style="{StaticResource ColTextHeaderStyle}" Width="80"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergyProducedColHeader">
-            <TextBlock Text="En. Produced" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="En. Produced" Style="{StaticResource ColTextHeaderStyle}" Width="80"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergySoldColHeader">
-            <TextBlock Text="En. Sold" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="En. Sold" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
         </DataTemplate>
         <DataTemplate x:Key="EnergyBoughtColHeader">
-            <TextBlock Text="En. Bought" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="En. Bought" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
         </DataTemplate>
         <DataTemplate x:Key="EnergyPeakColHeader">
-            <TextBlock Text="En. Peak" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="En. Peak" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
         </DataTemplate>
         <DataTemplate x:Key="PriceColHeader">
-            <TextBlock Text="Price €" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="Price €" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
         </DataTemplate>
         <DataTemplate x:Key="AddressColHeader">
-            <TextBlock Text="Address" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="Address" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
         <DataTemplate x:Key="AdminColHeader">
-            <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}"/>
+            <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}" Width="230" />
         </DataTemplate>
 
         <Style x:Key="myMenu" TargetType="{x:Type TextBlock}">
