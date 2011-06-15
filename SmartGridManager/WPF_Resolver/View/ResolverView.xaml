@@ -15,9 +15,10 @@
 	<Window.Resources>
 
         <Style x:Key="ChartText" TargetType="{x:Type chartingToolkit:Chart}">
-            <Setter Property="Foreground" Value="#8C1F76"/>
-            <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="DarkBlue"/>
+            <Setter Property="FontFamily" Value="Century Gothic"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         
         <Style x:Key="ColTextHeaderStyle" TargetType="{x:Type TextBlock}">
@@ -420,7 +421,7 @@
 										<ColumnDefinition Width="Auto"/>
 									</Grid.ColumnDefinitions>
 									<DV:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" Template="{DynamicResource LegendControlTemplate2}"/>
-									<System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
+									<System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}" Margin="5,0,0,0">
 										<Grid Style="{TemplateBinding PlotAreaStyle}" Panel.ZIndex="-1"/>
 										<Border BorderThickness="1" Panel.ZIndex="10"/>
 									</System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel>
@@ -746,7 +747,7 @@
 										<ColumnDefinition Width="Auto"/>
 									</Grid.ColumnDefinitions>
 									<DV:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" Template="{DynamicResource LegendControlTemplate1}"/>
-									<System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
+									<System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}" Margin="8,0,0,0">
 										<Grid Style="{TemplateBinding PlotAreaStyle}" Panel.ZIndex="-1"/>
 										<Border BorderThickness="1" Panel.ZIndex="10"/>
 									</System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel>
