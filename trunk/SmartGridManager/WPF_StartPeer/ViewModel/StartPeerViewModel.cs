@@ -221,7 +221,8 @@ namespace WPF_StartPeer.ViewModel
 
         public void Disconnect()
         {
-            house.StopEnergyProduction();
+            if(house != null)
+                house.StopEnergyProduction();
 
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
             this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
@@ -242,19 +243,30 @@ namespace WPF_StartPeer.ViewModel
         {
             house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
 
-            _imgPath = @"/WPF_StartPeer;component/img/online.png";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+            if (house.isConnected == true)
+            {
+                _imgPath = @"/WPF_StartPeer;component/img/online.png";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
 
-            _peerStatus = "Online...";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+                _peerStatus = "Online...";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
 
-            _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+                _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
 
-            _startButton = "Disconnect";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+                _startButton = "Disconnect";
+                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
 
-            _isStartable = false;
+                _isStartable = false;
+            }
+            else 
+            {
+                house = null;
+                if (MessageBox.Show("Unable to contact the Resolver Service. Retry?", "Connection Error", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
+                {
+                    Connect();
+                }
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

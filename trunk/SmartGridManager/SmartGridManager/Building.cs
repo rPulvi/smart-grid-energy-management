@@ -17,8 +17,7 @@ namespace SmartGridManager
 
         private string _address;
         private string _adminName;
-
-        private bool isConnected = false;
+        
         /// <summary>
         /// Default Constructor
         /// </summary>
@@ -29,16 +28,19 @@ namespace SmartGridManager
         public Building(String Name, PeerStatus status, EnergyType enType, float enProduced, float energyPeak, float price, string address, string adminName)
             : base(Name)
         {
-            _address = address;
-            _adminName = adminName;
-            _pwManager = new PowerManager(Name, status, new EnergyGenerator(enType, enProduced), energyPeak, price);
-            peerthread = new Thread(_pwManager.Start) { IsBackground = true };
-            
-            peerthread.Start();            
+            if (isConnected == true)
+            {
+                _address = address;
+                _adminName = adminName;
+                _pwManager = new PowerManager(Name, status, new EnergyGenerator(enType, enProduced), energyPeak, price);
+                peerthread = new Thread(_pwManager.Start) { IsBackground = true };
 
-            //send hello message
-            Connector.channel.sayHello(MessageFactory.CreateHelloMessage("@All",Name,status,enType,enProduced,
-                energyPeak,price,address,adminName));
+                peerthread.Start();
+
+                //send hello message
+                Connector.channel.sayHello(MessageFactory.CreateHelloMessage("@All", Name, status, enType, enProduced,
+                    energyPeak, price, address, adminName));
+            }
         }
 
         public void StopEnergyProduction()
