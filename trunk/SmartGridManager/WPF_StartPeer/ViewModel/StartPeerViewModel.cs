@@ -56,7 +56,7 @@ namespace WPF_StartPeer.ViewModel
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
             _peerStatus = "Offline...";
 
-            _startButton = "Start";
+            _startButton = "Connect";
 
             _status = PeerStatus.Consumer;
             this.builder = new StringBuilder();
@@ -234,7 +234,7 @@ namespace WPF_StartPeer.ViewModel
 
             _isStartable = true;
 
-            _startButton = "Start";
+            _startButton = "Connect";
             this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
         }
 
@@ -251,7 +251,7 @@ namespace WPF_StartPeer.ViewModel
             _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
             this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
 
-            _startButton = "Stop";
+            _startButton = "Disconnect";
             this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
 
             _isStartable = false;
