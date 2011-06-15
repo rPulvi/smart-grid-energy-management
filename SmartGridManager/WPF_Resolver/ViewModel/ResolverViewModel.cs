@@ -27,6 +27,8 @@ namespace WPF_Resolver.ViewModel
         private string _enTh;
         private string _imgPath;
 
+        private int _localFontSize;
+        private int _remoteFontSize;
         private int _numProducers = 0;
         private int _numConsumers = 0;
         int i = 0;
@@ -38,6 +40,10 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
+
+        private Visibility _listVisibilityLocal = new Visibility();
+        private Visibility _listVisibilityRemote = new Visibility();
+
         private ObservableDictionary<DateTime, float> _enTimeLine = new ObservableDictionary<DateTime, float>();
         private ObservableDictionary<string, float> _enProdBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, float> _enConsBar = new ObservableDictionary<string, float>();
@@ -55,11 +61,24 @@ namespace WPF_Resolver.ViewModel
         #region DelegateCommands
         public DelegateCommand StartResolver { get; set; }
         public DelegateCommand Exit { get; set; }
+        public DelegateCommand ShowLocal { get; set; }
+        public DelegateCommand ShowRemote { get; set; }
+        public DelegateCommand SetLocalFont { get; set; }
+        public DelegateCommand SetRemoteFont { get; set; }
         #endregion
 
         public ResolverViewModel()
         {
             #region init
+            _localFontSize = 13;
+            _remoteFontSize = 13;
+
+            OnPropertyChanged("SetLocalFontSize");
+            OnPropertyChanged("SetRemoteFontSize");
+
+            _listVisibilityLocal = Visibility.Hidden;
+            OnPropertyChanged("SetVisibilityLocal");
+
             _imgPath = @"/WPF_Resolver;component/img/offline.png";
             OnPropertyChanged("GetImgPath");
 
@@ -110,8 +129,12 @@ namespace WPF_Resolver.ViewModel
 
             _ipHost = Dns.GetHostByName(Dns.GetHostName());
 
-            this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canStart);
-            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
+            this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canDo);
+            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
+            this.ShowLocal = new DelegateCommand((o) => this.ChangeVisibilityLocal(), o => this.canDo);
+            this.ShowRemote = new DelegateCommand((o) => this.ChangeVisibilityRemote(), o => this.canDo);
+            this.SetLocalFont = new DelegateCommand((o) => this.ChangeLocalFontSize(), o => this.canDo);
+            this.SetRemoteFont = new DelegateCommand((o) => this.ChangeRemoteFontSize(), o => this.canDo);
         }
 
         public ObservableDictionary<string, int> GetPieChartData
@@ -159,6 +182,46 @@ namespace WPF_Resolver.ViewModel
             }
         }
 
+        public Visibility SetVisibilityLocal
+        {
+            get { return _listVisibilityLocal; }
+            set
+            {
+                _listVisibilityLocal = value;
+                OnPropertyChanged("SetVisibility");
+            }
+        }
+
+        public Visibility SetVisibilityRemote
+        {
+            get { return _listVisibilityRemote; }
+            set
+            {
+                _listVisibilityRemote = value;
+                OnPropertyChanged("SetVisibilityRemote");
+            }
+        }
+
+        public int SetLocalFontSize
+        {
+            get { return _localFontSize; }
+            set
+            {
+                _localFontSize = value;
+                OnPropertyChanged("SetLocalFontSize");
+            }
+        }
+
+        public int SetRemoteFontSize
+        {
+            get { return _remoteFontSize; }
+            set
+            {
+                _remoteFontSize = value;
+                OnPropertyChanged("SetRemoteFontSize");
+            }
+        }
+
         public string EnThroughput
         {
             get { return _enTh; }
@@ -169,9 +232,40 @@ namespace WPF_Resolver.ViewModel
             }
         }
 
-        private bool canStart
+        public void ChangeVisibilityLocal()
         {
-            get { return true; }
+            _listVisibilityLocal = Visibility.Visible;
+            OnPropertyChanged("SetVisibilityLocal");
+
+            _localFontSize = 13;
+            OnPropertyChanged("SetLocalFontSize");
+
+            _listVisibilityRemote = Visibility.Hidden;
+            OnPropertyChanged("SetVisibilityRemote");
+        }
+
+        public void ChangeVisibilityRemote()
+        {
+            _listVisibilityRemote = Visibility.Visible;
+            OnPropertyChanged("SetVisibilityRemote");
+
+            _remoteFontSize = 13;
+            OnPropertyChanged("SetRemoteFontSize");
+
+            _listVisibilityLocal = Visibility.Hidden;
+            OnPropertyChanged("SetVisibilityLocal");
+        }
+
+        public void ChangeLocalFontSize()
+        {
+            _localFontSize = 11;
+            OnPropertyChanged("SetLocalFontSize");
+        }
+
+        public void ChangeRemoteFontSize()
+        {
+            _remoteFontSize = 11;
+            OnPropertyChanged("SetRemoteFontSize");
         }
 
         public void Start()
@@ -187,11 +281,6 @@ namespace WPF_Resolver.ViewModel
             {
                 _bw.RunWorkerAsync();
             }
-        }
-
-        private bool canExit
-        {
-            get { return true; }
         }
 
         public void AppExit()
@@ -368,6 +457,11 @@ namespace WPF_Resolver.ViewModel
             this.OnPropertyChanged("GetResolverName");         
             this.OnPropertyChanged("GetResolverStatus");
             this.OnPropertyChanged("GetResolverIP");
+        }
+
+        private bool canDo
+        {
+            get { return true; }
         }
     }
 }
