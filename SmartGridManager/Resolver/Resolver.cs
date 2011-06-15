@@ -41,8 +41,9 @@ namespace Resolver
 
         public string name { get; private set; }
         
-        private PeerStatus _peerStatus;     
-
+        private PeerStatus _peerStatus;
+        private bool isLocalConnected;
+        private bool isRemoteConnected;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         private List<TransactionField> _messageList = new List<TransactionField>();
 
@@ -56,14 +57,16 @@ namespace Resolver
         #region Methods
         
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
+            this.isLocalConnected = false;
+            this.isRemoteConnected = false;
             this.name = Tools.getResolverName();
             this._peerStatus = PeerStatus.Resolver;
         }
 
         public void Connect()
         {
-            StartLocalResolver();
-            StartRemoteConnection();
+            this.isLocalConnected = StartLocalResolver();
+            this.isRemoteConnected = StartRemoteConnection();            
 
             //To handle the remote traffic            
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
@@ -92,8 +95,10 @@ namespace Resolver
             #endregion
         }
 
-        private void StartLocalResolver()
-        {            
+        private bool StartLocalResolver()
+        {
+            bool bRet = false;
+
             customResolver = new ServiceHost(crs);
 
             Console.WriteLine("Starting Custom Local Peer Resolver Service...");
@@ -102,6 +107,7 @@ namespace Resolver
             {
                 crs.Open();
                 customResolver.Open();
+                bRet = true;
                 Console.WriteLine("Custom Local Peer Resolver Service is started");
             }
             catch (Exception e)
@@ -110,12 +116,14 @@ namespace Resolver
                 Console.WriteLine(e);
                 crs.Close();                
                 customResolver.Abort();
-                Console.ReadLine();
-            }        
+                bRet = false;
+            }
+
+            return bRet;
         }
 
-        private void StartRemoteConnection()
-        {
+        private bool StartRemoteConnection()
+        {            
             int n=0;
             bool bRet = false;
             List<RemoteHost> h;            
@@ -159,13 +167,14 @@ namespace Resolver
                 catch (Exception e)
                 {
                     Console.WriteLine("Error in connecting to: {0}", h[n].IP);
-                    Console.WriteLine(e); //For debug
-                    remoteHost.Abort();
-                    Console.ReadLine();
+                    Console.WriteLine(e); //For debug purpose
+                    remoteHost.Abort();                    
                     n++;
                     bRet = false;
                 }
-            }            
+            }
+
+            return bRet;
         }
 
         //To Resolver
@@ -322,13 +331,15 @@ namespace Resolver
         }
 
         public void CloseService()
-        { 
-            //close remote connections
-            remoteHost.Close();
+        {
+            if (this.isRemoteConnected == true)                        
+                remoteHost.Close();
             
-            //close local Resolver Service
-            crs.Close();
-            customResolver.Close();
+            if(this.isLocalConnected == true)
+            {                
+                crs.Close();
+                customResolver.Close();
+            }
         }
             
         #endregion
