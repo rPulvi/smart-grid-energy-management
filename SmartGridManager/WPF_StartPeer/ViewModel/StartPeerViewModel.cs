@@ -78,7 +78,7 @@ namespace WPF_StartPeer.ViewModel
 
         public void Start()
         {
-            ButtonClick();
+            CreateBuilding();
         }
 
         public void Producer()
@@ -193,35 +193,20 @@ namespace WPF_StartPeer.ViewModel
 
         public void AppExit()
         {
+            Disconnect();
             Application.Current.Shutdown();
         }
 
-        private void ButtonClick()
+        private void CreateBuilding()
         {
             if (_isStartable)
             {
                 if (checkFields() == true)
                 {
                     if (_status == PeerStatus.Consumer)
-                    {
                         EnType = EnergyType.None;
-                    }
 
-                    house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
-
-                    _imgPath = @"/WPF_StartPeer;component/img/online.png";
-                    this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
-
-                    _peerStatus = "Online...";
-                    this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
-
-                    _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
-                    this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
-
-                    _startButton = "Stop";
-                    this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
-
-                    _isStartable = false;
+                    Connect();
                 }
                 else
                 {                    
@@ -230,22 +215,46 @@ namespace WPF_StartPeer.ViewModel
             }
             else
             {
-                house.StopEnergyProduction();
-
-                _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
-
-                _imgPath = @"/WPF_StartPeer;component/img/offline.png";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
-
-                _peerStatus = "Offline...";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
-
-                _isStartable = true;
-
-                _startButton = "Start";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+                Disconnect();
             }
+        }
+
+        public void Disconnect()
+        {
+            house.StopEnergyProduction();
+
+            _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+
+            _imgPath = @"/WPF_StartPeer;component/img/offline.png";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+
+            _peerStatus = "Offline...";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+
+            _isStartable = true;
+
+            _startButton = "Start";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+        }
+
+        public void Connect()
+        {
+            house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
+
+            _imgPath = @"/WPF_StartPeer;component/img/online.png";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+
+            _peerStatus = "Online...";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+
+            _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+
+            _startButton = "Stop";
+            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+
+            _isStartable = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
