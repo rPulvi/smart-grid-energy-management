@@ -270,11 +270,14 @@ namespace WPF_Resolver.ViewModel
 
         public void Start()
         {
+            _listVisibilityLocal = Visibility.Visible;
             _resolverName = "";
             _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
 
             _resolverName = "Starting...";
             this.OnPropertyChanged("GetResolverName");
+
+            OnPropertyChanged("SetVisibilityLocal");
 
 
             if (_bw.IsBusy != true)
