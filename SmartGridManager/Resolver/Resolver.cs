@@ -293,7 +293,7 @@ namespace Resolver
             }            
         }
 
-        void UpdatePeerStatus(UpdateStatusMessage message)
+        private void UpdatePeerStatus(UpdateStatusMessage message)
         {
             if (message.header.Receiver == this.name)
             {
@@ -320,6 +320,17 @@ namespace Resolver
                 }
             }
         }
+
+        public void CloseService()
+        { 
+            //close remote connections
+            remoteHost.Close();
+            
+            //close local Resolver Service
+            crs.Close();
+            customResolver.Close();
+        }
+            
         #endregion
 
         private class TransactionField
