@@ -37,6 +37,8 @@ namespace SmartGridManager.Core
                 ((ICommunicationObject)channel).Open();
             }
             catch (CommunicationException ex){
+                ((ICommunicationObject)channel).Abort();
+                _factory.Abort();
                 Console.WriteLine("Could not find resolver.  If you are using a custom resolver, please ensure");
                 Console.WriteLine("that the service is running.");                
                 Console.WriteLine("SystemError: {0}", ex);
@@ -49,6 +51,7 @@ namespace SmartGridManager.Core
         public static void Disconnect()
         {
             channel.Close();
+
             if (_factory != null)
                 _factory.Close();        
         }
