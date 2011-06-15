@@ -338,8 +338,10 @@ namespace Resolver
             if(this.isLocalConnected == true)
             {                
                 crs.Close();
-                customResolver.Close();
+                customResolver.Close();                
             }
+
+            base.StopService();
         }
             
         #endregion
