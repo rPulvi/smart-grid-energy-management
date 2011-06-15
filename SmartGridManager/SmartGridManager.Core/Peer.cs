@@ -13,7 +13,7 @@ namespace SmartGridManager.Core
 {       
     public class Peer
     {
-        private bool isConnected;
+        public bool isConnected { get; private set; }
 
         public String ID { get; private set; }
 

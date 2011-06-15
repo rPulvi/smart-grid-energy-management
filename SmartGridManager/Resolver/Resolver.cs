@@ -57,28 +57,26 @@ namespace Resolver
         #region Methods
         
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
+            
             this.isLocalConnected = false;
             this.isRemoteConnected = false;
+
             this.name = Tools.getResolverName();
             this._peerStatus = PeerStatus.Resolver;
+
+            //This timer manage the peer's HB to check the online status
+            _HBTimer = new System.Timers.Timer();
+            _HBTimer.Interval = 5000;
+            _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
+            _HBTimer.Enabled = false;
         }
 
         public void Connect()
         {
             this.isLocalConnected = StartLocalResolver();
             this.isRemoteConnected = StartRemoteConnection();            
-
-            //To handle the remote traffic            
-            remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
-   
-
-            #region HeartBeat Timer
-            //This timer manage the peer's HB to check the online status
-            _HBTimer = new System.Timers.Timer();
-            _HBTimer.Interval = 5000;
-            _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
-            _HBTimer.Enabled = true;
-            #endregion
+              
+            _HBTimer.Enabled = true;            
 
             #region Normal Peer Activity
 
@@ -131,6 +129,10 @@ namespace Resolver
             remoteMessageHandler = new PeerServices();
 
             remoteHost = new ServiceHost(remoteMessageHandler);
+
+            //To handle the remote traffic
+            remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
+
             h = Tools.getRemoteHosts();
             
             while (bRet == false && n < h.Count)
@@ -332,6 +334,8 @@ namespace Resolver
 
         public void CloseService()
         {
+            _HBTimer.Enabled = false;
+
             if (this.isRemoteConnected == true)                        
                 remoteHost.Close();
             
@@ -341,7 +345,7 @@ namespace Resolver
                 customResolver.Close();                
             }
 
-            base.StopService();
+            StopService(); //Calls the base.StopService method
         }
             
         #endregion
