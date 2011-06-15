@@ -113,7 +113,7 @@
     	<TextBlock Margin="0,24,92,0" TextWrapping="Wrap" FontSize="32" FontWeight="Bold" TextAlignment="Center" FontFamily="Segoe WP Black" Foreground="#FF172456" HorizontalAlignment="Right" VerticalAlignment="Center" Width="284" Grid.ColumnSpan="2"><Run Language="it-it" Text="Building Setup"/></TextBlock>
 
         <Button Command="{Binding StartPeer}"
-        Height="33.296" Grid.Column="1" Margin="0,0,9.005,30.696" Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="78.995">
+        Height="33.296" Grid.Column="1" Margin="107,0,9.005,30.696" Grid.Row="1" VerticalAlignment="Bottom">
                 <Button.Style>
                     <Style>
                         <Style.Triggers>
