@@ -285,6 +285,7 @@ namespace WPF_Resolver.ViewModel
 
         public void AppExit()
         {
+            _resolver.CloseService();
             Application.Current.Shutdown();
         }
 
