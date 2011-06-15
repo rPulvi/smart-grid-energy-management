@@ -36,7 +36,7 @@ namespace WPF_StartPeer.ViewModel
         #endregion
 
         #region Objects
-        private BackgroundWorker bw = new BackgroundWorker();
+
         private readonly StringBuilder builder;
         private Building house;
         private List<ErrorMap> _errorMessages = new List<ErrorMap>();
@@ -56,19 +56,14 @@ namespace WPF_StartPeer.ViewModel
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
             _peerStatus = "Offline...";
 
-            bw.WorkerReportsProgress = true;
-            bw.WorkerSupportsCancellation = true;
-
-            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
-
             _startButton = "Start";
 
             _status = PeerStatus.Consumer;
             this.builder = new StringBuilder();
 
-            this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canStart);
-            this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canSetProducer);
-            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canExit);
+            this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canDo);
+            this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canDo);
+            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
         }
 
         public string StartButton
@@ -83,10 +78,7 @@ namespace WPF_StartPeer.ViewModel
 
         public void Start()
         {
-            if (bw.IsBusy != true)
-            {
-                bw.RunWorkerAsync();
-            }
+            ButtonClick();
         }
 
         public void Producer()
@@ -94,17 +86,7 @@ namespace WPF_StartPeer.ViewModel
             _status = PeerStatus.Producer;
         }
 
-        private bool canStart
-        {
-            get { return true; }
-        }
-
-        private bool canSetProducer
-        {
-            get { return true; }
-        }
-
-        private bool canExit
+        private bool canDo
         {
             get { return true; }
         }
@@ -214,7 +196,7 @@ namespace WPF_StartPeer.ViewModel
             Application.Current.Shutdown();
         }
 
-        private void bw_DoWork(object sender, DoWorkEventArgs e)
+        private void ButtonClick()
         {
             if (_isStartable)
             {
