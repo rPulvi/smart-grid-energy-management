@@ -14,6 +14,12 @@
 	
 	<Window.Resources>
 
+        <Style x:Key="ChartText" TargetType="{x:Type chartingToolkit:Chart}">
+            <Setter Property="Foreground" Value="#8C1F76"/>
+            <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        
         <Style x:Key="ColTextHeaderStyle" TargetType="{x:Type TextBlock}">
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
@@ -97,9 +103,10 @@
 				</Grid>
 			</Border>
 		</ControlTemplate>
-		
-        <Style x:Key="ChartStyle1" TargetType="{x:Type DVC:Chart}">
-			<Setter Property="BorderBrush" Value="Black"/>
+
+        <Style x:Key="ChartStyle1" TargetType="{x:Type DVC:Chart}" BasedOn ="{StaticResource ChartText}">
+            
+            <Setter Property="BorderBrush" Value="Black"/>
 			<Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="IsTabStop" Value="False"/>
 			<Setter Property="Padding" Value="10"/>
@@ -424,9 +431,10 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
-		
-        <Style x:Key="ChartStyle2" TargetType="{x:Type DVC:Chart}">
-			<Setter Property="BorderBrush" Value="Black"/>
+
+        <Style x:Key="ChartStyle2" TargetType="{x:Type DVC:Chart}" BasedOn ="{StaticResource ChartText}">
+                        
+            <Setter Property="BorderBrush" Value="Black"/>
 			<Setter Property="BorderThickness" Value="1"/>
 			<Setter Property="IsTabStop" Value="False"/>
 			<Setter Property="Padding" Value="10"/>
@@ -1213,11 +1221,11 @@
 					<ColumnDefinition Width="0.3*"/>
 					<ColumnDefinition Width="0.4*"/>
 				</Grid.ColumnDefinitions>
-				<DVC:Chart Margin="0" Template="{DynamicResource ChartControlTemplate1}">
+                <DVC:Chart Margin="0" Template="{DynamicResource ChartControlTemplate1}" Style="{StaticResource ChartText}">
 					<DVC:PieSeries
 						ItemsSource="{Binding GetPieChartData}"
 						IndependentValueBinding="{Binding Key}"
-						DependentValueBinding="{Binding Value}">                                    
+						DependentValueBinding="{Binding Value}">
 						<DVC:PieSeries.Palette>
 							<DV:ResourceDictionaryCollection>
 								<ResourceDictionary>
@@ -1252,7 +1260,7 @@
 						<RowDefinition/>
 					</Grid.RowDefinitions>
 
-					<DVC:Chart Margin="0" Grid.Row="1" Style="{DynamicResource ChartStyle1}">
+                    <DVC:Chart Margin="0" Grid.Row="1" Style="{DynamicResource ChartStyle1}">
 						<DVC:BarSeries 
 							IndependentValueBinding="{Binding Key}"
 							DependentValueBinding="{Binding Value}"  
