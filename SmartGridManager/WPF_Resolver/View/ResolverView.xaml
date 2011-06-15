@@ -13,8 +13,46 @@
         WindowState="Maximized" Icon="/img/Energy-icon.ico" mc:Ignorable="d">
 	
 	<Window.Resources>
-		
-		<Style x:Key="myMenu" TargetType="{x:Type TextBlock}">
+
+        <Style x:Key="ColTextHeaderStyle" TargetType="{x:Type TextBlock}">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
+            <Setter Property="Foreground" Value="white"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="Width" Value="100"/>
+        </Style>
+
+        <DataTemplate x:Key="NameColHeader">
+            <TextBlock Text="Name" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="EnergyTypeColHeader">
+            <TextBlock Text="Energy Type" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="EnergyProducedColHeader">
+            <TextBlock Text="En. Produced" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="EnergySoldColHeader">
+            <TextBlock Text="En. Sold" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="EnergyBoughtColHeader">
+            <TextBlock Text="En. Bought" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="EnergyPeakColHeader">
+            <TextBlock Text="En. Peak" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="PriceColHeader">
+            <TextBlock Text="Price €" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="AddressColHeader">
+            <TextBlock Text="Address" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+        <DataTemplate x:Key="AdminColHeader">
+            <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}"/>
+        </DataTemplate>
+
+
+        <Style x:Key="myMenu" TargetType="{x:Type TextBlock}">
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="2"/>
@@ -27,9 +65,6 @@
 			<Style.Triggers>
 				<Trigger Property="IsMouseOver" Value="true">
 					<Setter Property="Foreground" Value="Orange"/>
-				</Trigger>
-				<Trigger Property="AreAnyTouchesCapturedWithin" Value="true">
-					<Setter Property="FontSize" Value="40"/>
 				</Trigger>
 			</Style.Triggers>
         </Style>
@@ -776,8 +811,8 @@
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
 					<Grid>
 						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition Width="200"/>
+							<ColumnDefinition Width="28" />
+							<ColumnDefinition Width="Auto"/>
 						</Grid.ColumnDefinitions>
 						<Image Source="{Binding iconPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
 						<TextBlock TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
@@ -1178,15 +1213,15 @@
 				util:GridViewSort.SortGlyphDescending="/img/down.png">
 				<ListView.View>
 					<GridView>
-						<GridViewColumn CellTemplate="{StaticResource NomeItemTemplate}" Header="Name" util:GridViewSort.PropertyName="Name" Width="300"/>
-						<GridViewColumn CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="Energia"/>
-						<GridViewColumn CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="En. Produced" util:GridViewSort.PropertyName="EnProduced"/>
-						<GridViewColumn CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="En. Sold" util:GridViewSort.PropertyName="EnSold"/>
-						<GridViewColumn CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="En. Bought" util:GridViewSort.PropertyName="EnBought"/>
-						<GridViewColumn CellTemplate="{StaticResource PeakItemTemplate}" Header="En. Peak" util:GridViewSort.PropertyName="EnPeak"/>
-						<GridViewColumn CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Price €" util:GridViewSort.PropertyName="EnPrice" Width="100"/>
-						<GridViewColumn CellTemplate="{StaticResource AddressItemTemplate}" Header="Address" util:GridViewSort.PropertyName="Address"/>
-						<GridViewColumn CellTemplate="{StaticResource AdminItemTemplate}" Header="Admin" util:GridViewSort.PropertyName="Admin"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource NameColHeader}" CellTemplate="{StaticResource NomeItemTemplate}" util:GridViewSort.PropertyName="Name"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="Energia"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource EnergyProducedColHeader}" CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="En. Produced" util:GridViewSort.PropertyName="EnProduced"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="En. Sold" util:GridViewSort.PropertyName="EnSold"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource EnergyBoughtColHeader}" CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="En. Bought" util:GridViewSort.PropertyName="EnBought"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource EnergyPeakColHeader}" CellTemplate="{StaticResource PeakItemTemplate}" Header="En. Peak" util:GridViewSort.PropertyName="EnPeak"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource PriceColHeader}" CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Price €" util:GridViewSort.PropertyName="EnPrice"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource AddressColHeader}" CellTemplate="{StaticResource AddressItemTemplate}" Header="Address" util:GridViewSort.PropertyName="Address"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource AdminColHeader}" CellTemplate="{StaticResource AdminItemTemplate}" Header="Admin" util:GridViewSort.PropertyName="Admin"/>
 					</GridView>
 				</ListView.View>
 			</ListView>
