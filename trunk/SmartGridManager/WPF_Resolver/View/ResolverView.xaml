@@ -14,9 +14,14 @@
 	
 	<Window.Resources>
 
+        <Style x:Key="RectangleChartStyle" TargetType="{x:Type Rectangle}">
+            <Setter Property="Fill" Value="black"/>
+            <Setter Property="Opacity" Value="0.19"/>
+        </Style>
+
         <Style x:Key="ChartText" TargetType="{x:Type chartingToolkit:Chart}">
-            <Setter Property="Foreground" Value="#FF0066CC"/>
-            <Setter Property="FontFamily" Value="Aharoni"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
@@ -78,6 +83,7 @@
 				</Trigger>
             </Style.Triggers>
         </Style>
+        
 
         <ControlTemplate x:Key="ChartControlTemplate1" TargetType="{x:Type DVC:Chart}">
 			<Border BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
@@ -87,13 +93,14 @@
 						<RowDefinition Height="Auto"/>
 						<RowDefinition Height="*"/>
 					</Grid.RowDefinitions>
-					
-					<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.3" RadiusX="15" RadiusY="15" Grid.Row="1" Margin="0,0,0,5"/>
+
+                    <Rectangle Style="{DynamicResource RectangleChartStyle}" Grid.RowSpan="3" RadiusX="15" RadiusY="15" Grid.Row="1" Margin="0,0,0,5"/>
 					
 					<Grid Margin="0,15" Grid.Row="1">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="*"/>
 							<ColumnDefinition Width="Auto"/>
+							
 						</Grid.ColumnDefinitions>
 						<DV:Legend x:Name="Legend" Grid.Column="1" Style="{TemplateBinding LegendStyle}" Title="{TemplateBinding LegendTitle}" Template="{DynamicResource LegendControlTemplate3}"/>
 						<System_Windows_Controls_DataVisualization_Charting_Primitives:EdgePanel x:Name="ChartArea" Style="{TemplateBinding ChartAreaStyle}">
@@ -395,9 +402,7 @@
 			<Setter Property="PlotAreaStyle">
 				<Setter.Value>
 					<Style TargetType="{x:Type Grid}">
-						<Setter Property="Background" Value="Transparent">
-
-						</Setter>
+						<Setter Property="Background" Value="Transparent"/>
 					</Style>
 				</Setter.Value>
 			</Setter>
@@ -410,12 +415,12 @@
 									<RowDefinition Height="Auto"/>
 									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
-								
-								<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.3" RadiusX="15" RadiusY="15" Grid.Row="0" Margin="0,0,0,5"/>
-								
-								<TextBlock TextWrapping="Wrap" Text="{Binding EnThroughput}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="0"/>
-								
-								<Grid Margin="0,15" Grid.Row="1">
+
+                                <Rectangle Style="{DynamicResource RectangleChartStyle}" Grid.RowSpan="3" RadiusX="15" RadiusY="15" Grid.Row="0" Margin="0,0,0,5"/>
+
+                                <TextBlock FontSize="15" Name="Throughput" TextWrapping="Wrap" Text="{Binding EnThroughput}" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="0"/>
+                               
+                                <Grid Margin="0,15" Grid.Row="1">
 									<Grid.ColumnDefinitions>
 										<ColumnDefinition Width="*"/>
 										<ColumnDefinition Width="Auto"/>
@@ -738,8 +743,8 @@
 									<RowDefinition Height="Auto"/>
 									<RowDefinition Height="*"/>
 								</Grid.RowDefinitions>
-								
-								<Rectangle Fill="#FFBED1E2" Grid.RowSpan="3" Opacity="0.3" RadiusX="15" RadiusY="15" Grid.Row="1" Margin="0,0,0,5"/>
+
+                                <Rectangle Style="{DynamicResource RectangleChartStyle}" Grid.RowSpan="3" RadiusX="15" RadiusY="15" Grid.Row="1" Margin="0,0,0,5"/>
 								
 								<Grid Margin="0,15" Grid.Row="1">
 									<Grid.ColumnDefinitions>
@@ -809,6 +814,7 @@
 				</Grid>
 			</Border>
 		</ControlTemplate>
+        
 	</Window.Resources>
 	
 	<Window.Background>
@@ -1157,9 +1163,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Rectangle Fill="#FFA1E7FF" Grid.RowSpan="2" Opacity="0.7" Margin="8,0,8,8" RadiusX="15" RadiusY="15" Grid.Row="2" d:IsLocked="True"/>
-
-		<Menu Width="auto" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" d:IsLocked="True">
+		<Menu Width="auto" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment">
 			<Menu.Background>
 				<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
 					<GradientStop Color="#FF24396A" Offset="1"/>
@@ -1201,28 +1205,39 @@
 
 		
 		<UniformGrid Rows="2" Columns="1" Margin="8,0,12,0" Grid.Row="2">
+			<Grid Margin="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				
+				<Rectangle Grid.Row="0" Opacity="0.19" Margin="8,0" RadiusX="15" RadiusY="15">
+					<Rectangle.Fill>
+						<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.InfoTextColorKey}}"/>
+					</Rectangle.Fill>
+				</Rectangle>
                     
     				<!--.:LISTA:.-->
-			<ListView Margin="8,8,0,0" x:Name="ListView" Visibility="{Binding SetVisibilityLocal}"
-				ItemsSource="{Binding PeerList}"
-				ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
-				util:GridViewSort.AutoSort="True"
-				util:GridViewSort.SortGlyphAscending="/img/up.png"
-				util:GridViewSort.SortGlyphDescending="/img/down.png">
-				<ListView.View>
-					<GridView>
-                        <GridViewColumn HeaderTemplate="{StaticResource NameColHeader}" CellTemplate="{StaticResource NomeItemTemplate}" util:GridViewSort.PropertyName="Name"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="EnType"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource EnergyProducedColHeader}" CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="En. Produced" util:GridViewSort.PropertyName="EnProduced"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="En. Sold" util:GridViewSort.PropertyName="EnSold"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource EnergyBoughtColHeader}" CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="En. Bought" util:GridViewSort.PropertyName="EnBought"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource EnergyPeakColHeader}" CellTemplate="{StaticResource PeakItemTemplate}" Header="En. Peak" util:GridViewSort.PropertyName="EnPeak"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource PriceColHeader}" CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Price €" util:GridViewSort.PropertyName="EnPrice"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource AddressColHeader}" CellTemplate="{StaticResource AddressItemTemplate}" Header="Address" util:GridViewSort.PropertyName="Address"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource AdminColHeader}" CellTemplate="{StaticResource AdminItemTemplate}" Header="Admin" util:GridViewSort.PropertyName="Admin"/>
-					</GridView>
-				</ListView.View>
-			</ListView>
+				<ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListView" Visibility="{Binding SetVisibilityLocal}"
+					ItemsSource="{Binding PeerList}"
+					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
+					util:GridViewSort.AutoSort="True"
+					util:GridViewSort.SortGlyphAscending="/img/up.png"
+					util:GridViewSort.SortGlyphDescending="/img/down.png">
+					<ListView.View>
+						<GridView>
+							<GridViewColumn HeaderTemplate="{StaticResource NameColHeader}" CellTemplate="{StaticResource NomeItemTemplate}" util:GridViewSort.PropertyName="Name"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="EnType"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyProducedColHeader}" CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="En. Produced" util:GridViewSort.PropertyName="EnProduced"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="En. Sold" util:GridViewSort.PropertyName="EnSold"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyBoughtColHeader}" CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="En. Bought" util:GridViewSort.PropertyName="EnBought"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyPeakColHeader}" CellTemplate="{StaticResource PeakItemTemplate}" Header="En. Peak" util:GridViewSort.PropertyName="EnPeak"/>
+							<GridViewColumn HeaderTemplate="{StaticResource PriceColHeader}" CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Price €" util:GridViewSort.PropertyName="EnPrice"/>
+							<GridViewColumn HeaderTemplate="{StaticResource AddressColHeader}" CellTemplate="{StaticResource AddressItemTemplate}" Header="Address" util:GridViewSort.PropertyName="Address"/>
+							<GridViewColumn HeaderTemplate="{StaticResource AdminColHeader}" CellTemplate="{StaticResource AdminItemTemplate}" Header="Admin" util:GridViewSort.PropertyName="Admin"/>
+						</GridView>
+					</ListView.View>
+				</ListView>
+			</Grid>
 			<Grid Margin="0" >
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.3*"/>
