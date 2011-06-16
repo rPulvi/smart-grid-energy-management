@@ -390,11 +390,11 @@ namespace WPF_Resolver.ViewModel
             }
 
             if (_enConsumed > 0)
-                _enThroughput = (_enProduced / _enConsumed) * 100;
+                _enThroughput = (_enConsumed / _enProduced) * 100;
             else
                 _enThroughput = 0;
 
-            _enTh ="En. Throughput: " + Math.Round(_enThroughput, 2) + "%";
+            _enTh ="En. Balance: " + Math.Round(_enThroughput, 2) + "%";
 
             _pieList["Producers"] = _numProducers;
             _pieList["Consumers"] = _numConsumers;
@@ -420,8 +420,11 @@ namespace WPF_Resolver.ViewModel
             }
 
             _enTimeLine.Add(DateTime.Now, enProd);
-
             OnPropertyChanged("GetPointTimeLine");
+
+
+            if (_enTimeLine.Count > 500)
+                _enTimeLine.Clear();
         }
 
         private void clockBar_Tick(object sender, EventArgs e)
