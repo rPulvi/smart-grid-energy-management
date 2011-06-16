@@ -15,9 +15,9 @@
 	<Window.Resources>
 
         <Style x:Key="ChartText" TargetType="{x:Type chartingToolkit:Chart}">
-            <Setter Property="Foreground" Value="DarkBlue"/>
-            <Setter Property="FontFamily" Value="Arial Unicode MS"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#FF0066CC"/>
+            <Setter Property="FontFamily" Value="Aharoni"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
         
