@@ -16,7 +16,7 @@
 
         <Style x:Key="ChartText" TargetType="{x:Type chartingToolkit:Chart}">
             <Setter Property="Foreground" Value="DarkBlue"/>
-            <Setter Property="FontFamily" Value="Century Gothic"/>
+            <Setter Property="FontFamily" Value="Arial Unicode MS"/>
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
         </Style>
@@ -1212,7 +1212,7 @@
 				<ListView.View>
 					<GridView>
                         <GridViewColumn HeaderTemplate="{StaticResource NameColHeader}" CellTemplate="{StaticResource NomeItemTemplate}" util:GridViewSort.PropertyName="Name"/>
-                        <GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="Energia"/>
+                        <GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="EnType"/>
                         <GridViewColumn HeaderTemplate="{StaticResource EnergyProducedColHeader}" CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="En. Produced" util:GridViewSort.PropertyName="EnProduced"/>
                         <GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="En. Sold" util:GridViewSort.PropertyName="EnSold"/>
                         <GridViewColumn HeaderTemplate="{StaticResource EnergyBoughtColHeader}" CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="En. Bought" util:GridViewSort.PropertyName="EnBought"/>
