@@ -79,6 +79,9 @@ namespace WPF_Resolver.ViewModel
             _listVisibilityLocal = Visibility.Hidden;
             OnPropertyChanged("SetVisibilityLocal");
 
+            _listVisibilityRemote = Visibility.Hidden;
+            OnPropertyChanged("SetVisibilityRemote");
+
             _imgPath = @"/WPF_Resolver;component/img/offline.png";
             OnPropertyChanged("GetImgPath");
 
