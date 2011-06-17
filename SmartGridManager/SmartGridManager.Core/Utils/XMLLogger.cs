@@ -18,8 +18,10 @@ namespace SmartGridManager.Core.Utils
 
             if (!File.Exists (logFileName))
             {
-                xmlLog = new XDocument(new XElement("PeerLog",
-                    new XAttribute("Name", peerName),
+                xmlLog = new XDocument(
+                    new XDeclaration("1.0", "utf-8", "yes"),
+                    new XElement("PeerLog",
+                        new XAttribute("Name", peerName),
                     new XElement("LocalActivities"),
                     new XElement("RemoteActivities")));
 
