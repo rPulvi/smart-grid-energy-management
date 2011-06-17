@@ -12,6 +12,7 @@ using SmartGridManager.Core.Commons;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
 using System.ComponentModel;
+using SmartGridManager.Core.Utils;
 
 namespace WPF_Resolver.ViewModel
 {
@@ -43,13 +44,15 @@ namespace WPF_Resolver.ViewModel
 
         private Visibility _listVisibilityLocal = new Visibility();
         private Visibility _listVisibilityRemote = new Visibility();
+        private Visibility _getTimeVisibility = new Visibility();
 
         private ObservableDictionary<DateTime, float> _enTimeLine = new ObservableDictionary<DateTime, float>();
         private ObservableDictionary<string, float> _enProdBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, float> _enConsBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
 
-        private ObservableCollectionEx<TempBuilding> peerList = new ObservableCollectionEx<TempBuilding>();
+        private ObservableCollectionEx<TempBuilding> _peerList = new ObservableCollectionEx<TempBuilding>();
+        private ObservableCollectionEx<RemoteHost> _hostList = new ObservableCollectionEx<RemoteHost>();
         private DispatcherTimer _timelineTemp;
         private DispatcherTimer _UIRefresh;
         private DispatcherTimer _clockBar;
@@ -82,6 +85,9 @@ namespace WPF_Resolver.ViewModel
             _listVisibilityRemote = Visibility.Hidden;
             OnPropertyChanged("SetVisibilityRemote");
 
+            _getTimeVisibility = Visibility.Hidden;
+            OnPropertyChanged("GetTimeVisibility");
+
             _imgPath = @"/WPF_Resolver;component/img/offline.png";
             OnPropertyChanged("GetImgPath");
 
@@ -91,7 +97,7 @@ namespace WPF_Resolver.ViewModel
             _enTimeLine.Add(DateTime.Now, 0f);
             OnPropertyChanged("GetPointTimeLine");
 
-            _enTh = "En. Throughput: 0%";
+            _enTh = "En. Balance: 0%";
             OnPropertyChanged("EnThroughput");
 
             _pieList.Add("Producers", 0);
@@ -172,7 +178,12 @@ namespace WPF_Resolver.ViewModel
 
         public ObservableCollectionEx<TempBuilding> PeerList
         {
-            get { return peerList; }
+            get { return _peerList; }
+        }
+
+        public ObservableCollectionEx<RemoteHost> HostList
+        {
+            get { return _hostList; }
         }
 
         public ObservableDictionary<DateTime, float> GetPointTimeLine
@@ -202,6 +213,16 @@ namespace WPF_Resolver.ViewModel
             {
                 _listVisibilityRemote = value;
                 OnPropertyChanged("SetVisibilityRemote");
+            }
+        }
+
+        public Visibility GetTimeVisibility
+        {
+            get { return _getTimeVisibility; }
+            set
+            {
+                _getTimeVisibility = value;
+                OnPropertyChanged("GetTimeVisibility");
             }
         }
 
@@ -375,19 +396,22 @@ namespace WPF_Resolver.ViewModel
 
             _enThroughput = 0f;
 
-            peerList = _resolver.GetConnectedPeers();
+            _peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");
+
+            //_hostList = Tools.getRemoteHosts();
+            OnPropertyChanged("HostList");
             
-            for(int i=0;i< peerList.Count;i++)
+            for(int i=0;i< _peerList.Count;i++)
             {
-                _enProduced += peerList[i].EnProduced;
-                _enConsumed += peerList[i].EnPeak;
+                _enProduced += _peerList[i].EnProduced;
+                _enConsumed += _peerList[i].EnPeak;
 
                 #region checkStatus
-                if (peerList[i].status == PeerStatus.Producer)
+                if (_peerList[i].status == PeerStatus.Producer)
                     _numProducers++;
 
-                if (peerList[i].status == PeerStatus.Consumer)
+                if (_peerList[i].status == PeerStatus.Consumer)
                     _numConsumers++;
                 #endregion
             }
@@ -417,9 +441,9 @@ namespace WPF_Resolver.ViewModel
         {
             float enProd = 0f;
 
-            for(int i=0;i< peerList.Count;i++)
+            for(int i=0;i< _peerList.Count;i++)
             {
-                enProd += peerList[i].EnProduced;
+                enProd += _peerList[i].EnProduced;
             }
 
             _enTimeLine.Add(DateTime.Now, enProd);
@@ -438,8 +462,8 @@ namespace WPF_Resolver.ViewModel
             int minuto = i / 60;
             int secondo = i % 60;
 
-            _ora = ora.ToString("00") + ":";
-            _minuto = minuto.ToString("00") + ":";
+            _ora = ora.ToString("00");
+            _minuto = minuto.ToString("00");
             _secondo = secondo.ToString("00");
 
             OnPropertyChanged("GetOra");
@@ -458,8 +482,11 @@ namespace WPF_Resolver.ViewModel
             _UIRefresh.Start();
             _timelineTemp.Start();
 
+
+
             _resolverName = _resolver.name;
             _resolverStatus = "Online...";
+            _getTimeVisibility = Visibility.Visible;
 
             _imgPath = @"/WPF_Resolver;component/img/resolver_ok.png";
 
@@ -467,6 +494,7 @@ namespace WPF_Resolver.ViewModel
             this.OnPropertyChanged("GetResolverName");         
             this.OnPropertyChanged("GetResolverStatus");
             this.OnPropertyChanged("GetResolverIP");
+            this.OnPropertyChanged("GetTimeVisibility");
         }
 
         private bool canDo
