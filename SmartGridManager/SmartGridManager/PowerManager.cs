@@ -119,7 +119,7 @@ namespace SmartGridManager
 
                     //start the timer to waiting for proposals
                     if (_proposalCountdown.Enabled == false)
-                        _proposalCountdown.Enabled = true;                    
+                        _proposalCountdown.Enabled = true;
                 }
             }
             else
@@ -170,23 +170,27 @@ namespace SmartGridManager
         private void _proposalCountdown_Elapsed(object sender, ElapsedEventArgs e)
         {
             _proposalCountdown.Enabled = false; //Stop the timer
-
+            
             if (_proposalList.Count > 0)
-            {
-                _proposalTimeout = 0;
+            {                
+                _proposalTimeout = 0;                
                 EvaluateProposal();
             }
             else
             {
                 _proposalTimeout++;
 
-                if (_proposalTimeout > 3)  //Go Outbound
+                if (_proposalTimeout > 2)  //Go Outbound
                 {
                     float enReq = _enPeak - (getEnergyLevel() + _enBought);
                     Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq));
                     messageSent = true;
 
                     _proposalTimeout = 0;
+                    
+                    //start the timer to waiting for proposals
+                    if (_proposalCountdown.Enabled == false)
+                        _proposalCountdown.Enabled = true;
                 }
                 else
                 {
