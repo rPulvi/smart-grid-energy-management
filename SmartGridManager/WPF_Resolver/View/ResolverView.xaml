@@ -973,7 +973,7 @@
 		<ImageBrush ImageSource="/img/wallpaper.jpg"/>
 	</Window.Background>
     
-	<Grid Height="{Binding Height, ElementName=window}">
+	<Grid>
 		
 		<Grid.Resources>
 
