@@ -148,13 +148,13 @@ namespace Resolver
 
                 try
                 {
-                    remoteHost.Open();                    
+                    remoteHost.Open();       
 
                     Console.WriteLine("Remote service started.");
                     Console.WriteLine("Connecting to {0}", h[n].IP);
 
                     //Retrieve Remote IP Addresses
-                    foreach (var newRemote in remoteChannel.RetrieveContactList())                    
+                    foreach (var newRemote in remoteChannel.RetrieveContactList())
                     {
                         if (!h.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
                         {
