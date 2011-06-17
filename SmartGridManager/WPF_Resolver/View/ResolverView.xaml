@@ -1334,7 +1334,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Menu Width="auto" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment">
+		<Menu Width="auto" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" d:IsLocked="True">
 			<Menu.Background>
 				<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
 					<GradientStop Color="#FF24396A" Offset="1"/>
@@ -1349,8 +1349,9 @@
 		<Grid Margin="8,0" Grid.Row="1" d:LayoutOverrides="Width" >
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="0.4*"/>
+				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="0.6*"/>
+				<ColumnDefinition Width="0.4*"/>
 			</Grid.ColumnDefinitions>
 			<Image Source="/WPF_Resolver;component/img/resolver.png" Width="100" Height="100" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Center"/>
 			<StackPanel Margin="0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1">
@@ -1365,8 +1366,58 @@
 					</TextBlock.Effect>
 				</TextBlock>       
 			</StackPanel>
+			<StackPanel Grid.Column="2" Margin="20,0,0,0" Orientation="Horizontal">
+				<Grid Visibility="{Binding GetTimeVisibility}" Margin="0,25,2,25" Width="50">
+					<Rectangle Fill="#FF034764" Height="50" RadiusX="10" RadiusY="10" d:LayoutOverrides="VerticalMargin" Opacity="0.135">
+						<Rectangle.Effect>
+							<DropShadowEffect/>
+						</Rectangle.Effect>
+					</Rectangle>
+					<Rectangle x:Name="gloss" Margin="0,0,0,23.334" Width="50" RadiusX="10" RadiusY="10" Opacity="0.645">
+						<Rectangle.Fill>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="Transparent" Offset="1"/>
+								<GradientStop Color="White"/>
+							</LinearGradientBrush>
+						</Rectangle.Fill>
+					</Rectangle>
+					<TextBlock Margin="0" TextWrapping="Wrap" Text="{Binding GetOra}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="26.667" Foreground="White" Opacity="0.815"/>
+				</Grid>
+				<Grid Visibility="{Binding GetTimeVisibility}" Margin="0,25,2,25" Width="50">
+					<Rectangle Fill="#FF034764" Height="50" RadiusX="10" RadiusY="10" d:LayoutOverrides="VerticalMargin" Opacity="0.135">
+						<Rectangle.Effect>
+							<DropShadowEffect/>
+						</Rectangle.Effect>
+					</Rectangle>
+					<Rectangle x:Name="gloss_Copy" Margin="0,0,0,23.334" Width="50" RadiusX="10" RadiusY="10" Opacity="0.645">
+						<Rectangle.Fill>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="Transparent" Offset="1"/>
+								<GradientStop Color="White"/>
+							</LinearGradientBrush>
+						</Rectangle.Fill>
+					</Rectangle>
+					<TextBlock Margin="0" TextWrapping="Wrap" Text="{Binding GetMinuto}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="26.667" Foreground="White" Opacity="0.815"/>
+				</Grid>
+				<Grid Visibility="{Binding GetTimeVisibility}" Margin="0,25" Width="50">
+					<Rectangle Fill="#FF034764" Height="50" Margin="0" RadiusX="10" RadiusY="10" d:LayoutOverrides="VerticalMargin" Opacity="0.135">
+						<Rectangle.Effect>
+							<DropShadowEffect/>
+						</Rectangle.Effect>
+					</Rectangle>
+					<Rectangle x:Name="gloss_Copy1" Margin="0,0,0,23.334" Width="50" RadiusX="10" RadiusY="10" Opacity="0.645">
+						<Rectangle.Fill>
+							<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+								<GradientStop Color="Transparent" Offset="1"/>
+								<GradientStop Color="White"/>
+							</LinearGradientBrush>
+						</Rectangle.Fill>
+					</Rectangle>
+					<TextBlock Margin="0" TextWrapping="Wrap" Text="{Binding GetSecondo}" VerticalAlignment="Center" HorizontalAlignment="Center" FontFamily="Arial Black" FontSize="26.667" Foreground="White" Opacity="0.815"/>
+				</Grid>
+			</StackPanel>
 			
-			<StackPanel Margin="0" Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right">
+			<StackPanel Margin="0" Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right">
                 <TextBlock util:MouseClickBehavior.MouseUp="{Binding ShowLocal}" util:MouseClickBehavior.MouseDown="{Binding SetLocalFont}" FontSize="{Binding SetLocalFontSize}" Margin="0" Text="Local" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource myMenu}"/>
                 <TextBlock util:MouseClickBehavior.MouseUp="{Binding ShowRemote}" util:MouseClickBehavior.MouseDown="{Binding SetRemoteFont}" FontSize="{Binding SetRemoteFontSize}" Margin="0" Text="Remote" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource myMenu}"/>
 			</StackPanel>
@@ -1375,7 +1426,7 @@
 
 
 		
-		<UniformGrid Rows="2" Columns="1" Margin="8,0,12,0" Grid.Row="2">
+		<UniformGrid Rows="2" Columns="1" Margin="8,0,12,0" Grid.Row="2" d:IsLocked="True">
 			<Grid Margin="0">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
@@ -1410,7 +1461,7 @@
 				</ListView>
 
                 <ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListViewRemote" Visibility="{Binding SetVisibilityRemote}"
-					ItemsSource="{Binding }"
+					ItemsSource="{Binding HostList}"
 					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
 					util:GridViewSort.AutoSort="True"
 					util:GridViewSort.SortGlyphAscending="/img/up.png"
