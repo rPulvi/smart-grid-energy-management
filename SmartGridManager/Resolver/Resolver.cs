@@ -169,9 +169,11 @@ namespace Resolver
                 catch (Exception e)
                 {
                     Console.WriteLine("Error in connecting to: {0}", h[n].IP);
-                    Console.WriteLine(e); //For debug purpose
-                    remoteHost.Abort();                    
+                    Console.WriteLine(e); //For debug purpose                    
                     n++;
+                    if(n > h.Count)
+                        remoteHost.Abort();
+
                     bRet = false;
                 }
             }
@@ -182,18 +184,21 @@ namespace Resolver
         //To Resolver
         private void ForwardLocalMessage(PeerMessage message)   
         {
-            if (_messageList.Count > 0)
+            if (isRemoteConnected == true)
             {
-                TransactionField t = getMessageByID(message.header.MessageID);
-                
-                if (t != null)
+                if (_messageList.Count > 0)
                 {
-                    message.header.Sender = t.peerName;
-                    _messageList.Remove(t);
-                }
-            }
+                    TransactionField t = getMessageByID(message.header.MessageID);
 
-            remoteChannel.ManageRemoteMessages(message);
+                    if (t != null)
+                    {
+                        message.header.Sender = t.peerName;
+                        _messageList.Remove(t);
+                    }
+                }
+
+                remoteChannel.ManageRemoteMessages(message);
+            }
         }
 
         //From Resolver
