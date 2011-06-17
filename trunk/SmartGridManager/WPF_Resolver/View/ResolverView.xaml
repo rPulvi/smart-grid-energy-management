@@ -40,6 +40,7 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Coloumn Header Template for ListLocal -->
         <DataTemplate x:Key="NameColHeader">
             <TextBlock Text="Name" Style="{StaticResource ColTextHeaderStyle}" Width="250"/>
         </DataTemplate>
@@ -68,6 +69,17 @@
             <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}" Width="200" />
         </DataTemplate>
 
+        <!-- Coloumn Header Template for ListRemote -->
+        <DataTemplate x:Key="HostRemoteNameColHeader">
+            <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="90"/>
+        </DataTemplate>
+        <DataTemplate x:Key="RemoteContactedColHeader">
+            <TextBlock Text="Contacted on" Style="{StaticResource ColTextHeaderStyle}" Width="90"/>
+        </DataTemplate>
+        <DataTemplate x:Key="RemoteContactedByColHeader">
+            <TextBlock Text="Contacted by" Style="{StaticResource ColTextHeaderStyle}" Width="95"/>
+        </DataTemplate>
+
         <Style x:Key="myMenu" TargetType="{x:Type TextBlock}">
             <Setter Property="Effect">
                 <Setter.Value>
@@ -85,7 +97,6 @@
             </Style.Triggers>
         </Style>
         
-
         <ControlTemplate x:Key="ChartControlTemplate1" TargetType="{x:Type DVC:Chart}">
 			<Border BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
 				
@@ -977,6 +988,8 @@
 		
 		<Grid.Resources>
 
+            <!--Template for ListView_LOCAL-->
+            
 			<DataTemplate x:Key="NomeItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8" Height="70">
 					<Grid>
@@ -1060,7 +1073,46 @@
 				</Border>
 			</DataTemplate>
 
-			<Style x:Key="ListViewItemContainerStyle" TargetType="{x:Type ListViewItem}">
+
+            <!--Template for ListView_REMOTE-->
+            <DataTemplate x:Key="RemoteHostItemTemplate">
+                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8" Height="70">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Image Source="{Binding TODO}" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
+                        <TextBlock FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" Text="{Binding TODO}" VerticalAlignment="Center" Grid.Column="1" />
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RemoteHostContactedTemplate">
+                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding TODO}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RemoteHostContactedByTemplate">
+                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding TODO}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+
+
+
+            <Style x:Key="ListViewItemContainerStyle" TargetType="{x:Type ListViewItem}">
 				<Setter Property="Background" Value="#ffffff" />
 				<Setter Property="HorizontalContentAlignment" Value="Left" />
 				<Setter Property="VerticalContentAlignment" Value="Center" />
@@ -1268,36 +1320,6 @@
 					</Setter.Value>
 				</Setter>
 			</Style>
-            
-			<!--Template for ListView_REMOTE-->
-			<DataTemplate x:Key="RemoteHostNameTemplate">
-				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="32" />
-							<ColumnDefinition Width="200"/>
-						</Grid.ColumnDefinitions>
-						<Image Source="{Binding iconPath}" Width="24" Height="24" Grid.Column="0" HorizontalAlignment="Center" />
-						<TextBlock TextWrapping="Wrap" Text="{Binding Name}" VerticalAlignment="Center" Grid.Column="1" />
-					</Grid>
-				</Border>
-			</DataTemplate>
-
-			<DataTemplate x:Key="RemoteHostContactedTemplate">
-				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-					<Grid>
-						<TextBlock Text="{Binding Contacted}" VerticalAlignment="Center" />
-					</Grid>
-				</Border>
-			</DataTemplate>
-
-			<DataTemplate x:Key="RemoteHostContactedByTemplate">
-				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-					<Grid>
-						<TextBlock Text="{Binding ContactedBy}" VerticalAlignment="Center" />
-					</Grid>
-				</Border>
-			</DataTemplate>
 
 		</Grid.Resources>
 
@@ -1386,7 +1408,23 @@
 						</GridView>
 					</ListView.View>
 				</ListView>
-			</Grid>
+
+                <ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListViewRemote" Visibility="{Binding SetVisibilityRemote}"
+					ItemsSource="{Binding }"
+					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
+					util:GridViewSort.AutoSort="True"
+					util:GridViewSort.SortGlyphAscending="/img/up.png"
+					util:GridViewSort.SortGlyphDescending="/img/down.png">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostItemTemplate}" util:GridViewSort.PropertyName="HostName"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource RemoteContactedColHeader}" CellTemplate="{StaticResource RemoteHostContactedTemplate}" util:GridViewSort.PropertyName="Contacted"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource RemoteContactedByColHeader}" CellTemplate="{StaticResource RemoteHostContactedByTemplate}" util:GridViewSort.PropertyName="ContactedBy"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+            </Grid>
 			<Grid Margin="0" >
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="0.3*"/>
