@@ -811,6 +811,7 @@
 				</Grid>
 			</Border>
 		</ControlTemplate>
+        
 		<LinearGradientBrush x:Key="VerticalScrollBarBackground" EndPoint="1,0" StartPoint="0,0">
 			<GradientStop Color="#E1E1E1" Offset="0"/>
 			<GradientStop Color="#EDEDED" Offset="0.20"/>
@@ -831,6 +832,7 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+        
 		<Style x:Key="VerticalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
 			<Setter Property="OverridesDefaultStyle" Value="true"/>
 			<Setter Property="Background" Value="Transparent"/>
@@ -844,6 +846,7 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+        
 		<Style x:Key="ScrollBarThumb" TargetType="{x:Type Thumb}">
 			<Setter Property="OverridesDefaultStyle" Value="true"/>
 			<Setter Property="IsTabStop" Value="false"/>
@@ -855,12 +858,14 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+        
 		<LinearGradientBrush x:Key="HorizontalScrollBarBackground" EndPoint="0,1" StartPoint="0,0">
 			<GradientStop Color="#E1E1E1" Offset="0"/>
 			<GradientStop Color="#EDEDED" Offset="0.20"/>
 			<GradientStop Color="#EDEDED" Offset="0.80"/>
 			<GradientStop Color="#E3E3E3" Offset="1"/>
 		</LinearGradientBrush>
+        
 		<Style x:Key="HorizontalScrollBarPageButton" TargetType="{x:Type RepeatButton}">
 			<Setter Property="OverridesDefaultStyle" Value="true"/>
 			<Setter Property="Background" Value="Transparent"/>
@@ -874,6 +879,7 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+        
 		<Style x:Key="ListViewVerticalScrollBarStyle" TargetType="{x:Type ScrollBar}">
 			<Setter Property="Background" Value="{StaticResource VerticalScrollBarBackground}"/>
 			<Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
@@ -890,7 +896,7 @@
 								<RowDefinition Height="0.00001*"/>
 								<RowDefinition MaxHeight="{DynamicResource {x:Static SystemParameters.VerticalScrollBarButtonHeightKey}}"/>
 							</Grid.RowDefinitions>
-							<RepeatButton Command="{x:Static ScrollBar.LineUpCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Style="{StaticResource ScrollBarButton}" Microsoft_Windows_Themes:ScrollChrome.ScrollGlyph="UpArrow" Visibility="Hidden"/>
+							<RepeatButton Command="{x:Static ScrollBar.LineUpCommand}" IsEnabled="{TemplateBinding IsMouseOver}" Style="{StaticResource ScrollBarButton}" Microsoft_Windows_Themes:ScrollChrome.ScrollGlyph="UpArrow" Visibility="Visible"/>
 							<Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}" Grid.Row="1">
 								<Track.DecreaseRepeatButton>
 									<RepeatButton Command="{x:Static ScrollBar.PageUpCommand}" Style="{StaticResource VerticalScrollBarPageButton}"/>
