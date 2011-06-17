@@ -32,5 +32,10 @@ namespace WPF_Resolver
             //associo Datasource
             base.DataContext = rvm;
         }
+
+        private void window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
+        }
     }
 }
