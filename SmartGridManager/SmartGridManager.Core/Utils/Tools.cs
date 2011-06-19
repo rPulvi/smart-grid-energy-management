@@ -65,7 +65,7 @@ namespace SmartGridManager.Core.Utils
         {
             XDocument xmlList = XDocument.Load("NetConfig.xml");
 
-            xmlList.Element("RemoteHosts").Add(new XElement("Host",
+            xmlList.Element("Params").Element("RemoteHosts").Add(new XElement("Host",
                                                             new XElement("Name",h.name),
                                                             new XElement("IP",h.IP),
                                                             new XElement("Port",h.port))
