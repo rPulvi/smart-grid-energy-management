@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ServiceModel;
 using SmartGridManager.Core.Commons;
+using SmartGridManager.Core.Utils;
 
 namespace SmartGridManager.Core.Messaging
 {
@@ -13,11 +14,8 @@ namespace SmartGridManager.Core.Messaging
     {
         public virtual void sayHello(HelloMessage message)
         {
-            Console.WriteLine("Messaggio: {0}\nRicevuto alle: {1}\ninviato da: {2}\ndestinato a: {3}\n",
-                message.header.MessageID,
-                message.header.TimeStamp,
-                message.header.Sender,
-                message.header.Receiver);          
+            XMLLogger.WriteLocalActivity("Messaggio: " + message.header.MessageID + "Ricevuto alle: " + message.header.TimeStamp +
+                "inviato da: " + message.header.Sender + "destinato a: " + message.header.Receiver);
         }
 
         public virtual void HelloResponse(HelloResponseMessage message)
@@ -28,63 +26,56 @@ namespace SmartGridManager.Core.Messaging
         public virtual void statusAdv(StatusNotifyMessage message)
         {
             if(message.status == PeerStatus.Consumer)
-            {
-                Console.WriteLine("Ricevuta richiesta di {0}kW di energia da parte di {1}",
-                    message.energyReq,                
-                    message.header.Sender);                
-            }
+                XMLLogger.WriteLocalActivity("Ricevuta richiesta di " + message.energyReq + "kW di energia da parte di " + message.header.Sender);
+
         }
 
         public virtual void energyProposal(EnergyProposalMessage message)
-        {            
-            Console.WriteLine("Proposta di vendita di {0}kW di energia. Prezzo{1}. Mittente {2}",
-                message.energyAvailable,                
-                message.price,
-                message.header.Sender);         
+        {
+            XMLLogger.WriteLocalActivity("Proposta di vendita di "+ message.energyAvailable +"kW di energia. Prezzo " + message.price + " Mittente " + message.header.Sender);
         }
 
         public virtual void acceptProposal(EnergyAcceptMessage message)
         {
-            Console.WriteLine("Proposta accettata - Energia richiesta {0}",
-                message.energy);
+            XMLLogger.WriteLocalActivity("Proposta accettata - Energia richiesta " + message.energy);
         }
 
         public virtual void endProposal(EndProposalMessage message)
         {
             String s;
             if (message.endStatus == true)            
-                s = "Confermata";                
-            
+                s = "Confermata";            
             else            
                 s = "Rifiutata";
 
-            Console.WriteLine("Offerta " + s);
+            XMLLogger.WriteLocalActivity("Offerta " + s);            
         }
 
         public virtual void heartBeat(HeartBeatMessage message)
-        {
+        {            
             Console.WriteLine("heartBeat di {0}, ricevuto alle {1}", message.header.Sender, message.header.TimeStamp);
         }
 
         public virtual void remoteAdv(StatusNotifyMessage message)
         {
-            Console.WriteLine("Remote request sent to Resolver");         
+            XMLLogger.WriteRemoteActivity("Remote request sent to Resolver");            
         }
 
         public virtual void forwardLocalMessage(PeerMessage message)
         {
-            Console.WriteLine("Peer {0} is forwarding a message..", message.header.Sender);
+            XMLLogger.WriteRemoteActivity("Peer " + message.header.Sender + " is forwarding a message..");
         }
 
         public virtual void updateEnergyStatus(UpdateStatusMessage message)
         {
-            Console.WriteLine("Peer {0} - Energy Sold: {1}", message.header.Sender, message.energySold);
-            Console.WriteLine("Peer {0} - Energy Bought: {1}", message.header.Sender, message.energyBought);
+            XMLLogger.WriteLocalActivity("Updating Stutus");
+            XMLLogger.WriteLocalActivity("Peer " + message.header.Sender + " - Energy Sold: " + message.energySold);
+            XMLLogger.WriteLocalActivity("Peer " + message.header.Sender + " - Energy Bought: " + message.energyBought);
         }
 
         public virtual void peerDown(PeerIsDownMessage message)
         {
-            Console.WriteLine("Peer {0} is down...", message.peerName);
+            XMLLogger.WriteRemoteActivity("Peer " +  message.peerName + " is down");
         }
     }
 }

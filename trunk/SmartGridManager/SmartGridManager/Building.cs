@@ -51,19 +51,22 @@ namespace SmartGridManager
 
         public void StopEnergyProduction()
         {
-            _pwManager.ShutDown();                       
-            base.StopService();
+            _pwManager.ShutDown();
+            base.StopService();            
         }
 
         public void Start()
         {
             peerthread = new Thread(_pwManager.Start) { IsBackground = true };
-
             peerthread.Start();
+
+            XMLLogger.WriteLocalActivity("Power Manager Started. Sending Hello Message.");
 
             //send hello message
             Connector.channel.sayHello(MessageFactory.CreateHelloMessage("@All", _name, _status, _enType, _enProduced,
-                _enPeak, _price, _address, _adminName));        
+                _enPeak, _price, _address, _adminName));
+
+            XMLLogger.WriteLocalActivity("Hello Message Sent.");
         }
     }
 }

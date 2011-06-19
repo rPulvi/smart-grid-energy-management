@@ -194,7 +194,7 @@ namespace SmartGridManager
                 }
                 else
                 {
-                    Console.WriteLine("Nessuna offerta energetica ricevuta");
+                    XMLLogger.WriteLocalActivity("Nessuna offerta energetica ricevuta");                    
                     messageSent = false; //send the request message again                
                 }
             }
@@ -205,8 +205,8 @@ namespace SmartGridManager
             var m = (from element in _proposalList
                     orderby element.price ascending
                     select element).First();
-            
-            Console.WriteLine("Il prezzo minore è fornito da {0} ed è {1}", m.header.Sender, m.price);
+
+            XMLLogger.WriteLocalActivity("Il prezzo minore è fornito da " + m.header.Sender + " ed è " + m.price);            
 
             EnergyAcceptMessage respMessage = MessageFactory.createEnergyAcceptMessage(
                     m.header.Sender,

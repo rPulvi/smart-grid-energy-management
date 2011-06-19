@@ -56,8 +56,10 @@ namespace Resolver
 
         #region Methods
         
-        public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver){
-            
+        public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver)
+        {
+            XMLLogger.InitLogFile(Tools.getResolverName());
+
             this.isLocalConnected = false;
             this.isRemoteConnected = false;
 
@@ -98,21 +100,21 @@ namespace Resolver
             bool bRet = false;
 
             customResolver = new ServiceHost(crs);
-
-            Console.WriteLine("Starting Custom Local Peer Resolver Service...");
+            
+            XMLLogger.WriteLocalActivity("Starting Custom Local Peer Resolver Service...");
 
             try
             {
                 crs.Open();
                 customResolver.Open();
                 bRet = true;
-                Console.WriteLine("Custom Local Peer Resolver Service is started");
+                XMLLogger.WriteLocalActivity("Custom Local Peer Resolver Service is started");                
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error in starting Custom Local Peer Resolver Service");
-                Console.WriteLine(e);
-                crs.Close();                
+                XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in starting Custom Local Peer Resolver Service");
+                XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); 
+                crs.Close();
                 customResolver.Abort();
                 bRet = false;
             }
@@ -148,10 +150,10 @@ namespace Resolver
 
                 try
                 {
-                    remoteHost.Open();       
+                    remoteHost.Open();
 
-                    Console.WriteLine("Remote service started.");
-                    Console.WriteLine("Connecting to {0}", h[n].IP);
+                    XMLLogger.WriteRemoteActivity("Remote service started.");
+                    XMLLogger.WriteRemoteActivity("Connecting to " + h[n].IP);
 
                     //Retrieve Remote IP Addresses
                     foreach (var newRemote in remoteChannel.RetrieveContactList())
@@ -163,13 +165,13 @@ namespace Resolver
                         }
                     }
 
-                    Console.WriteLine("Connected to: {0}", h[n].IP);
+                    XMLLogger.WriteRemoteActivity("Connected to: " + h[n].IP);                    
                     bRet = true;
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error in connecting to: {0}", h[n].IP);
-                    Console.WriteLine(e); //For debug purpose                    
+                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in connecting to: " + h[n].IP);
+                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
                     n++;
                     if(n > h.Count)
                         remoteHost.Abort();

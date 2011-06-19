@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.ServiceModel;
 using SmartGridManager.Core.Messaging;
+using SmartGridManager.Core.Utils;
 using SmartGridManager.Core.P2P;
 
 namespace SmartGridManager.Core
@@ -36,12 +37,13 @@ namespace SmartGridManager.Core
             {
                 ((ICommunicationObject)channel).Open();
             }
-            catch (CommunicationException ex){
+            catch (CommunicationException e){
                 ((ICommunicationObject)channel).Abort();
                 _factory.Abort();
-                Console.WriteLine("Could not find resolver.  If you are using a custom resolver, please ensure");
-                Console.WriteLine("that the service is running.");                
-                Console.WriteLine("SystemError: {0}", ex);
+
+                XMLLogger.WriteErrorMessage("Connector", "Could not find resolver.  If you are using a custom resolver, please ensure that the service is running.");
+                XMLLogger.WriteErrorMessage("Connector", "System Error: " + e.ToString());                
+
                 return false;
             }
 

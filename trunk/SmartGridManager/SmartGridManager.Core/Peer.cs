@@ -41,19 +41,24 @@ namespace SmartGridManager.Core
                 ostat.Online += new EventHandler(OnOnline);
                 ostat.Offline += new EventHandler(OnOffline);
                 this.isConnected = true;
+
+                XMLLogger.WriteLocalActivity("OnLine.");
             }
             else
             {
                 this.isConnected = false;
-                Console.WriteLine("Errore in connessione");
+                XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Connection Error");                
             }
         }
 
 
         public void StopService() 
         {
-            if(this.isConnected == true)
-                Connector.Disconnect(); 
+            if (this.isConnected == true)
+            {
+                Connector.Disconnect();
+                XMLLogger.WriteLocalActivity("OffLine.");
+            }
         }
 
         // PeerNode event handlers
