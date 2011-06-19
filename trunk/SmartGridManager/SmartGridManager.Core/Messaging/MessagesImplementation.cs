@@ -15,7 +15,7 @@ namespace SmartGridManager.Core.Messaging
         public virtual void sayHello(HelloMessage message)
         {
             XMLLogger.WriteLocalActivity("Messaggio: " + message.header.MessageID + "Ricevuto alle: " + message.header.TimeStamp +
-                "inviato da: " + message.header.Sender + "destinato a: " + message.header.Receiver);
+                " inviato da: " + message.header.Sender + " destinato a: " + message.header.Receiver);
         }
 
         public virtual void HelloResponse(HelloResponseMessage message)
