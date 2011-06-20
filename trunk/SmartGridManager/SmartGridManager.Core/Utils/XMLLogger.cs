@@ -15,7 +15,7 @@ namespace SmartGridManager.Core.Utils
 
         public static void InitLogFile(string peerName)
         {            
-            logFileName = peerName + ".xml";
+            logFileName = "log.xml";
 
             if (!File.Exists (logFileName))
             {
