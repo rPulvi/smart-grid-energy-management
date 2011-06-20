@@ -1,0 +1,53 @@
+﻿<Window x:Class="WPF_Resolver.View.LogView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="LogView" WindowStyle="ToolWindow" Background="#FF1F1F1F">
+	
+	<Window.Resources>
+		
+		<Style x:Key="RectangleStyle" TargetType="{x:Type Rectangle}">
+            <Setter Property="Fill" Value="White"/>
+            <Setter Property="Opacity" Value="0.1"/>
+			<Setter Property="RadiusX" Value="15"/>
+			<Setter Property="RadiusY" Value="15"/>
+			<Setter Property="Height" Value="Auto"/>
+        </Style>
+
+        <DataTemplate x:Key="MessageDataTemplate">
+            <TextBlock Text="{Binding XPath=/PeerLog/LocalActivities/Message}" Width="Auto" Height="Auto"/>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="TimeDataTemplate">
+            <TextBlock Text="{Binding XPath=/PeerLog/LocalActivities/Time}" Width="Auto" Height="Auto"/>
+        </DataTemplate>
+		
+	</Window.Resources>
+
+    <Grid>
+    	<Grid.RowDefinitions>
+    		<RowDefinition Height="0.33*"/>
+    		<RowDefinition Height="0.33*"/>
+    		<RowDefinition Height="0.33*"/>
+    	</Grid.RowDefinitions>
+		
+    	<Grid Margin="10,2,10,0">
+    		<Rectangle Style="{StaticResource ResourceKey=RectangleStyle}" Stroke="Black"/>
+
+            <ListView Margin="10" ItemsSource="{Binding Source={StaticResource logDataSource}, XPath=/PeerLog/LocalActivities}">
+    			<ListView.View>
+    				<GridView>
+                        <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}"/>
+    					<GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}"/>
+    				</GridView>
+    			</ListView.View>
+    		</ListView>
+			
+    	</Grid>
+    	<Grid Margin="10,2,10,0" Grid.Row="1">
+    		<Rectangle Style="{StaticResource ResourceKey=RectangleStyle}" Stroke="Black"/>
+    	</Grid>
+    	<Grid Margin="10,2,10,0" Grid.Row="2">
+    		<Rectangle Style="{StaticResource ResourceKey=RectangleStyle}" Stroke="Black"/>
+    	</Grid>
+    </Grid>
+</Window>
