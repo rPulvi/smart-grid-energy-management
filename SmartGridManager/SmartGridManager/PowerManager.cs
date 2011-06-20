@@ -148,12 +148,8 @@ namespace SmartGridManager
                             _name,
                             message.energyReq,
                             _price);
-
-                        //Check if the request is Local or Remote
-                        if (message.header.Sender == _resolverName) //Remote
-                            Connector.channel.forwardLocalMessage(respMessage);
-                        else //Local
-                            Connector.channel.energyProposal(respMessage);
+                        
+                        Connector.channel.energyProposal(respMessage);
                     }
                 }
             }
@@ -183,7 +179,7 @@ namespace SmartGridManager
                 if (_proposalTimeout > 2)  //Go Outbound
                 {
                     float enReq = _enPeak - (getEnergyLevel() + _enBought);
-                    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq));
+                    Connector.channel.forwardEnergyRequest(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq));
                     messageSent = true;
 
                     _proposalTimeout = 0;
@@ -213,11 +209,7 @@ namespace SmartGridManager
                     _name,
                     _enPeak - (getEnergyLevel() + _enBought));
             
-            //Check if the message is Local or Remote
-            if (m.header.Sender == _resolverName)
-                Connector.channel.forwardLocalMessage(respMessage);
-            else
-                Connector.channel.acceptProposal(respMessage);            
+            Connector.channel.acceptProposal(respMessage);
         }
 
         private void ProposalAccepted(EnergyAcceptMessage message)
@@ -245,10 +237,6 @@ namespace SmartGridManager
                     status,
                     message.energy);
 
-                //Check if the Confirm has to be sent to a Local or Remote Resolver
-                if (message.header.Sender == _resolverName) //Remote
-                    Connector.channel.forwardLocalMessage(respMessage);
-                else //Local
                     Connector.channel.endProposal(respMessage);
             }
         }

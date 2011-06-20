@@ -15,7 +15,8 @@ namespace SmartGridManager.Core.Messaging
     public delegate void endProposal (EndProposalMessage m);
     public delegate void heartBeat (HeartBeatMessage m);
     public delegate void remoteAdv (StatusNotifyMessage m);
-    public delegate void forwardLocalMessage (PeerMessage m);
+    public delegate void forwardEnergyRequest(StatusNotifyMessage m);
+    public delegate void forwardEnergyReply(EndProposalMessage m);
     public delegate void updateStatus (UpdateStatusMessage m);
     public delegate void alertPeerDown (PeerIsDownMessage m);
     #endregion
@@ -31,7 +32,8 @@ namespace SmartGridManager.Core.Messaging
         public event endProposal OnEndProposalArrived;
         public event heartBeat OnHeartBeat;
         public event remoteAdv OnRemoteAdv;
-        public event forwardLocalMessage OnForwardLocalMessage;
+        public event forwardEnergyRequest OnForwardEnergyRequest;
+        public event forwardEnergyReply OnForwardEnergyReply;
         public event updateStatus OnUpdateStatus;
         public event alertPeerDown OnPeerDown;
         #endregion
@@ -100,12 +102,20 @@ namespace SmartGridManager.Core.Messaging
             base.remoteAdv(message);
         }
 
-        public override void forwardLocalMessage(PeerMessage message)
+        public override void forwardEnergyRequest(StatusNotifyMessage message)
         {
-            if (OnForwardLocalMessage != null)
-                OnForwardLocalMessage(message);
+            if (OnForwardEnergyRequest != null)
+                OnForwardEnergyRequest(message);
             
-            base.forwardLocalMessage(message);
+            base.forwardEnergyRequest(message);
+        }
+
+        public override void forwardEnergyReply(EndProposalMessage message)
+        {
+            if (OnForwardEnergyReply != null)
+                OnForwardEnergyReply(message);
+
+            base.forwardEnergyReply(message);
         }
 
         public override void updateEnergyStatus(UpdateStatusMessage message)

@@ -52,18 +52,22 @@ namespace Resolver
         private System.Timers.Timer _HBTimer;
 
         private object _lLock = new object();
+
+        private EnergyBroker _broker;
+
         #endregion
 
         #region Methods
         
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver)
         {
-            XMLLogger.InitLogFile(Tools.getResolverName());
+            this.name = Tools.getResolverName();
+
+            XMLLogger.InitLogFile(name);            
 
             this.isLocalConnected = false;
             this.isRemoteConnected = false;
-
-            this.name = Tools.getResolverName();
+            
             this._peerStatus = PeerStatus.Resolver;
 
             //This timer manage the peer's HB to check the online status
@@ -85,8 +89,11 @@ namespace Resolver
             base.StartService();
             MsgHandler = Connector.messageHandler;
 
+            _broker = new EnergyBroker(MsgHandler, name);
+
             #region Event Listeners
-            MsgHandler.OnForwardLocalMessage += new forwardLocalMessage(ForwardLocalMessage);
+            MsgHandler.OnForwardEnergyRequest += new forwardEnergyRequest(ForwardEnergyRequest);
+            MsgHandler.OnForwardEnergyReply += new forwardEnergyReply(ForwardEnergyReply);
             MsgHandler.OnSayHello += new sayHello(HelloResponse);
             MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
             MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);
@@ -134,6 +141,8 @@ namespace Resolver
 
             //To handle the remote traffic
             remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
+            remoteMessageHandler.OnRemoteEnergyRequest += new manageEnergyRequest(ManageRemoteEnergyRequest);
+            remoteMessageHandler.OnRemoteEnergyReply += new replyEnergyRequest(ManageRemoteEnergyReply);
 
             h = Tools.getRemoteHosts();
             
@@ -184,7 +193,7 @@ namespace Resolver
         }
 
         //To Resolver
-        private void ForwardLocalMessage(PeerMessage message)   
+        private void ForwardEnergyRequest(StatusNotifyMessage message)   
         {
             if (isRemoteConnected == true)
             {
@@ -199,8 +208,13 @@ namespace Resolver
                     }
                 }
 
-                remoteChannel.ManageRemoteMessages(message);
+                remoteChannel.ManageRemoteEnergyRequest(message);
             }
+        }
+
+        void ForwardEnergyReply(EndProposalMessage m)
+        {
+            remoteChannel.ReplyEnergyRequest(m);
         }
 
         //From Resolver
@@ -229,6 +243,16 @@ namespace Resolver
                 Connector.channel.heartBeat((HeartBeatMessage)message);
             else if (message is PeerIsDownMessage)
                 Connector.channel.peerDown((PeerIsDownMessage)message);
+        }
+
+        private void ManageRemoteEnergyRequest(StatusNotifyMessage message)
+        {            
+            _broker.EnergyLookUp(message);
+        }
+
+        void ManageRemoteEnergyReply(EndProposalMessage m)
+        {
+            Connector.channel.endProposal(m);
         }
 
         private void HelloResponse(HelloMessage message)
