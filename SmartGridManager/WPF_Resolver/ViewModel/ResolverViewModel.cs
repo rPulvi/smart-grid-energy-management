@@ -68,6 +68,7 @@ namespace WPF_Resolver.ViewModel
         public DelegateCommand ShowRemote { get; set; }
         public DelegateCommand SetLocalFont { get; set; }
         public DelegateCommand SetRemoteFont { get; set; }
+        public DelegateCommand ViewLog { get; set; }
         #endregion
 
         public ResolverViewModel()
@@ -144,6 +145,7 @@ namespace WPF_Resolver.ViewModel
             this.ShowRemote = new DelegateCommand((o) => this.ChangeVisibilityRemote(), o => this.canDo);
             this.SetLocalFont = new DelegateCommand((o) => this.ChangeLocalFontSize(), o => this.canDo);
             this.SetRemoteFont = new DelegateCommand((o) => this.ChangeRemoteFontSize(), o => this.canDo);
+            this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
         }
 
         public ObservableDictionary<string, int> GetPieChartData
@@ -194,6 +196,12 @@ namespace WPF_Resolver.ViewModel
                 _enTimeLine = value;
                 OnPropertyChanged("GetPointTimeLine");
             }
+        }
+
+        public void Log()
+        {
+            View.LogView LogWindow = new View.LogView();
+            LogWindow.ShowDialog();
         }
 
         public Visibility SetVisibilityLocal
