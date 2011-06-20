@@ -61,9 +61,14 @@ namespace SmartGridManager.Core.Messaging
             XMLLogger.WriteRemoteActivity("Remote request sent to Resolver");            
         }
 
-        public virtual void forwardLocalMessage(PeerMessage message)
+        public virtual void forwardEnergyRequest(StatusNotifyMessage message)
         {
             XMLLogger.WriteRemoteActivity("Peer " + message.header.Sender + " is forwarding a message..");
+        }
+
+        public virtual void forwardEnergyReply(EndProposalMessage message)
+        {
+            XMLLogger.WriteRemoteActivity("Energy Request accepted = " + message.endStatus);
         }
 
         public virtual void updateEnergyStatus(UpdateStatusMessage message)

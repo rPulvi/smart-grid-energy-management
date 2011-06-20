@@ -10,6 +10,8 @@ using SmartGridManager.Core.Utils;
 namespace SmartGridManager.Core.P2P
 {    
     public delegate void forwardRemoteMessage(PeerMessage m);
+    public delegate void manageEnergyRequest(StatusNotifyMessage m);
+    public delegate void replyEnergyRequest(EndProposalMessage m);
 
     [ServiceContract]
     //[ServiceContract(CallbackContract = typeof(IPeerServices))]
@@ -20,6 +22,12 @@ namespace SmartGridManager.Core.P2P
 
         [OperationContract]
         void ManageRemoteMessages(PeerMessage message);
+
+        [OperationContract]
+        void ManageRemoteEnergyRequest(StatusNotifyMessage message);
+
+        [OperationContract]
+        void ReplyEnergyRequest(EndProposalMessage message);
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
@@ -27,6 +35,8 @@ namespace SmartGridManager.Core.P2P
     public class PeerServices : IPeerServices
     {
         public event forwardRemoteMessage OnForwardRemoteMessage;
+        public event manageEnergyRequest OnRemoteEnergyRequest;
+        public event replyEnergyRequest OnRemoteEnergyReply;
 
         public List<RemoteHost> RetrieveContactList()
         {
@@ -37,6 +47,18 @@ namespace SmartGridManager.Core.P2P
         {
             if (OnForwardRemoteMessage != null)
                 OnForwardRemoteMessage(message);
+        }
+
+        public void ManageRemoteEnergyRequest(StatusNotifyMessage message)
+        {
+            if (OnRemoteEnergyRequest != null)
+                OnRemoteEnergyRequest(message);
+        }
+
+        public void ReplyEnergyRequest(EndProposalMessage message)
+        {
+            if (OnRemoteEnergyReply != null)
+                OnRemoteEnergyReply(message);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Params>
-  <Name>Resolver1</Name>
+  <Name>Rick Resolver</Name>
   <RemoteHosts>
     <Host>
       <Name>Locale</Name>

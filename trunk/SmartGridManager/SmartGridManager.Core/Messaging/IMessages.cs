@@ -34,7 +34,10 @@ namespace SmartGridManager.Core.Messaging
         void remoteAdv(StatusNotifyMessage m);
 
         [OperationContract(IsOneWay = true)]
-        void forwardLocalMessage(PeerMessage m);
+        void forwardEnergyRequest(StatusNotifyMessage m);
+
+        [OperationContract(IsOneWay = true)]
+        void forwardEnergyReply(EndProposalMessage m);
 
         [OperationContract(IsOneWay = true)]
         void updateEnergyStatus(UpdateStatusMessage m);
