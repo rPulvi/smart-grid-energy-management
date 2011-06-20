@@ -1334,7 +1334,7 @@
 			<RowDefinition Height="Auto"/>
 		</Grid.RowDefinitions>
 
-		<Menu Width="auto" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment" d:IsLocked="True">
+		<Menu Width="auto" VerticalAlignment="Top" d:LayoutOverrides="VerticalAlignment">
 			<Menu.Background>
 				<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
 					<GradientStop Color="#FF24396A" Offset="1"/>
@@ -1345,7 +1345,10 @@
 				<MenuItem Header="Start" Foreground="Blue" Command="{Binding StartResolver}"/>
 				<MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
 			</MenuItem>
-		</Menu>
+            <MenuItem Header="View" Foreground="White">
+                <MenuItem Header="Log" Foreground="Blue" Command="{Binding ViewLog}"/>
+            </MenuItem>
+        </Menu>
 		<Grid Margin="8,0" Grid.Row="1" d:LayoutOverrides="Width" >
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
@@ -1418,15 +1421,15 @@
 			</StackPanel>
 			
 			<StackPanel Margin="0" Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right">
-                <TextBlock util:MouseClickBehavior.MouseUp="{Binding ShowLocal}" util:MouseClickBehavior.MouseDown="{Binding SetLocalFont}" FontSize="{Binding SetLocalFontSize}" Margin="0" Text="Local" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource myMenu}"/>
-                <TextBlock util:MouseClickBehavior.MouseUp="{Binding ShowRemote}" util:MouseClickBehavior.MouseDown="{Binding SetRemoteFont}" FontSize="{Binding SetRemoteFontSize}" Margin="0" Text="Remote" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource myMenu}"/>
+				<TextBlock util:MouseClickBehavior.MouseUp="{Binding ShowLocal}" util:MouseClickBehavior.MouseDown="{Binding SetLocalFont}" FontSize="{Binding SetLocalFontSize}" Margin="0" Text="Local" VerticalAlignment="Center" HorizontalAlignment="Center" Style="{DynamicResource myMenu}"/>
+				<TextBlock util:MouseClickBehavior.MouseUp="{Binding ShowRemote}" util:MouseClickBehavior.MouseDown="{Binding SetRemoteFont}" FontSize="{Binding SetRemoteFontSize}" Margin="0" Text="Remote" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource myMenu}"/>
 			</StackPanel>
 			
 		</Grid>
 
 
 		
-		<UniformGrid Rows="2" Columns="1" Margin="8,0,12,0" Grid.Row="2" d:IsLocked="True">
+		<UniformGrid Rows="2" Columns="1" Margin="8,0,12,0" Grid.Row="2">
 			<Grid Margin="0">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
