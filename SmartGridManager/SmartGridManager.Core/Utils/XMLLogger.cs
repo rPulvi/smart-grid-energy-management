@@ -39,9 +39,10 @@ namespace SmartGridManager.Core.Utils
             try
             {
                 xmlLog.Root.Element("LocalActivities").Add(
+                    new XElement("LogMessage",
                     new XElement("Time", DateTime.Now),
                     new XElement("Message", logMessage)
-                    );
+                    ));
 
                 xmlLog.Save(logFileName);
             }
