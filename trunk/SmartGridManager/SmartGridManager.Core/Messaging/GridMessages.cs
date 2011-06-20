@@ -33,8 +33,7 @@ namespace SmartGridManager.Core.Messaging
         [MessageBodyMember]
         public string Admin { get; set; }
     }
-
-
+    
     [MessageContract]
     public class HelloResponseMessage : PeerMessage
     {
