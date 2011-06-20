@@ -14,11 +14,11 @@
         </Style>
 
         <DataTemplate x:Key="MessageDataTemplate">
-            <TextBlock Text="{Binding XPath=/PeerLog/LocalActivities/Message}" Width="Auto" Height="Auto"/>
+            <TextBlock Text="{Binding XPath=Message}" Width="Auto" Height="Auto"/>
         </DataTemplate>
         
         <DataTemplate x:Key="TimeDataTemplate">
-            <TextBlock Text="{Binding XPath=/PeerLog/LocalActivities/Time}" Width="Auto" Height="Auto"/>
+            <TextBlock Text="{Binding XPath=Time}" Width="Auto" Height="Auto"/>
         </DataTemplate>
 		
 	</Window.Resources>
