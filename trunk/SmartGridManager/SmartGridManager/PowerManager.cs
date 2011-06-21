@@ -237,6 +237,9 @@ namespace SmartGridManager
                     status,
                     message.energy);
 
+                if (message.header.Sender == _resolverName)
+                    Connector.channel.forwardEnergyReply(respMessage);
+                else
                     Connector.channel.endProposal(respMessage);
             }
         }
