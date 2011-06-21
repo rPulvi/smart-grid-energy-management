@@ -28,7 +28,7 @@
         </Style>
         
         <Style x:Key="ColTextHeaderStyle" TargetType="{x:Type TextBlock}">
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -42,31 +42,31 @@
 
         <!-- Coloumn Header Template for ListLocal -->
         <DataTemplate x:Key="NameColHeader">
-            <TextBlock Text="Name" Style="{StaticResource ColTextHeaderStyle}" Width="250"/>
+            <TextBlock Text="Name" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergyTypeColHeader">
-            <TextBlock Text="Energy Type" Style="{StaticResource ColTextHeaderStyle}" Width="90"/>
+            <TextBlock Text="Energy Type" Style="{StaticResource ColTextHeaderStyle}" Width="108"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergyProducedColHeader">
-            <TextBlock Text="En. Produced" Style="{StaticResource ColTextHeaderStyle}" Width="95"/>
+            <TextBlock Text="En. Produced (KW/h)" Style="{StaticResource ColTextHeaderStyle}" Width="130"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergySoldColHeader">
-            <TextBlock Text="En. Sold" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
+            <TextBlock Text="En. Sold (KW/h)" Style="{StaticResource ColTextHeaderStyle}" Width="108"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergyBoughtColHeader">
-            <TextBlock Text="En. Bought" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
+            <TextBlock Text="En. Bought (KW/h)" Style="{StaticResource ColTextHeaderStyle}" Width="108"/>
         </DataTemplate>
         <DataTemplate x:Key="EnergyPeakColHeader">
-            <TextBlock Text="En. Peak" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
+            <TextBlock Text="En. Peak (KW/h)" Style="{StaticResource ColTextHeaderStyle}" Width="108"/>
         </DataTemplate>
         <DataTemplate x:Key="PriceColHeader">
-            <TextBlock Text="Price €" Style="{StaticResource ColTextHeaderStyle}" Width="80" />
+            <TextBlock Text="Price €" Style="{StaticResource ColTextHeaderStyle}" Width="108"/>
         </DataTemplate>
         <DataTemplate x:Key="AddressColHeader">
             <TextBlock Text="Address" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
         <DataTemplate x:Key="AdminColHeader">
-            <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}" Width="200" />
+            <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
 
         <!-- Coloumn Header Template for ListRemote -->
@@ -1444,7 +1444,7 @@
 				</Rectangle>
                     
     				<!--.:LISTA:.-->
-				<ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListView" Visibility="{Binding SetVisibilityLocal}"
+				<ListView Grid.Row="0" Margin="18,0" x:Name="ListView" Visibility="{Binding SetVisibilityLocal}"
 					ItemsSource="{Binding PeerList}"
 					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
 					util:GridViewSort.AutoSort="True"
@@ -1453,19 +1453,19 @@
 					<ListView.View>
 						<GridView>
 							<GridViewColumn HeaderTemplate="{StaticResource NameColHeader}" CellTemplate="{StaticResource NomeItemTemplate}" util:GridViewSort.PropertyName="Name"/>
-							<GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" Header="Energy Type" util:GridViewSort.PropertyName="EnType"/>
-							<GridViewColumn HeaderTemplate="{StaticResource EnergyProducedColHeader}" CellTemplate="{StaticResource EnergyProducedItemTemplate}" Header="En. Produced" util:GridViewSort.PropertyName="EnProduced"/>
-							<GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" Header="En. Sold" util:GridViewSort.PropertyName="EnSold"/>
-							<GridViewColumn HeaderTemplate="{StaticResource EnergyBoughtColHeader}" CellTemplate="{StaticResource EnergyBoughtItemTemplate}" Header="En. Bought" util:GridViewSort.PropertyName="EnBought"/>
-							<GridViewColumn HeaderTemplate="{StaticResource EnergyPeakColHeader}" CellTemplate="{StaticResource PeakItemTemplate}" Header="En. Peak" util:GridViewSort.PropertyName="EnPeak"/>
-							<GridViewColumn HeaderTemplate="{StaticResource PriceColHeader}" CellTemplate="{StaticResource EnergyPriceItemTemplate}" Header="Price €" util:GridViewSort.PropertyName="EnPrice"/>
-							<GridViewColumn HeaderTemplate="{StaticResource AddressColHeader}" CellTemplate="{StaticResource AddressItemTemplate}" Header="Address" util:GridViewSort.PropertyName="Address"/>
-							<GridViewColumn HeaderTemplate="{StaticResource AdminColHeader}" CellTemplate="{StaticResource AdminItemTemplate}" Header="Admin" util:GridViewSort.PropertyName="Admin"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" util:GridViewSort.PropertyName="EnType"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyProducedColHeader}" CellTemplate="{StaticResource EnergyProducedItemTemplate}" util:GridViewSort.PropertyName="EnProduced"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" util:GridViewSort.PropertyName="EnSold"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyBoughtColHeader}" CellTemplate="{StaticResource EnergyBoughtItemTemplate}" util:GridViewSort.PropertyName="EnBought"/>
+							<GridViewColumn HeaderTemplate="{StaticResource EnergyPeakColHeader}" CellTemplate="{StaticResource PeakItemTemplate}" util:GridViewSort.PropertyName="EnPeak"/>
+							<GridViewColumn HeaderTemplate="{StaticResource PriceColHeader}" CellTemplate="{StaticResource EnergyPriceItemTemplate}" util:GridViewSort.PropertyName="EnPrice"/>
+							<GridViewColumn HeaderTemplate="{StaticResource AddressColHeader}" CellTemplate="{StaticResource AddressItemTemplate}" util:GridViewSort.PropertyName="Address"/>
+							<GridViewColumn HeaderTemplate="{StaticResource AdminColHeader}" CellTemplate="{StaticResource AdminItemTemplate}" util:GridViewSort.PropertyName="Admin"/>
 						</GridView>
 					</ListView.View>
 				</ListView>
 
-                <ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListViewRemote" Visibility="{Binding SetVisibilityRemote}"
+                <!--<ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListViewRemote" Visibility="{Binding SetVisibilityRemote}"
 					ItemsSource="{Binding HostList}"
 					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
 					util:GridViewSort.AutoSort="True"
@@ -1478,7 +1478,7 @@
                             <GridViewColumn HeaderTemplate="{StaticResource RemoteContactedByColHeader}" CellTemplate="{StaticResource RemoteHostContactedByTemplate}" util:GridViewSort.PropertyName="ContactedBy"/>
                         </GridView>
                     </ListView.View>
-                </ListView>
+                </ListView>-->
 
             </Grid>
 			<Grid Margin="0" >

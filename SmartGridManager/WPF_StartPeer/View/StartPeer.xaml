@@ -75,7 +75,7 @@
     		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}" FontSize="13.333"><Run Language="it-it" Text="State:"/></TextBlock>
     		<TextBlock Margin="27,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Energy Type:"/></TextBlock>
     		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Energy Peak (KW/h):"/></TextBlock>
-    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Price:"/></TextBlock>
+    		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Price €:"/></TextBlock>
             <TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Energy Produced (KW/h):"/><LineBreak/><Run Language="it-it"/></TextBlock>
     		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Address:"/></TextBlock>
     		<TextBlock Margin="0,0,18.088,10" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}"><Run Language="it-it" Text="Admin:"/></TextBlock>
