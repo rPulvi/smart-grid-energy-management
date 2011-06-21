@@ -35,7 +35,7 @@ namespace SmartGridManager
         public Building(String Name, PeerStatus status, EnergyType enType, float enProduced, float energyPeak, float price, string address, string adminName)
             : base(Name)
         {
-            XMLLogger.InitLogFile(Name);
+            
 
             _name = Name;
             _enType = enType;
