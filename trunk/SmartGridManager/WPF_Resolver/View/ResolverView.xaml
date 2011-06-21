@@ -1455,17 +1455,17 @@
 							<GridViewColumn HeaderTemplate="{StaticResource NameColHeader}" CellTemplate="{StaticResource NomeItemTemplate}" util:GridViewSort.PropertyName="Name"/>
 							<GridViewColumn HeaderTemplate="{StaticResource EnergyTypeColHeader}" CellTemplate="{StaticResource EnergiaItemTemplate}" util:GridViewSort.PropertyName="EnType"/>
 							<GridViewColumn HeaderTemplate="{StaticResource EnergyProducedColHeader}" CellTemplate="{StaticResource EnergyProducedItemTemplate}" util:GridViewSort.PropertyName="EnProduced"/>
-							<GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" util:GridViewSort.PropertyName="EnSold"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource EnergyPeakColHeader}" CellTemplate="{StaticResource PeakItemTemplate}" util:GridViewSort.PropertyName="EnPeak"/>
 							<GridViewColumn HeaderTemplate="{StaticResource EnergyBoughtColHeader}" CellTemplate="{StaticResource EnergyBoughtItemTemplate}" util:GridViewSort.PropertyName="EnBought"/>
-							<GridViewColumn HeaderTemplate="{StaticResource EnergyPeakColHeader}" CellTemplate="{StaticResource PeakItemTemplate}" util:GridViewSort.PropertyName="EnPeak"/>
-							<GridViewColumn HeaderTemplate="{StaticResource PriceColHeader}" CellTemplate="{StaticResource EnergyPriceItemTemplate}" util:GridViewSort.PropertyName="EnPrice"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource EnergySoldColHeader}" CellTemplate="{StaticResource EnergySoldItemTemplate}" util:GridViewSort.PropertyName="EnSold"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource PriceColHeader}" CellTemplate="{StaticResource EnergyPriceItemTemplate}" util:GridViewSort.PropertyName="EnPrice"/>
 							<GridViewColumn HeaderTemplate="{StaticResource AddressColHeader}" CellTemplate="{StaticResource AddressItemTemplate}" util:GridViewSort.PropertyName="Address"/>
 							<GridViewColumn HeaderTemplate="{StaticResource AdminColHeader}" CellTemplate="{StaticResource AdminItemTemplate}" util:GridViewSort.PropertyName="Admin"/>
 						</GridView>
 					</ListView.View>
 				</ListView>
 
-                <!--<ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListViewRemote" Visibility="{Binding SetVisibilityRemote}"
+                <ListView Grid.Row="0" Margin="18,0,0,0" x:Name="ListViewRemote" Visibility="{Binding SetVisibilityRemote}"
 					ItemsSource="{Binding HostList}"
 					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
 					util:GridViewSort.AutoSort="True"
@@ -1478,7 +1478,7 @@
                             <GridViewColumn HeaderTemplate="{StaticResource RemoteContactedByColHeader}" CellTemplate="{StaticResource RemoteHostContactedByTemplate}" util:GridViewSort.PropertyName="ContactedBy"/>
                         </GridView>
                     </ListView.View>
-                </ListView>-->
+                </ListView>
 
             </Grid>
 			<Grid Margin="0" >

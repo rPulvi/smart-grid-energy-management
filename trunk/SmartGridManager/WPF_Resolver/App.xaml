@@ -7,7 +7,7 @@
     <Application.Resources>
          
     	<XmlDataProvider x:Key="logDataSource" 
-                         Source="C:\Users\Giuseppe\Documents\Visual Studio 2010\Projects\SmartGridManager\SmartGridManager\WPF_Resolver\bin\Debug\log.xml" 
+                         Source="log.xml" 
                          d:IsDataSource="True"/>
          
     </Application.Resources>

@@ -5,6 +5,6 @@
              StartupUri="View/StartPeer.xaml">
     <Application.Resources>
         <XmlDataProvider x:Key="logDataSource" 
-                         Source="C:\Users\Giuseppe\Documents\Visual Studio 2010\Projects\SmartGridManager\SmartGridManager\WPF_StartPeer\bin\Debug\log.xml"/>
+                         Source="log.xml"/>
     </Application.Resources>
 </Application>
