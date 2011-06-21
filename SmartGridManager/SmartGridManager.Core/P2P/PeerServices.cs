@@ -10,7 +10,7 @@ using SmartGridManager.Core.Utils;
 namespace SmartGridManager.Core.P2P
 {    
     public delegate void forwardRemoteMessage(PeerMessage m);
-    public delegate void manageEnergyRequest(StatusNotifyMessage m);
+    public delegate void manageEnergyRequest(StatusNotifyMessage m, string ip, string port);
     public delegate void replyEnergyRequest(EndProposalMessage m);
 
     [ServiceContract]
@@ -24,7 +24,7 @@ namespace SmartGridManager.Core.P2P
         void ManageRemoteMessages(PeerMessage message);
 
         [OperationContract]
-        void ManageRemoteEnergyRequest(StatusNotifyMessage message);
+        void ManageRemoteEnergyRequest(StatusNotifyMessage message, string IP, string port);
 
         [OperationContract]
         void ReplyEnergyRequest(EndProposalMessage message);
@@ -49,10 +49,10 @@ namespace SmartGridManager.Core.P2P
                 OnForwardRemoteMessage(message);
         }
 
-        public void ManageRemoteEnergyRequest(StatusNotifyMessage message)
+        public void ManageRemoteEnergyRequest(StatusNotifyMessage message, string IP, string port)
         {
             if (OnRemoteEnergyRequest != null)
-                OnRemoteEnergyRequest(message);
+                OnRemoteEnergyRequest(message, IP, port);
         }
 
         public void ReplyEnergyRequest(EndProposalMessage message)
