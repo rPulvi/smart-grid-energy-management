@@ -37,6 +37,7 @@ namespace Resolver
         private ServiceHost remoteHost;
         //private IPeerServices remoteChannel;
         private IRemote remoteChannel;
+        private IRemote incomingConnection;
 
         private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
         private MessageHandler MsgHandler;
@@ -211,14 +212,14 @@ namespace Resolver
                     }
                 }
 
-                remoteChannel.ManageRemoteEnergyRequest(message);
+                remoteChannel.ManageRemoteEnergyRequest(message,Tools.getLocalIP(),"8082");
             }
         }
 
         void ForwardEnergyReply(EndProposalMessage message)
         {
             message.header.Receiver = _originPeerName;
-            remoteChannel.ReplyEnergyRequest(message);
+            incomingConnection.ReplyEnergyRequest(message);            
         }
 
         //From Resolver
@@ -249,15 +250,27 @@ namespace Resolver
                 Connector.channel.peerDown((PeerIsDownMessage)message);
         }
 
-        private void ManageRemoteEnergyRequest(StatusNotifyMessage message)
+        private void ManageRemoteEnergyRequest(StatusNotifyMessage message, string IP, string port)
         {
+            string address = @"net.tcp://" + IP + ":" + port + @"/Remote";
+
             _originPeerName = message.header.Sender;
-            message.header.Sender = this.name;            
+            message.header.Sender = this.name;
+
+            #region Create an Incoming Connection
+            NetTcpBinding tcpBinding = new NetTcpBinding();
+            EndpointAddress remoteEndpoint = new EndpointAddress(address);
+            tcpBinding.Security.Mode = SecurityMode.None;
+
+            ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+            incomingConnection = cf.CreateChannel();
+            #endregion
+                       
             _broker.EnergyLookUp(message);
         }
 
         void ManageRemoteEnergyReply(EndProposalMessage m)
-        {
+        {            
             Connector.channel.endProposal(m);
         }
 
