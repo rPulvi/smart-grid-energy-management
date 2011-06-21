@@ -58,7 +58,7 @@ namespace WPF_Resolver.ViewModel
         private DispatcherTimer _clockBar;
         private BackgroundWorker _bw = new BackgroundWorker();                
         private Resolver.Resolver _resolver;
-        private IPHostEntry _ipHost;
+        private string _ipHost;
         #endregion
 
         #region DelegateCommands
@@ -304,7 +304,7 @@ namespace WPF_Resolver.ViewModel
         {
             _listVisibilityLocal = Visibility.Visible;
             _resolverName = "";
-            _resolverIP = "IP:  " + _ipHost.AddressList[0].ToString();
+            _resolverIP = "IP:  " + _ipHost;
 
             _resolverName = "Starting...";
             this.OnPropertyChanged("GetResolverName");
