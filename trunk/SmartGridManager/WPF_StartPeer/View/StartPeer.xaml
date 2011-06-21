@@ -93,7 +93,7 @@
             </ComboBox>
             
             <TextBox Text="{Binding Path=EnPeak, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPicco" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
-            <TextBox Text="{Binding Path=Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPrezzo" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
+            <TextBox IsEnabled="{Binding ElementName=chkProducer, Path=IsChecked}" Text="{Binding Path=Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPrezzo" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
             <TextBox Text="{Binding Path=EnProduced, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtEnergiaGeneratore" Height="23" Margin="8,0,8,4" TextWrapping="Wrap" d:LayoutOverrides="Width"/>
     	</StackPanel>
         <TextBox Text="{Binding Path=Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtIndirizzo" Grid.Column="1" Margin="8,0,8,96.994" TextWrapping="Wrap" Grid.Row="1" Height="22.744" VerticalAlignment="Bottom"/>
