@@ -240,8 +240,8 @@
     				ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="100"/>
-                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="100"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="auto"/>
+                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="auto"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -282,9 +282,9 @@
     				ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="100"/>
-                            <GridViewColumn Header="Class" CellTemplate="{StaticResource ClassDataTemplate}" Width="100"/>
-                            <GridViewColumn Header="Errors" CellTemplate="{StaticResource ErrorDataTemplate}" Width="100"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Class" CellTemplate="{StaticResource ClassDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Errors" CellTemplate="{StaticResource ErrorDataTemplate}" Width="300"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
