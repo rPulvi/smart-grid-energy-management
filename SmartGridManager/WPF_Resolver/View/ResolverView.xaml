@@ -1344,7 +1344,7 @@
 				</LinearGradientBrush>
 			</Menu.Background>
 			<MenuItem Header="File" Foreground="White">
-				<MenuItem Header="Start" Foreground="Blue" Command="{Binding StartResolver}"/>
+                <MenuItem Header="Start" Foreground="{Binding GetStartColour}" Command="{Binding StartResolver}" IsEnabled="{Binding GetIsEnabledStatus}"/>
 				<MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
 			</MenuItem>
             <MenuItem Header="View" Foreground="White">

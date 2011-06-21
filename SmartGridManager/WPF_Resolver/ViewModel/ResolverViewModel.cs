@@ -27,6 +27,7 @@ namespace WPF_Resolver.ViewModel
         private string _secondo;
         private string _enTh;
         private string _imgPath;
+        private string _startColour;
 
         private int _localFontSize;
         private int _remoteFontSize;
@@ -37,6 +38,8 @@ namespace WPF_Resolver.ViewModel
         private float _enProduced;
         private float _enConsumed;
         private double _enThroughput;
+
+        private bool _startIsEnabled;
 
         #endregion
 
@@ -74,6 +77,12 @@ namespace WPF_Resolver.ViewModel
         public ResolverViewModel()
         {
             #region init
+            _startIsEnabled = true;
+            OnPropertyChanged("GetIsEnabledStatus");
+
+            _startColour = "Blue";
+            OnPropertyChanged("GetStartColour");
+
             _localFontSize = 13;
             _remoteFontSize = 13;
 
@@ -231,6 +240,26 @@ namespace WPF_Resolver.ViewModel
             {
                 _getTimeVisibility = value;
                 OnPropertyChanged("GetTimeVisibility");
+            }
+        }
+
+        public string GetStartColour
+        {
+            get { return _startColour; }
+            set
+            {
+                _startColour = value;
+                OnPropertyChanged("GetStartColour");
+            }
+        }
+
+        public bool GetIsEnabledStatus
+        {
+            get { return _startIsEnabled; }
+            set
+            {
+                _startIsEnabled = value;
+                OnPropertyChanged("GetIsEnabledStatus");
             }
         }
 
@@ -490,19 +519,22 @@ namespace WPF_Resolver.ViewModel
             _UIRefresh.Start();
             _timelineTemp.Start();
 
-
-
+            _startIsEnabled = false;
+            _startColour = "Gray";
+            
             _resolverName = _resolver.name;
             _resolverStatus = "Online...";
             _getTimeVisibility = Visibility.Visible;
 
             _imgPath = @"/WPF_Resolver;component/img/resolver_ok.png";
 
-            this.OnPropertyChanged("GetImgPath");
-            this.OnPropertyChanged("GetResolverName");         
-            this.OnPropertyChanged("GetResolverStatus");
-            this.OnPropertyChanged("GetResolverIP");
-            this.OnPropertyChanged("GetTimeVisibility");
+            OnPropertyChanged("GetImgPath");
+            OnPropertyChanged("GetResolverName");         
+            OnPropertyChanged("GetResolverStatus");
+            OnPropertyChanged("GetResolverIP");
+            OnPropertyChanged("GetTimeVisibility");
+            OnPropertyChanged("GetIsEnabledStatus");
+            OnPropertyChanged("GetStartColour");
         }
 
         private bool canDo
