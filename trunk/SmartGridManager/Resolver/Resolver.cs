@@ -212,9 +212,13 @@ namespace Resolver
                     }
                 }
                 //move to message factory class
-                RemoteEnergyRequest mes = (RemoteEnergyRequest)message;
-                mes.IP = Tools.getLocalIP();
-                mes.port = "8082";
+                RemoteEnergyRequest mes = new RemoteEnergyRequest()
+                {
+                    enReqMessage = message,
+                    IP = Tools.getLocalIP(),
+                    port = "8082"
+
+                };
 
                 remoteChannel.ManageRemoteEnergyRequest(mes);
             }
@@ -270,7 +274,7 @@ namespace Resolver
             incomingConnection = cf.CreateChannel();
             #endregion
 
-            StatusNotifyMessage mes = (StatusNotifyMessage)message;
+            StatusNotifyMessage mes = message.enReqMessage;
 
             _broker.EnergyLookUp(mes);
         }
