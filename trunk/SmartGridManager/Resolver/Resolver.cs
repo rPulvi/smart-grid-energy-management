@@ -64,9 +64,7 @@ namespace Resolver
         
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver)
         {
-            this.name = Tools.getResolverName();
-
-            XMLLogger.InitLogFile(name);            
+            this.name = Tools.getResolverName();            
 
             this.isLocalConnected = false;
             this.isRemoteConnected = false;
