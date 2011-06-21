@@ -262,8 +262,8 @@ namespace Resolver
         {
             string address = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote";
 
-            _originPeerName = message.header.Sender;
-            message.header.Sender = this.name;
+            _originPeerName = message.enReqMessage.header.Sender;
+            message.enReqMessage.header.Sender = this.name;
 
             #region Create an Incoming Connection
             NetTcpBinding tcpBinding = new NetTcpBinding();
