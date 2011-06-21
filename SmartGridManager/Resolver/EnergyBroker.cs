@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using SmartGridManager.Core.Messaging;
-using SmartGridManager.Core.Commons;
 using System.Timers;
 using SmartGridManager.Core.Utils;
 using SmartGridManager.Core;
@@ -29,15 +26,13 @@ namespace Resolver
 
         #region Methods
 
-        public EnergyBroker(MessageHandler msgHandler, string resolverName)
+        public EnergyBroker(string resolverName)
         {
-            this.MsgHandler = msgHandler;
+            this.MsgHandler = Connector.messageHandler;
             this._name = resolverName;
 
-            #region EventListeners
             MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
             MsgHandler.OnEndProposalArrived += new endProposal(EndProposal);
-            #endregion
 
             _proposalCountdown = new System.Timers.Timer();            
             _proposalCountdown.Interval = 5000;
@@ -47,8 +42,8 @@ namespace Resolver
 
         public void EnergyLookUp(StatusNotifyMessage message)
         {
-            _originPeerName = message.header.Sender;
-            message.header.Sender = this._name;
+            //_originPeerName = message.header.Sender;
+            //message.header.Sender = this._name;
             _enLookUp = message.energyReq;
 
             Connector.channel.statusAdv(message);
@@ -115,11 +110,11 @@ namespace Resolver
 
         private void EndProposal(EndProposalMessage message)
         {
-            if (message.header.Receiver == this._name)
-            {
-                message.header.Receiver = _originPeerName;
-                Connector.channel.forwardEnergyReply(message);
-            }
+            //if (message.header.Receiver == this._name)
+            //{
+            //    message.header.Receiver = _originPeerName;
+            //    Connector.channel.forwardEnergyReply(message);
+            //}
         }
 
         #endregion

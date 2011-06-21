@@ -28,6 +28,9 @@ namespace Resolver
         #endregion
 
         #region Attributes
+
+        private string _originPeerName;
+
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
         
@@ -89,7 +92,7 @@ namespace Resolver
             base.StartService();
             MsgHandler = Connector.messageHandler;
 
-            _broker = new EnergyBroker(MsgHandler, name);
+            _broker = new EnergyBroker(name);
 
             #region Event Listeners
             MsgHandler.OnForwardEnergyRequest += new forwardEnergyRequest(ForwardEnergyRequest);
@@ -212,9 +215,10 @@ namespace Resolver
             }
         }
 
-        void ForwardEnergyReply(EndProposalMessage m)
+        void ForwardEnergyReply(EndProposalMessage message)
         {
-            remoteChannel.ReplyEnergyRequest(m);
+            message.header.Receiver = _originPeerName;
+            remoteChannel.ReplyEnergyRequest(message);
         }
 
         //From Resolver
@@ -246,7 +250,9 @@ namespace Resolver
         }
 
         private void ManageRemoteEnergyRequest(StatusNotifyMessage message)
-        {            
+        {
+            _originPeerName = message.header.Sender;
+            message.header.Sender = this.name;            
             _broker.EnergyLookUp(message);
         }
 
