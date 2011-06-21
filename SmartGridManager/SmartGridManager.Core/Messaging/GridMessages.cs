@@ -125,8 +125,11 @@ namespace SmartGridManager.Core.Messaging
     }
 
     [MessageContract]
-    public class RemoteEnergyRequest : StatusNotifyMessage
+    public class RemoteEnergyRequest : PeerMessage
     {
+        [MessageBodyMember]
+        public StatusNotifyMessage enReqMessage {get; set;}
+
         [MessageBodyMember]
         public string IP { get; set; }
 
