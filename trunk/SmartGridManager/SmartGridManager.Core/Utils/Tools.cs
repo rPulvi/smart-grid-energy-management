@@ -80,6 +80,11 @@ namespace SmartGridManager.Core.Utils
             return XElement.Load("NetConfig.xml").Element("Name").Value;
         }
 
+        public static string getResolverServicePort()
+        {
+            return XElement.Load("NetConfig.xml").Element("ServicePort").Value;
+        }
+
         public static string getLocalIP()
         {
             IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
