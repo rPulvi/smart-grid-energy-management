@@ -137,7 +137,7 @@ namespace WPF_Resolver.ViewModel
             _clockBar.Tick += new EventHandler(clockBar_Tick);
             #endregion
 
-            _ipHost = Dns.GetHostByName(Dns.GetHostName());
+            _ipHost = Tools.getLocalIP();
 
             this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canDo);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
