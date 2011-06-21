@@ -57,9 +57,10 @@ namespace SmartGridManager.Core.Utils
             try
             {
                 xmlLog.Root.Element("RemoteActivities").Add(
+                    new XElement("LogMessage",
                     new XElement("Time", DateTime.Now),
                     new XElement("Message", logMessage)
-                    );
+                    ));
 
                 xmlLog.Save(logFileName);
             }
@@ -74,10 +75,11 @@ namespace SmartGridManager.Core.Utils
             try
             {
                 xmlLog.Root.Element("ErrorMessages").Add(
+					new XElement("LogMessage",
                     new XElement("Time", DateTime.Now),
                     new XElement("Class", className),
                     new XElement("Error", logMessage)
-                    );
+                    ));
 
                 xmlLog.Save(logFileName);
             }
