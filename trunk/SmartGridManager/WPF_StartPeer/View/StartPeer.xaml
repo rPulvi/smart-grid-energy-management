@@ -108,6 +108,9 @@
     		<MenuItem Header="File" Foreground="White">
                 <MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
     		</MenuItem>
+            <MenuItem Header="View" Foreground="White">
+                <MenuItem Header="Log" Foreground="blue" Command="{Binding ViewLog}"/>
+            </MenuItem>
     	</Menu>
     	<Image Grid.Column="1" Margin="0,24,12,-3.744" Source="/img/Home.png" Stretch="Fill" HorizontalAlignment="Right" Width="76"/>
     	<TextBlock Margin="0,24,92,0" TextWrapping="Wrap" FontSize="32" FontWeight="Bold" TextAlignment="Center" FontFamily="Segoe WP Black" Foreground="#FF172456" HorizontalAlignment="Right" VerticalAlignment="Center" Width="284" Grid.ColumnSpan="2"><Run Language="it-it" Text="Building Setup"/></TextBlock>

@@ -1,8 +1,10 @@
 ﻿<Application x:Class="WPF_StartPeer.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              StartupUri="View/StartPeer.xaml">
     <Application.Resources>
-         
+        <XmlDataProvider x:Key="logDataSource" 
+                         Source="C:\Users\Giuseppe\Documents\Visual Studio 2010\Projects\SmartGridManager\SmartGridManager\WPF_StartPeer\bin\Debug\log.xml"/>
     </Application.Resources>
 </Application>

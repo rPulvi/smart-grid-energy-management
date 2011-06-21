@@ -46,6 +46,7 @@ namespace WPF_StartPeer.ViewModel
         public DelegateCommand StartPeer { get; set; }
         public DelegateCommand SetProducer { get; set; }
         public DelegateCommand Exit { get; set; }
+        public DelegateCommand ViewLog { get; set; }
         #endregion
 
         public StartPeerViewModel()
@@ -64,6 +65,7 @@ namespace WPF_StartPeer.ViewModel
             this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canDo);
             this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canDo);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
+            this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
         }
 
         public string StartButton
@@ -84,6 +86,12 @@ namespace WPF_StartPeer.ViewModel
         public void Producer()
         {
             _status = PeerStatus.Producer;
+        }
+
+        public void Log()
+        {
+            View.LogView LogWindow = new View.LogView();
+            LogWindow.ShowDialog();
         }
 
         private bool canDo
