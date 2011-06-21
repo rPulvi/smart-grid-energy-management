@@ -123,4 +123,17 @@ namespace SmartGridManager.Core.Messaging
 
         public PeerIsDownMessage() { }
     }
+
+    [MessageContract]
+    public class RemoteEnergyRequest : StatusNotifyMessage
+    {
+        [MessageBodyMember]
+        public string IP { get; set; }
+
+        [MessageBodyMember]
+        public string port { get; set; }
+
+        public RemoteEnergyRequest() { }
+    }
+
 }
