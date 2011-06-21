@@ -8,10 +8,10 @@ using SmartGridManager.Core.Commons;
 using SmartGridManager.Core.Utils;
 
 namespace SmartGridManager.Core.P2P
-{    
-    public delegate void forwardRemoteMessage(PeerMessage m);
+{        
     public delegate void manageEnergyRequest(RemoteEnergyRequest m);
     public delegate void replyEnergyRequest(EndProposalMessage m);
+    public delegate void remotePeerIsDown(PeerIsDownMessage m);
 
     [ServiceContract]
     //[ServiceContract(CallbackContract = typeof(IPeerServices))]
@@ -21,32 +21,26 @@ namespace SmartGridManager.Core.P2P
         List<RemoteHost> RetrieveContactList();
 
         [OperationContract]
-        void ManageRemoteMessages(PeerMessage message);
-
-        [OperationContract]
         void ManageRemoteEnergyRequest(RemoteEnergyRequest message);
 
         [OperationContract]
         void ReplyEnergyRequest(EndProposalMessage message);
+
+        [OperationContract]
+        void PeerDownAlert(PeerIsDownMessage message);
     }
 
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class PeerServices : IPeerServices
-    {
-        public event forwardRemoteMessage OnForwardRemoteMessage;
+    {        
         public event manageEnergyRequest OnRemoteEnergyRequest;
         public event replyEnergyRequest OnRemoteEnergyReply;
+        public event remotePeerIsDown OnRemotePeerIsDown;
 
         public List<RemoteHost> RetrieveContactList()
         {
             return Tools.getRemoteHosts();
-        }
-
-        public void ManageRemoteMessages(PeerMessage message)
-        {
-            if (OnForwardRemoteMessage != null)
-                OnForwardRemoteMessage(message);
         }
 
         public void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
@@ -59,6 +53,12 @@ namespace SmartGridManager.Core.P2P
         {
             if (OnRemoteEnergyReply != null)
                 OnRemoteEnergyReply(message);
+        }
+
+        public void PeerDownAlert(PeerIsDownMessage message)
+        {
+            if (OnRemotePeerIsDown != null)
+                OnRemotePeerIsDown(message);        
         }
     }
 }

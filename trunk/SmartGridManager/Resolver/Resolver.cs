@@ -143,10 +143,10 @@ namespace Resolver
 
             remoteHost = new ServiceHost(remoteMessageHandler);
 
-            //To handle the remote traffic
-            remoteMessageHandler.OnForwardRemoteMessage += new forwardRemoteMessage(ForwardRemoteMessage);
+            //To handle the remote traffic            
             remoteMessageHandler.OnRemoteEnergyRequest += new manageEnergyRequest(ManageRemoteEnergyRequest);
             remoteMessageHandler.OnRemoteEnergyReply += new replyEnergyRequest(ManageRemoteEnergyReply);
+            remoteMessageHandler.OnRemotePeerIsDown += new remotePeerIsDown(RemotePeerIsDown);
 
             h = Tools.getRemoteHosts();
             
@@ -196,7 +196,6 @@ namespace Resolver
             return bRet;
         }
 
-        //To Resolver
         private void ForwardEnergyRequest(StatusNotifyMessage message)   
         {
             if (isRemoteConnected == true)
@@ -211,51 +210,9 @@ namespace Resolver
                         _messageList.Remove(t);
                     }
                 }
-                //move to message factory class
-                RemoteEnergyRequest mes = new RemoteEnergyRequest()
-                {
-                    enReqMessage = message,
-                    IP = Tools.getLocalIP(),
-                    port = "8082"
 
-                };
-
-                remoteChannel.ManageRemoteEnergyRequest(mes);
+                remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,Tools.getLocalIP(),"8082"));
             }
-        }
-
-        void ForwardEnergyReply(EndProposalMessage message)
-        {
-            message.header.Receiver = _originPeerName;
-            incomingConnection.ReplyEnergyRequest(message);            
-        }
-
-        //From Resolver
-        private void ForwardRemoteMessage(PeerMessage message)  
-        {
-            TransactionField t = new TransactionField();
-            t.ID = message.header.MessageID;
-            t.peerName = message.header.Sender;
-            
-            _messageList.Add(t);
-            
-            message.header.Sender = name;
-
-            if (message.header.Receiver == "Resolver")
-                message.header.Receiver = "@All";
-
-            if (message is StatusNotifyMessage)
-                Connector.channel.statusAdv((StatusNotifyMessage)message);
-            else if (message is EnergyProposalMessage)
-                Connector.channel.energyProposal((EnergyProposalMessage)message);
-            else if (message is EnergyAcceptMessage)
-                Connector.channel.acceptProposal((EnergyAcceptMessage)message);
-            else if (message is EndProposalMessage)
-                Connector.channel.endProposal((EndProposalMessage)message);
-            else if (message is HeartBeatMessage)
-                Connector.channel.heartBeat((HeartBeatMessage)message);
-            else if (message is PeerIsDownMessage)
-                Connector.channel.peerDown((PeerIsDownMessage)message);
         }
 
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
@@ -274,14 +231,23 @@ namespace Resolver
             incomingConnection = cf.CreateChannel();
             #endregion
 
-            StatusNotifyMessage mes = message.enReqMessage;
-
-            _broker.EnergyLookUp(mes);
+            _broker.EnergyLookUp(message.enReqMessage);
         }
 
-        void ManageRemoteEnergyReply(EndProposalMessage m)
+        void ForwardEnergyReply(EndProposalMessage message)
+        {
+            message.header.Receiver = _originPeerName;
+            incomingConnection.ReplyEnergyRequest(message);            
+        }        
+
+        void ManageRemoteEnergyReply(EndProposalMessage message)
         {            
-            Connector.channel.endProposal(m);
+            Connector.channel.endProposal(message);
+        }
+
+        private void RemotePeerIsDown(PeerIsDownMessage message)
+        {
+            Connector.channel.peerDown(message);
         }
 
         private void HelloResponse(HelloMessage message)
@@ -356,8 +322,8 @@ namespace Resolver
                     {
                         //Remove the deadly peer but first alert the folks.
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-                        remoteChannel.ManageRemoteMessages(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-                        
+                        incomingConnection.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+
                         _buildings.RemoveAt(i);                        
                     }
                 }

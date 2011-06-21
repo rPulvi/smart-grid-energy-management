@@ -122,5 +122,17 @@ namespace SmartGridManager.Core.Messaging
 
             return message;
         }
+
+        public static RemoteEnergyRequest createRemoteEnergyRequestMessage(StatusNotifyMessage energyRequestMessage, string resolverIP, string resolverPort)
+        {
+            RemoteEnergyRequest message = new RemoteEnergyRequest()
+            {
+                enReqMessage = energyRequestMessage,
+                IP = resolverIP,
+                port = resolverPort
+            };
+
+            return message;
+        }
     }
 }

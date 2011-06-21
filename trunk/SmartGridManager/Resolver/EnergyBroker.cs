@@ -31,8 +31,7 @@ namespace Resolver
             this.MsgHandler = Connector.messageHandler;
             this._name = resolverName;
 
-            MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
-            MsgHandler.OnEndProposalArrived += new endProposal(EndProposal);
+            MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);            
 
             _proposalCountdown = new System.Timers.Timer();            
             _proposalCountdown.Interval = 5000;
@@ -106,15 +105,6 @@ namespace Resolver
                     _enLookUp);
             
             Connector.channel.acceptProposal(respMessage);
-        }
-
-        private void EndProposal(EndProposalMessage message)
-        {
-            //if (message.header.Receiver == this._name)
-            //{
-            //    message.header.Receiver = _originPeerName;
-            //    Connector.channel.forwardEnergyReply(message);
-            //}
         }
 
         #endregion
