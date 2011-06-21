@@ -4,8 +4,104 @@
         Title="LogView" WindowStyle="ToolWindow" Background="#FF1F1F1F">        
 	
 	<Window.Resources>
+
+        <!--LIST STYLE-->
         
-        
+
+        <Style x:Key="{x:Type ListView}" TargetType="{x:Type ListView}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="white"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListView}">
+                        <Border x:Name="Border">
+                            <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Border" Property="Background" Value="#BBBBBB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ListViewItemContainerStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Background" Value="#ffffff" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border x:Name="Bd" Background="Transparent" SnapsToDevicePixels="true">
+                            <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected"  Value="true">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FF143c65" />
+                                <Setter Property="Background" TargetName="Bd">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                            <LinearGradientBrush.GradientStops>
+                                                <GradientStopCollection>
+                                                    <GradientStop Color="#FF75aac7" Offset="0"/>
+                                                    <GradientStop Color="#FF143c65" Offset="1"/>
+                                                </GradientStopCollection>
+                                            </LinearGradientBrush.GradientStops>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="Orange"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="true" />
+                                    <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                            <LinearGradientBrush.GradientStops>
+                                                <GradientStopCollection>
+                                                    <GradientStop Color="#FF75aac7" Offset="0"/>
+                                                    <GradientStop Color="#FF143c65" Offset="1"/>
+                                                </GradientStopCollection>
+                                            </LinearGradientBrush.GradientStops>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FF143c65"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--END LIST STYLE-->
+
         <Style x:Key="RectangleStyle" TargetType="{x:Type Rectangle}">
             <Setter Property="Fill" Value="White"/>
             <Setter Property="Opacity" Value="0.1"/>
@@ -34,7 +130,8 @@
     	<Grid Margin="10,2,10,0">
     		<Rectangle Style="{StaticResource ResourceKey=RectangleStyle}" Stroke="Black"/>
 
-            <ListView Margin="10" ItemsSource="{Binding Source={StaticResource logDataSource}, XPath=/PeerLog/LocalActivities/LogMessage}">
+            <ListView Margin="10" ItemsSource="{Binding Source={StaticResource logDataSource}, XPath=/PeerLog/LocalActivities/LogMessage}"
+                      ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}">
     			<ListView.View>
     				<GridView>
                         <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}"/>
