@@ -6,6 +6,7 @@ using SmartGridManager.Core.Messaging;
 using SmartGridManager.Core.Commons;
 using System.Xml;
 using System.Xml.Linq;
+using System.Net;
 
 
 namespace SmartGridManager.Core.Utils
@@ -27,7 +28,7 @@ namespace SmartGridManager.Core.Utils
             if (isNew == true) //Each session has a GUID
                 _MessageID = Guid.NewGuid();            
 
-            m = new StandardMessageHeader{ 
+            m = new StandardMessageHeader{
                 MessageID = _MessageID, 
                 Receiver = receiver,
                 Sender = sender,
@@ -77,6 +78,20 @@ namespace SmartGridManager.Core.Utils
         public static string getResolverName()
         {
             return XElement.Load("NetConfig.xml").Element("Name").Value;
+        }
+
+        public static string getLocalIP()
+        {
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+            string IPAddress = "0.0.0.0";
+
+            foreach (var ip in host.AddressList)
+            {
+                if (ip.AddressFamily.ToString() == "InterNetwork")
+                    IPAddress = ip.ToString();
+            }
+
+            return IPAddress;
         }
     }
 }
