@@ -37,7 +37,7 @@ namespace Resolver
         private ServiceHost remoteHost;
         //private IPeerServices remoteChannel;
         private IRemote remoteChannel;
-        private IRemote incomingConnection;
+        private List<RemoteConnection> _incomingConnections = new List<RemoteConnection>();
 
         private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
         private MessageHandler MsgHandler;
@@ -48,8 +48,7 @@ namespace Resolver
         private PeerStatus _peerStatus;
         private bool isLocalConnected;
         private bool isRemoteConnected;
-        private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
-        private List<TransactionField> _messageList = new List<TransactionField>();
+        private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();        
 
         private List<TempBuilding> hbrBuildingd = new List<TempBuilding>();
 
@@ -199,46 +198,71 @@ namespace Resolver
         private void ForwardEnergyRequest(StatusNotifyMessage message)   
         {
             if (isRemoteConnected == true)
-            {
-                if (_messageList.Count > 0)
-                {
-                    TransactionField t = getMessageByID(message.header.MessageID);
-
-                    if (t != null)
-                    {
-                        message.header.Sender = t.peerName;
-                        _messageList.Remove(t);
-                    }
-                }
-
-                remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,Tools.getLocalIP(),"8082"));
-            }
+                remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
+                    Tools.getLocalIP(),
+                    Tools.getResolverServicePort()
+                    ));
+            else
+                XMLLogger.WriteRemoteActivity("No Remote Connections. Please Check your NetConfig file.");
         }
 
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
         {
-            string address = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote";
+            RemoteConnection remConn;
 
-            _originPeerName = message.enReqMessage.header.Sender;
+            RequestField req = new RequestField()
+            {
+                ID = message.header.MessageID,
+                peerName = message.header.Sender
+            };
+
+            if (!ConnectionExists(message.IP, message.port))
+            {
+                string address = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote";
+
+                NetTcpBinding tcpBinding = new NetTcpBinding();
+                EndpointAddress remoteEndpoint = new EndpointAddress(address);
+                tcpBinding.Security.Mode = SecurityMode.None;
+
+                ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+                IRemote tChannel = cf.CreateChannel();
+
+                remConn = new RemoteConnection()
+                {
+                    channel = tChannel,
+                    IP = message.IP,
+                    port = message.port
+                };
+            }
+            else
+            {
+                remConn = GetConnection(message.IP, message.port);
+                remConn.requests.Add(req);
+            }
+
+            _incomingConnections.Add(remConn);
+
             message.enReqMessage.header.Sender = this.name;
-
-            #region Create an Incoming Connection
-            NetTcpBinding tcpBinding = new NetTcpBinding();
-            EndpointAddress remoteEndpoint = new EndpointAddress(address);
-            tcpBinding.Security.Mode = SecurityMode.None;
-
-            ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
-            incomingConnection = cf.CreateChannel();
-            #endregion
-
             _broker.EnergyLookUp(message.enReqMessage);
         }
 
         void ForwardEnergyReply(EndProposalMessage message)
         {
-            message.header.Receiver = _originPeerName;
-            incomingConnection.ReplyEnergyRequest(message);            
-        }        
+            RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);
+            RequestField req = GetRequestByMessageID(message.header.MessageID);
+
+            if (conn != null && req != null)
+            {
+                message.header.Receiver = req.peerName;
+                conn.channel.ReplyEnergyRequest(message);
+
+                _incomingConnections.Remove(conn);
+            }
+            else
+            {
+                XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Could not find the following message: " + message.header.MessageID);
+            }
+        }
 
         void ManageRemoteEnergyReply(EndProposalMessage message)
         {            
@@ -277,22 +301,6 @@ namespace Resolver
             Connector.channel.HelloResponse(MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName()));
         }
 
-        private TransactionField getMessageByID(Guid ID)
-        {
-            TransactionField t = null;
-
-            for (int i = 0; i < _messageList.Count; i++)
-            {
-                if (_messageList[i].ID == ID)
-                {
-                    t = _messageList[i];
-                    break;
-                }
-            }
-
-            return t;
-        }
-
         public ObservableCollectionEx<TempBuilding> GetConnectedPeers()
         {
             return _buildings;
@@ -322,7 +330,8 @@ namespace Resolver
                     {
                         //Remove the deadly peer but first alert the folks.
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-                        incomingConnection.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        // TODO: fix if condition
+                        //_incomingConnections.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
 
                         _buildings.RemoveAt(i);                        
                     }
@@ -373,13 +382,87 @@ namespace Resolver
 
             StopService(); //Calls the base.StopService method
         }
+
+
+        private bool ConnectionExists(string IP, string port)
+        {
+            bool bRet = false;
+
+            var found = from c in _incomingConnections
+                        where c.IP == IP && c.port == port
+                        select c;
             
+            if (found.Count() > 0)
+                bRet = true;
+
+            //foreach (var c in _incomingConnections)
+            //{
+            //    if (c.IP == IP && c.port == port)
+            //    {
+            //        bRet = true;
+            //        break;
+            //    }
+            //}
+
+            return bRet;
+        }
+
+        private RemoteConnection GetConnection(string IP, string port)
+        {
+            var found = from c in _incomingConnections
+                        where c.IP == IP && c.port == port
+                        select c;
+            
+            return (RemoteConnection)found;
+        }
+
+        private RemoteConnection GetConnectionByMessageID(Guid ID)
+        {
+            foreach (var c in _incomingConnections)
+            {
+                foreach (var r in c.requests)
+                {
+                    if (r.ID == ID)
+                    {
+                        return c;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        private RequestField GetRequestByMessageID(Guid ID)
+        {
+            foreach (var c in _incomingConnections)
+            {
+                foreach (var r in c.requests)
+                {
+                    if (r.ID == ID)
+                    {
+                        return r;
+                        break;
+                    }
+                }
+            }
+
+            return null;            
+        }
+
         #endregion
 
-        private class TransactionField
+        private class RequestField
         {
             public Guid ID;
             public string peerName;
         }
+
+        private class RemoteConnection
+        {
+            public IRemote channel;
+            public List<RequestField> requests;
+            public string IP;
+            public string port;
+        }    
     }
 }
