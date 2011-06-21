@@ -211,8 +211,12 @@ namespace Resolver
                         _messageList.Remove(t);
                     }
                 }
+                //move to message factory class
+                RemoteEnergyRequest mes = (RemoteEnergyRequest)message;
+                mes.IP = Tools.getLocalIP();
+                mes.port = "8082";
 
-                remoteChannel.ManageRemoteEnergyRequest(message,Tools.getLocalIP(),"8082");
+                remoteChannel.ManageRemoteEnergyRequest(mes);
             }
         }
 
@@ -250,9 +254,9 @@ namespace Resolver
                 Connector.channel.peerDown((PeerIsDownMessage)message);
         }
 
-        private void ManageRemoteEnergyRequest(StatusNotifyMessage message, string IP, string port)
+        private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
         {
-            string address = @"net.tcp://" + IP + ":" + port + @"/Remote";
+            string address = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote";
 
             _originPeerName = message.header.Sender;
             message.header.Sender = this.name;
@@ -265,8 +269,10 @@ namespace Resolver
             ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
             incomingConnection = cf.CreateChannel();
             #endregion
-                       
-            _broker.EnergyLookUp(message);
+
+            StatusNotifyMessage mes = (StatusNotifyMessage)message;
+
+            _broker.EnergyLookUp(mes);
         }
 
         void ManageRemoteEnergyReply(EndProposalMessage m)
