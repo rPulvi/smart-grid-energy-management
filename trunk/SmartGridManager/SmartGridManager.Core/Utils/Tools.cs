@@ -21,18 +21,34 @@ namespace SmartGridManager.Core.Utils
         /// <param name="receiver">message receiver</param>
         /// <param name="sender">message sender</param>
         /// <returns>the message header</returns>
-        public static StandardMessageHeader getHeader(String receiver, String sender, bool isNew=false )
+        public static StandardMessageHeader getHeader(String receiver, String sender)
         { 
             StandardMessageHeader m;            
-
-            if (isNew == true) //Each session has a GUID
-                _MessageID = Guid.NewGuid();            
+            
+            _MessageID = Guid.NewGuid();
 
             m = new StandardMessageHeader{
                 MessageID = _MessageID, 
                 Receiver = receiver,
                 Sender = sender,
                 TimeStamp = DateTime.Now };
+
+            return m;
+        }
+
+        public static StandardMessageHeader getHeader(String receiver, String sender, Guid SessionMessageID)
+        {
+            StandardMessageHeader m;
+
+            _MessageID = SessionMessageID;
+
+            m = new StandardMessageHeader
+            {
+                MessageID = _MessageID,
+                Receiver = receiver,
+                Sender = sender,
+                TimeStamp = DateTime.Now
+            };
 
             return m;
         }

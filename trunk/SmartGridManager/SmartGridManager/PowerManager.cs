@@ -144,10 +144,12 @@ namespace SmartGridManager
                     if (enAvailable >= message.energyReq)
                     {
                         EnergyProposalMessage respMessage = MessageFactory.createEnergyProposalMessage(
+                            message.header.MessageID,
                             message.header.Sender,
                             _name,
                             message.energyReq,
-                            _price);
+                            _price
+                            );
                         
                         Connector.channel.energyProposal(respMessage);
                     }
@@ -205,6 +207,7 @@ namespace SmartGridManager
             XMLLogger.WriteLocalActivity("Il prezzo minore è fornito da " + m.header.Sender + " ed è " + m.price);            
 
             EnergyAcceptMessage respMessage = MessageFactory.createEnergyAcceptMessage(
+                    m.header.MessageID,
                     m.header.Sender,
                     _name,
                     _enPeak - (getEnergyLevel() + _enBought));
@@ -232,6 +235,7 @@ namespace SmartGridManager
                 }
 
                 EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(
+                    message.header.MessageID,
                     message.header.Sender,
                     _name,
                     status,
