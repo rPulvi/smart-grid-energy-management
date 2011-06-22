@@ -41,8 +41,6 @@ namespace Resolver
 
         public void EnergyLookUp(StatusNotifyMessage message)
         {
-            //_originPeerName = message.header.Sender;
-            //message.header.Sender = this._name;
             _enLookUp = message.energyReq;
 
             Connector.channel.statusAdv(message);
@@ -100,6 +98,7 @@ namespace Resolver
             XMLLogger.WriteLocalActivity("Il prezzo minore è fornito da " + m.header.Sender + " ed è " + m.price);            
 
             EnergyAcceptMessage respMessage = MessageFactory.createEnergyAcceptMessage(
+                    m.header.MessageID,
                     m.header.Sender,
                     _name,
                     _enLookUp);

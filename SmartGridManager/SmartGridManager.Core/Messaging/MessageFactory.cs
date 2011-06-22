@@ -43,7 +43,7 @@ namespace SmartGridManager.Core.Messaging
         {
             StatusNotifyMessage message = new StatusNotifyMessage()
             {
-                header = Tools.getHeader(dest, source, true),
+                header = Tools.getHeader(dest, source),
                 status = peerStatus,
                 energyReq = enReq
             };
@@ -51,11 +51,11 @@ namespace SmartGridManager.Core.Messaging
             return message;
         }
 
-        public static EnergyProposalMessage createEnergyProposalMessage(string dest, string source, float enReq, float enPrice)
+        public static EnergyProposalMessage createEnergyProposalMessage(Guid SessionID, string dest, string source, float enReq, float enPrice)
         {
             EnergyProposalMessage message = new EnergyProposalMessage()
             {
-                header = Tools.getHeader(dest, source),
+                header = Tools.getHeader(dest, source, SessionID),
                 /* TODO: Optimization required
                 //If peer's energy is >= the request, give the requested energy, otherwise give the en. available
                 energyAvailable = energyAvailable >= message.energyReq ? message.energyReq : energyAvailable,
@@ -67,22 +67,22 @@ namespace SmartGridManager.Core.Messaging
             return message;
         }
 
-        public static EnergyAcceptMessage createEnergyAcceptMessage(string dest, string source, float qEnergy)
+        public static EnergyAcceptMessage createEnergyAcceptMessage(Guid SessionID, string dest, string source, float qEnergy)
         {
             EnergyAcceptMessage message = new EnergyAcceptMessage()
             {
-                header = Tools.getHeader(dest, source),
+                header = Tools.getHeader(dest, source, SessionID),
                 energy = qEnergy
             };
 
             return message;
         }
 
-        public static EndProposalMessage createEndProposalMessage(string dest, string source, bool status, float qEnergy)
+        public static EndProposalMessage createEndProposalMessage(Guid SessionID, string dest, string source, bool status, float qEnergy)
         {
             EndProposalMessage message = new EndProposalMessage()
             {
-                header = Tools.getHeader(dest, source),
+                header = Tools.getHeader(dest, source,SessionID),
                 endStatus = status,
                 energy = qEnergy
             };
