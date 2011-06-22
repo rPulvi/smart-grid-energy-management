@@ -229,7 +229,7 @@ namespace Resolver
                 };
             }
 
-            remConn.requests.Add(message.header.MessageID, message.header.Sender);
+            remConn.requests.Add(message.enReqMessage.header.MessageID, message.enReqMessage.header.Sender);
 
             _incomingConnections.Add(remConn);
 
