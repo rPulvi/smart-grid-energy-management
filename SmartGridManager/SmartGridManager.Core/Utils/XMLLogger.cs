@@ -11,31 +11,11 @@ namespace SmartGridManager.Core.Utils
     public static class XMLLogger
     {
         private static XDocument xmlLog;
-        private static string logFileName;
-
-        public static void InitLogFile(string peerName)
-        {            
-            logFileName = "log.xml";
-
-            if (!File.Exists (logFileName))
-            {
-                xmlLog = new XDocument(
-                    new XDeclaration("1.0", "utf-8", "yes"),
-                    new XElement("PeerLog",
-                        new XAttribute("Name", peerName),
-                    new XElement("LocalActivities"),
-                    new XElement("RemoteActivities"),
-                    new XElement("ErrorMessages")
-                    ));
-
-                xmlLog.Save(logFileName);
-            }
-
-            xmlLog = XDocument.Load(logFileName);            
-        }
 
         public static void WriteLocalActivity(string logMessage)
         {
+            xmlLog = XDocument.Load("log.xml");
+
             try
             {
                 xmlLog.Root.Element("LocalActivities").Add(
@@ -44,7 +24,7 @@ namespace SmartGridManager.Core.Utils
                     new XElement("Message", logMessage)
                     ));
 
-                xmlLog.Save(logFileName);
+                xmlLog.Save("log.xml");
             }
             catch(Exception e)
             {
@@ -54,6 +34,8 @@ namespace SmartGridManager.Core.Utils
 
         public static void WriteRemoteActivity(string logMessage)
         {
+            xmlLog = XDocument.Load("log.xml");
+
             try
             {
                 xmlLog.Root.Element("RemoteActivities").Add(
@@ -62,7 +44,7 @@ namespace SmartGridManager.Core.Utils
                     new XElement("Message", logMessage)
                     ));
 
-                xmlLog.Save(logFileName);
+                xmlLog.Save("log.xml");
             }
             catch (Exception e)
             {
@@ -72,6 +54,8 @@ namespace SmartGridManager.Core.Utils
 
         public static void WriteErrorMessage(string className, string logMessage)
         {
+            xmlLog = XDocument.Load("log.xml");
+
             try
             {
                 xmlLog.Root.Element("ErrorMessages").Add(
@@ -81,7 +65,7 @@ namespace SmartGridManager.Core.Utils
                     new XElement("Error", logMessage)
                     ));
 
-                xmlLog.Save(logFileName);
+                xmlLog.Save("log.xml");
             }
             catch (Exception e)
             {
