@@ -10,7 +10,7 @@
         xmlns:System_Windows_Controls_DataVisualization_Charting_Primitives="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit" 
         xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" 
         x:Name="window" x:Class="WPF_Resolver.MainWindow"
-        Title="Resolver"
+        Title="SmartGrid Manager - Resolver"
         WindowState="Maximized" Icon="/img/Energy-icon.ico" mc:Ignorable="d">
 	
 	<Window.Resources>
@@ -86,7 +86,7 @@
                     <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="2"/>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Foreground" Value="darkblue"/>
+            <Setter Property="Foreground" Value="CadetBlue"/>
             <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
             <Setter Property="Width" Value="50"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -979,6 +979,7 @@
 		</Style>
         
 	</Window.Resources>
+    
 	<Window.Background>
 		<RadialGradientBrush>
 			<GradientStop Color="#FF005174" Offset="1"/>
