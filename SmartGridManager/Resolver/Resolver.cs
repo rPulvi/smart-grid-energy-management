@@ -206,15 +206,11 @@ namespace Resolver
 
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
         {
-            RemoteConnection remConn;
+            RemoteConnection remConn;            
 
-            RequestField req = new RequestField()
-            {
-                ID = message.header.MessageID,
-                peerName = message.header.Sender
-            };
+            remConn = GetConnection(message.IP, message.port);
 
-            if (!ConnectionExists(message.IP, message.port))
+            if (remConn == null)//If entry doesn't exist
             {
                 string address = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote";
 
@@ -232,29 +228,29 @@ namespace Resolver
                     port = message.port
                 };
             }
-            else
-            {
-                remConn = GetConnection(message.IP, message.port);
-                remConn.requests.Add(req);
-            }
+
+            remConn.requests.Add(message.header.MessageID, message.header.Sender);
 
             _incomingConnections.Add(remConn);
 
+            //Header handling
             message.enReqMessage.header.Sender = this.name;
+            
             _broker.EnergyLookUp(message.enReqMessage);
         }
 
         void ForwardEnergyReply(EndProposalMessage message)
         {
-            RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);
-            RequestField req = GetRequestByMessageID(message.header.MessageID);
+            //TODO: Fix logic here.
+            RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);            
 
-            if (conn != null && req != null)
+            if (conn != null)
             {
-                message.header.Receiver = req.peerName;
+                //Header re-handling
+                message.header.Receiver = conn.requests[message.header.MessageID];
                 conn.channel.ReplyEnergyRequest(message);
 
-                _incomingConnections.Remove(conn);
+                RemoveRequestEntry(message.header.MessageID);
             }
             else
             {
@@ -328,8 +324,9 @@ namespace Resolver
                     {
                         //Remove the deadly peer but first alert the folks.
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-                        // TODO: fix if condition
-                        //_incomingConnections.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        // TODO: fix here                        
+                        foreach (var c in _incomingConnections)
+                            c.channel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
 
                         _buildings.RemoveAt(i);                        
                     }
@@ -381,30 +378,6 @@ namespace Resolver
             StopService(); //Calls the base.StopService method
         }
 
-
-        private bool ConnectionExists(string IP, string port)
-        {
-            bool bRet = false;
-
-            var found = from c in _incomingConnections
-                        where c.IP == IP && c.port == port
-                        select c;
-            
-            if (found.Count() > 0)
-                bRet = true;
-
-            //foreach (var c in _incomingConnections)
-            //{
-            //    if (c.IP == IP && c.port == port)
-            //    {
-            //        bRet = true;
-            //        break;
-            //    }
-            //}
-
-            return bRet;
-        }
-
         private RemoteConnection GetConnection(string IP, string port)
         {
             var found = from c in _incomingConnections
@@ -418,47 +391,34 @@ namespace Resolver
         {
             foreach (var c in _incomingConnections)
             {
-                foreach (var r in c.requests)
-                {
-                    if (r.ID == ID)
-                    {
-                        return c;
-                    }
-                }
+                if(c.requests.ContainsKey(ID))                
+                    return c;
             }
 
             return null;
         }
 
-        private RequestField GetRequestByMessageID(Guid ID)
-        {
-            foreach (var c in _incomingConnections)
+        private void RemoveRequestEntry(Guid ID)
+        {           
+            for(int i=0;i<_incomingConnections.Count;i++)
             {
-                foreach (var r in c.requests)
+                if (_incomingConnections[i].requests.ContainsKey(ID))
+                    _incomingConnections[i].requests.Remove(ID);
+
+                if (_incomingConnections[i].requests.Count == 0)
                 {
-                    if (r.ID == ID)
-                    {
-                        return r;
-                        break;
-                    }
+                    _incomingConnections[i].channel.Close();
+                    _incomingConnections.RemoveAt(i);
                 }
             }
-
-            return null;            
         }
 
         #endregion
 
-        private class RequestField
-        {
-            public Guid ID;
-            public string peerName;
-        }
-
         private class RemoteConnection
         {
-            public IRemote channel;
-            public List<RequestField> requests;
+            public IRemote channel;            
+            public Dictionary<Guid, string> requests = new Dictionary<Guid,string>();
             public string IP;
             public string port;
         }    
