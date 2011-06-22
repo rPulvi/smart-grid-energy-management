@@ -979,10 +979,16 @@
 		</Style>
         
 	</Window.Resources>
-	
 	<Window.Background>
-		<ImageBrush ImageSource="/img/wallpaper.jpg"/>
+		<RadialGradientBrush>
+			<GradientStop Color="#FF005174" Offset="1"/>
+			<GradientStop Color="#FF8ADCFF"/>
+		</RadialGradientBrush>
 	</Window.Background>
+	
+	<!--<Window.Background>
+		<ImageBrush ImageSource="/img/wallpaper.jpg"/>
+	</Window.Background>-->
     
 	<Grid>
 		
