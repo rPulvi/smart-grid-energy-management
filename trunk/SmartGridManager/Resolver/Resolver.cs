@@ -240,8 +240,7 @@ namespace Resolver
         }
 
         void ForwardEnergyReply(EndProposalMessage message)
-        {
-            //TODO: Fix logic here.
+        {            
             RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);            
 
             if (conn != null)
@@ -380,11 +379,18 @@ namespace Resolver
 
         private RemoteConnection GetConnection(string IP, string port)
         {
-            var found = from c in _incomingConnections
-                        where c.IP == IP && c.port == port
-                        select c;
-            
-            return (RemoteConnection)found;
+            RemoteConnection cRet = null;
+
+            foreach (var c in _incomingConnections)
+            {
+                if (c.IP == IP && c.port == port)
+                {
+                    cRet = c;
+                    break;
+                }
+            }
+
+            return cRet;
         }
 
         private RemoteConnection GetConnectionByMessageID(Guid ID)
