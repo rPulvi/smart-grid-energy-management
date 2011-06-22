@@ -10,7 +10,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using WPF_StartPeer.ViewModel;
 
 namespace WPF_StartPeer.View
 {
@@ -19,15 +18,9 @@ namespace WPF_StartPeer.View
     /// </summary>
     public partial class LogView : Window
     {
-        LogViewModel lvm;
-
         public LogView()
         {
             InitializeComponent();
-
-            this.lvm = new LogViewModel();
-
-            base.DataContext = lvm;
         }
     }
 }

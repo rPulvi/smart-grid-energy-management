@@ -336,7 +336,7 @@ namespace WPF_Resolver.ViewModel
             _resolverIP = "IP:  " + _ipHost;
 
             _resolverName = "Starting...";
-            this.OnPropertyChanged("GetResolverName");
+            OnPropertyChanged("GetResolverName");
 
             OnPropertyChanged("SetVisibilityLocal");
 

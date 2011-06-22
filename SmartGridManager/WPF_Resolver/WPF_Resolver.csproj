@@ -75,7 +75,6 @@
     </ApplicationDefinition>
     <Compile Include="Util\MouseClickBehavior.cs" />
     <Compile Include="Util\GridViewSort.cs" />
-    <Compile Include="ViewModel\LogViewModel.cs" />
     <Compile Include="ViewModel\ResolverViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Page Include="View\LogView.xaml">

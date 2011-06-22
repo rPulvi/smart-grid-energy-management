@@ -12,7 +12,7 @@ using WPF_StartPeer.Command;
 
 namespace WPF_StartPeer.ViewModel
 {
-    class StartPeerViewModel : INotifyPropertyChanged
+    class StartPeerViewModel : ViewModelBase
     {
         #region Attributes
         
@@ -74,7 +74,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _startButton = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+                OnPropertyChanged("StartButton");
             }
         }
 
@@ -105,7 +105,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _name = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Nome"));
+                OnPropertyChanged("Nome");
             }
         }
          
@@ -115,7 +115,7 @@ namespace WPF_StartPeer.ViewModel
             set 
             {
                 _enProduced = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("EnProduced"));
+                OnPropertyChanged("EnProduced");
             }
         }
 
@@ -125,7 +125,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _enType = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Energia"));
+                OnPropertyChanged("Energia");
             }
         }
 
@@ -135,7 +135,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _enPeak = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("EnPeak"));
+                OnPropertyChanged("EnPeak");
             }
         }
 
@@ -145,7 +145,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _price = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Price"));
+                OnPropertyChanged("Price");
             }
         }
 
@@ -155,7 +155,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _address = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Address"));
+                OnPropertyChanged("Address");
             }
         }
         
@@ -165,7 +165,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _admin = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Admin"));
+                OnPropertyChanged("Admin");
             }
         }
 
@@ -175,7 +175,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _imgPath = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+                OnPropertyChanged("Path");
             }
         }
 
@@ -185,7 +185,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _startButtonIconPath = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+                OnPropertyChanged("StartButtonIconPath");
             }
         }
 
@@ -195,7 +195,7 @@ namespace WPF_StartPeer.ViewModel
             set
             {
                 _peerStatus = value;
-                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+                OnPropertyChanged("GetPeerStatus");
             }
         }
 
@@ -236,16 +236,16 @@ namespace WPF_StartPeer.ViewModel
                 house.Start();
 
                 _imgPath = @"/WPF_StartPeer;component/img/online.png";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+                OnPropertyChanged("Path");
 
                 _peerStatus = "Online...";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+                OnPropertyChanged("GetPeerStatus");
 
                 _startButtonIconPath = @"/WPF_StartPeer;component/img/connected.png";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+                OnPropertyChanged("StartButtonIconPath");
 
                 _startButton = "Disconnect";
-                this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
+                OnPropertyChanged("StartButton");
 
                 _isStartable = false;
             }
@@ -267,29 +267,18 @@ namespace WPF_StartPeer.ViewModel
                 house.StopEnergyProduction();
 
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButtonIconPath"));
+            OnPropertyChanged("StartButtonIconPath");
 
             _imgPath = @"/WPF_StartPeer;component/img/offline.png";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("Path"));
+            OnPropertyChanged("Path");
 
             _peerStatus = "Offline...";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("GetPeerStatus"));
+            OnPropertyChanged("GetPeerStatus");
 
             _isStartable = true;
 
             _startButton = "Connect";
-            this.OnPropertyChanged(new PropertyChangedEventArgs("StartButton"));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            OnPropertyChanged("StartButton");
         }
 
         private bool checkFields()

@@ -74,7 +74,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Command\DelegateCommand.cs" />
-    <Compile Include="ViewModel\LogViewModel.cs" />
     <Compile Include="ViewModel\StartPeerViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\LogView.xaml.cs">
