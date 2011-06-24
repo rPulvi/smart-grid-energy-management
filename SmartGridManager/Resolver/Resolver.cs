@@ -253,10 +253,11 @@ namespace Resolver
         {            
             RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);
 
+            XMLLogger.WriteRemoteActivity("Forwarding Remote Response about message: " + message.header.MessageID + " Status = " + message.endStatus);
+            XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
+
             if (conn != null)
-            {
-                XMLLogger.WriteRemoteActivity("Forwarding Remote Response about message: " + message.header.MessageID + " Status = " + message.endStatus);
-                XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
+            {                
 
                 //Header re-handling
                 message.header.Receiver = conn.requests[message.header.MessageID];

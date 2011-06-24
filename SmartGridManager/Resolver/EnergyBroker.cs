@@ -43,6 +43,8 @@ namespace Resolver
         {
             _enLookUp = message.energyReq;
 
+            XMLLogger.WriteRemoteActivity("Broker is serving: " + message.header.MessageID + " session.");
+
             Connector.channel.statusAdv(message);
 
             _proposalCountdown.Enabled = true;
