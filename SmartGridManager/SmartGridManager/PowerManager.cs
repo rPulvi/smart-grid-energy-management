@@ -81,7 +81,7 @@ namespace SmartGridManager
             _proposalCountdown.Enabled = false;
 
             _heartBeatTimer = new System.Timers.Timer();
-            _heartBeatTimer.Enabled = true;
+            _heartBeatTimer.Enabled = false;
             _heartBeatTimer.Interval = 3000;
             _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);
             _heartBeatTimer.Start();
@@ -98,6 +98,7 @@ namespace SmartGridManager
         public void Start()
         {
             _mainTimer.Enabled = true;
+            _heartBeatTimer.Enabled = true;
         }
 
         /// <summary>
