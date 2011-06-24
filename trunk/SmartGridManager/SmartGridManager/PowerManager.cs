@@ -182,7 +182,14 @@ namespace SmartGridManager
                 if (_proposalTimeout > 2)  //Go Outbound
                 {
                     float enReq = _enPeak - (getEnergyLevel() + _enBought);
-                    Connector.channel.forwardEnergyRequest(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq));
+
+                    XMLLogger.WriteRemoteActivity("Going Outside to find " + enReq + " KW/h");
+
+                    StatusNotifyMessage mes = MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq);
+
+                    XMLLogger.WriteRemoteActivity("Message ID: " + mes.header.MessageID);
+
+                    Connector.channel.forwardEnergyRequest(mes);
                     messageSent = true;
 
                     _proposalTimeout = 0;
@@ -226,7 +233,10 @@ namespace SmartGridManager
                 {
                     status = true;
                     _enSold += message.energy;
-                    
+
+                    XMLLogger.WriteLocalActivity("Ok, " + message.energy + " KW/h sold to " + message.header.Sender);
+                    XMLLogger.WriteLocalActivity("Message ID: " + message.header.MessageID);
+
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
                     _consumers.Add(link);
 
@@ -256,6 +266,9 @@ namespace SmartGridManager
                 if (message.endStatus == true)
                 {
                     _enBought += message.energy;
+
+                    XMLLogger.WriteLocalActivity("Energy received from " + message.header.Sender);
+                    XMLLogger.WriteLocalActivity("Message ID: " + message.header.MessageID);
 
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
                     _producers.Add(link);
