@@ -235,11 +235,12 @@ namespace Resolver
                     IP = message.IP,
                     port = message.port
                 };
+
+                remConn.requests.Add(message.enReqMessage.header.MessageID, message.enReqMessage.header.Sender);
+                _incomingConnections.Add(remConn);
             }
-
-            remConn.requests.Add(message.enReqMessage.header.MessageID, message.enReqMessage.header.Sender);
-
-            _incomingConnections.Add(remConn);
+            else
+                remConn.requests.Add(message.enReqMessage.header.MessageID, message.enReqMessage.header.Sender);
 
             //Header handling
             message.enReqMessage.header.Sender = this.name;
@@ -281,7 +282,7 @@ namespace Resolver
 
         private void HelloResponse(HelloMessage message)
         {
-            //Elaborate the Hello Message
+            //Elaborates the Hello Message
             TempBuilding b = new TempBuilding();
 
             #region setting fields
