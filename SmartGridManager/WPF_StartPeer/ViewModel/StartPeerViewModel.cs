@@ -24,6 +24,7 @@ namespace WPF_StartPeer.ViewModel
         private string _startButtonIconPath;
         private string _peerStatus;
 
+        private bool _formEnabled;
         private bool _isStartable = true;
 
         private float _enPeak;
@@ -57,6 +58,9 @@ namespace WPF_StartPeer.ViewModel
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
             _peerStatus = "Offline...";
 
+            _formEnabled = true;
+            OnPropertyChanged("FormEnabled");
+
             _startButton = "Connect";
 
             _status = PeerStatus.Consumer;
@@ -78,6 +82,16 @@ namespace WPF_StartPeer.ViewModel
             }
         }
 
+        public bool FormEnabled
+        {
+            get { return _formEnabled; }
+            set
+            {
+                _formEnabled = value;
+                OnPropertyChanged("FormEnabled");
+            }
+        }
+
         public void Start()
         {
             CreateBuilding();
@@ -85,7 +99,17 @@ namespace WPF_StartPeer.ViewModel
 
         public void Producer()
         {
-            _status = PeerStatus.Producer;
+            if (_status == PeerStatus.Consumer)
+                _status = PeerStatus.Producer;
+            else
+            {
+                _status = PeerStatus.Consumer;
+                _enType = EnergyType.None;
+                _price = 0;
+
+                OnPropertyChanged("EnType");
+                OnPropertyChanged("Price");
+            }
         }
 
         public void Log()
@@ -248,6 +272,9 @@ namespace WPF_StartPeer.ViewModel
                 OnPropertyChanged("StartButton");
 
                 _isStartable = false;
+
+                _formEnabled = false;
+                OnPropertyChanged("FormEnabled");
             }
             else
             {
@@ -263,6 +290,8 @@ namespace WPF_StartPeer.ViewModel
 
         public void Disconnect()
         {
+            _isStartable = true;
+
             if(house != null)
                 house.StopEnergyProduction();
 
@@ -274,11 +303,12 @@ namespace WPF_StartPeer.ViewModel
 
             _peerStatus = "Offline...";
             OnPropertyChanged("GetPeerStatus");
-
-            _isStartable = true;
-
+            
             _startButton = "Connect";
             OnPropertyChanged("StartButton");
+
+            _formEnabled = true;
+            OnPropertyChanged("FormEnabled");
         }
 
         private bool checkFields()

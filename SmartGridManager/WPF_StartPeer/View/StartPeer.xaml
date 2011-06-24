@@ -9,7 +9,7 @@
 		Icon="/img/Home.ico" ResizeMode="NoResize">
 	
 	<Window.Resources>
-		
+	
 		<Style x:Key="StileTextBlock" TargetType="{x:Type TextBlock}">
 			<Setter Property="FontWeight" Value="SemiBold"/>
 			<Setter Property="FontSize" Value="13"/>
@@ -150,81 +150,93 @@
 			</StackPanel>
 		</Grid>
 		<Grid Margin="0" Grid.Row="2">
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
 			<Rectangle Margin="5,0,5,-8" Stroke="Black" RadiusX="15" RadiusY="15" Opacity="0.095">
 				<Rectangle.Fill>
 					<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}"/>
 				</Rectangle.Fill>
 			</Rectangle>
 			<StackPanel Margin="17,8,20,2">
-				<Grid Margin="0,0,0,5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Name:"/></TextBlock>
-					<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Nome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtNome" Margin="0" TextWrapping="Wrap" BorderThickness="1,1,1,0" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
-				</Grid>
-				<Grid Margin="0,0,0,5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock Margin="0,0,2,0" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}" FontSize="13.333" d:LayoutOverrides="Height" VerticalAlignment="Center"><Run Language="it-it" Text="State:"/></TextBlock>
-					<CheckBox Command="{Binding SetProducer}" x:Name="chkProducer" Content="Producer" Margin="2,0,0,0" Foreground="darkgray" FontFamily="Calibri" VerticalAlignment="Center" Grid.Column="1"/>
-				</Grid>
-				<Grid Margin="0,0,0,5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Tipe:"/></TextBlock>
-					<ComboBox IsEnabled="{Binding IsChecked, ElementName=chkProducer}" SelectedValue="{Binding EnType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" Width="150" x:Name="cmbEnergyType" Margin="2,0,0,0" Grid.Column="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">
-						<ComboBoxItem Content="Solare" Tag="1"/>
-						<ComboBoxItem Content="Eolica" Tag="2"/>
-						<ComboBoxItem Content="Idrica" Tag="3"/>
-						<ComboBoxItem Content="Termica" Tag="4"/>
-					</ComboBox>
-				</Grid>
-				<Grid Margin="0,0,0,5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Peak(KW/h):"/></TextBlock>
-					<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnPeak, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPicco" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
-				</Grid>
-				<Grid Margin="0,0,0,5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Price (€):"/></TextBlock>
-					<TextBox Style="{StaticResource myTextBoxStyle}" IsEnabled="{Binding IsChecked, ElementName=chkProducer}" Text="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPrezzo" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
-				</Grid>
-				<Grid Margin="0,0,0,5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Produced(KW/h):"/></TextBlock>
-					<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnProduced, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtEnergiaGeneratore" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
-				</Grid>
-				<Grid Margin="0,0,0,5">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Address:"/></TextBlock>
-					<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtIndirizzo" Margin="0" TextWrapping="Wrap" Height="22.744" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
-				</Grid>
-				<Grid Margin="0">
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="0.4*"/>
-						<ColumnDefinition Width="0.6*"/>
-					</Grid.ColumnDefinitions>
-					<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Administrator:"/></TextBlock>
-					<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Admin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtAdministrator" Height="23" Margin="0" TextWrapping="Wrap" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
-				</Grid>
+
+
+
+                <StackPanel Orientation="Vertical" IsEnabled="{Binding FormEnabled}">
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Name:"/></TextBlock>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Nome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtNome" Margin="0" TextWrapping="Wrap" BorderThickness="1,1,1,0" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock Margin="0,0,2,0" TextWrapping="Wrap" HorizontalAlignment="Right" Style="{DynamicResource StileTextBlock}" FontSize="13.333" d:LayoutOverrides="Height" VerticalAlignment="Center"><Run Language="it-it" Text="State:"/></TextBlock>
+						<CheckBox Command="{Binding SetProducer}" x:Name="chkProducer" Content="Producer" Margin="2,0,0,0" Foreground="darkgray" FontFamily="Calibri" VerticalAlignment="Center" Grid.Column="1"/>
+					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Tipe:"/></TextBlock>
+						<ComboBox IsEnabled="{Binding IsChecked, ElementName=chkProducer}" SelectedValue="{Binding EnType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" Width="150" x:Name="cmbEnergyType" Margin="2,0,0,0" Grid.Column="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">
+							<ComboBoxItem Content="Solare" Tag="1"/>
+							<ComboBoxItem Content="Eolica" Tag="2"/>
+							<ComboBoxItem Content="Idrica" Tag="3"/>
+							<ComboBoxItem Content="Termica" Tag="4"/>
+						</ComboBox>
+					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Peak(KW/h):"/></TextBlock>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnPeak, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPicco" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
+					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Price (€):"/></TextBlock>
+						<TextBox Style="{StaticResource myTextBoxStyle}" IsEnabled="{Binding IsChecked, ElementName=chkProducer}" Text="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPrezzo" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
+					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Produced(KW/h):"/></TextBlock>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnProduced, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtEnergiaGeneratore" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
+					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Address:"/></TextBlock>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtIndirizzo" Margin="0" TextWrapping="Wrap" Height="22.744" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
+					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Administrator:"/></TextBlock>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Admin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtAdministrator" Height="23" Margin="0" TextWrapping="Wrap" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
+					</Grid>
+				
+				
+				
+				</StackPanel>
 				
 				
 				
@@ -249,7 +261,7 @@
 				</Button>
 			</StackPanel>
 		</Grid>
-		<Grid Margin="0,0,0,5" Grid.Row="3" VerticalAlignment="Bottom">
+		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom">
 			<StackPanel>
 				<Rectangle Height="1" Margin="0,0,0,3" Stroke="#FF606060" HorizontalAlignment="Center" VerticalAlignment="Center" Width="340"/>
 				<StackPanel Orientation="Horizontal">
