@@ -106,6 +106,8 @@ namespace Resolver
                     _enLookUp);
             
             Connector.channel.acceptProposal(respMessage);
+
+            _proposalList.Clear();
         }
 
         #endregion
