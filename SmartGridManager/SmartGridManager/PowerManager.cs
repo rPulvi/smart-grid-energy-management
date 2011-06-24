@@ -185,15 +185,11 @@ namespace SmartGridManager
 
                     XMLLogger.WriteRemoteActivity("Going Outside to find " + enReq + " KW/h");
 
-                    StatusNotifyMessage mes = MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq);
-
-                    XMLLogger.WriteRemoteActivity("Message ID: " + mes.header.MessageID);
-
-                    Connector.channel.forwardEnergyRequest(mes);
+                    Connector.channel.forwardEnergyRequest(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq));
                     messageSent = true;
 
                     _proposalTimeout = 0;
-                    
+
                     //start the timer to waiting for proposals
                     if (_proposalCountdown.Enabled == false)
                         _proposalCountdown.Enabled = true;
@@ -212,7 +208,7 @@ namespace SmartGridManager
                     orderby element.price ascending
                     select element).First();
 
-            XMLLogger.WriteLocalActivity("Il prezzo minore è fornito da " + m.header.Sender + " ed è " + m.price);            
+            XMLLogger.WriteLocalActivity("The lowest price is " + m.price + " provided by " + m.header.Sender);
 
             EnergyAcceptMessage respMessage = MessageFactory.createEnergyAcceptMessage(
                     m.header.MessageID,
@@ -234,8 +230,7 @@ namespace SmartGridManager
                     status = true;
                     _enSold += message.energy;
 
-                    XMLLogger.WriteLocalActivity("Ok, " + message.energy + " KW/h sold to " + message.header.Sender);
-                    XMLLogger.WriteLocalActivity("Message ID: " + message.header.MessageID);
+                    XMLLogger.WriteLocalActivity("Ok, " + message.energy + " KW/h sold to " + message.header.Sender);                    
 
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
                     _consumers.Add(link);
@@ -267,8 +262,7 @@ namespace SmartGridManager
                 {
                     _enBought += message.energy;
 
-                    XMLLogger.WriteLocalActivity("Energy received from " + message.header.Sender);
-                    XMLLogger.WriteLocalActivity("Message ID: " + message.header.MessageID);
+                    XMLLogger.WriteLocalActivity("Energy received from " + message.header.Sender);                    
 
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
                     _producers.Add(link);

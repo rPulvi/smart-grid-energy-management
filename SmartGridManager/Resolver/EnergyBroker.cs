@@ -67,37 +67,13 @@ namespace Resolver
                 _proposalTimeout = 0;                
                 EvaluateProposal();
             }
-            else
-            {
-                //_proposalTimeout++;
-
-                //if (_proposalTimeout > 2)  //Go Outbound
-                //{
-                //    float enReq = _enPeak - (getEnergyLevel() + _enBought);
-                //    Connector.channel.forwardLocalMessage(MessageFactory.createEnergyRequestMessage(_resolverName, _name, _peerStatus, enReq));
-                //    messageSent = true;
-
-                //    _proposalTimeout = 0;
-                    
-                //    //start the timer to waiting for proposals
-                //    if (_proposalCountdown.Enabled == false)
-                //        _proposalCountdown.Enabled = true;
-                //}
-                //else
-                //{
-                //    XMLLogger.WriteLocalActivity("Nessuna offerta energetica ricevuta");                    
-                //    messageSent = false; //send the request message again                
-                //}
-            }
         }
 
         private void EvaluateProposal()
         {            
             var m = (from element in _proposalList
                     orderby element.price ascending
-                    select element).First();
-
-            XMLLogger.WriteLocalActivity("Il prezzo minore è fornito da " + m.header.Sender + " ed è " + m.price);            
+                    select element).First();            
 
             EnergyAcceptMessage respMessage = MessageFactory.createEnergyAcceptMessage(
                     m.header.MessageID,
