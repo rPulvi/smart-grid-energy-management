@@ -339,6 +339,7 @@ namespace Resolver
 
                         //Remove the deadly peer but first alert the folks.
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        
                         // TODO: fix here                        
                         //foreach (var c in _incomingConnections)
                         //    c.channel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
