@@ -123,10 +123,11 @@ namespace SmartGridManager.Core.Messaging
             return message;
         }
 
-        public static RemoteEnergyRequest createRemoteEnergyRequestMessage(StatusNotifyMessage energyRequestMessage, string resolverIP, string resolverPort)
+        public static RemoteEnergyRequest createRemoteEnergyRequestMessage(StatusNotifyMessage energyRequestMessage, string resolverName, string resolverIP, string resolverPort)
         {
             RemoteEnergyRequest message = new RemoteEnergyRequest()
             {
+                header = Tools.getHeader("RemoteResolver",resolverName),
                 enReqMessage = energyRequestMessage,
                 IP = resolverIP,
                 port = resolverPort
