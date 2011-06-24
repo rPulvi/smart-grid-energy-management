@@ -11,6 +11,7 @@ using SmartGridManager.Core.P2P;
 using SmartGridManager.Core.Messaging;
 using System.Timers;
 using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace Resolver
 {
@@ -46,8 +47,12 @@ namespace Resolver
         public string name { get; private set; }
         
         private PeerStatus _peerStatus;
-        private bool isLocalConnected;
-        private bool isRemoteConnected;
+        
+        //TODO: msgbox nel resolver a seconda degli stati.
+        public bool isLocalConnected { get; private set; }
+        public bool isRemoteServiceStarted { get; private set; }
+        public bool isRemoteConnected { get; private set; }
+
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();        
 
         private List<TempBuilding> hbrBuildingd = new List<TempBuilding>();
@@ -67,8 +72,9 @@ namespace Resolver
             this.name = Tools.getResolverName();            
 
             this.isLocalConnected = false;
+            this.isRemoteServiceStarted = false;
             this.isRemoteConnected = false;
-            
+
             this._peerStatus = PeerStatus.Resolver;
 
             //This timer manage the peer's HB to check the online status
@@ -81,27 +87,34 @@ namespace Resolver
         public void Connect()
         {
             this.isLocalConnected = StartLocalResolver();
-            this.isRemoteConnected = StartRemoteConnection();            
-              
-            _HBTimer.Enabled = true;            
+            
+            if (this.isLocalConnected == true)
+            {
+                this.isRemoteServiceStarted = StartRemoteService();
+                this.isRemoteConnected = ConnectToRemoteHost();
 
-            #region Normal Peer Activity
+                _HBTimer.Enabled = true;
 
-            base.StartService();
-            MsgHandler = Connector.messageHandler;
+                #region Normal Peer Activity
 
-            _broker = new EnergyBroker(name);
+                base.StartService();
+                MsgHandler = Connector.messageHandler;
 
-            #region Event Listeners
-            MsgHandler.OnForwardEnergyRequest += new forwardEnergyRequest(ForwardEnergyRequest);
-            MsgHandler.OnForwardEnergyReply += new forwardEnergyReply(ForwardEnergyReply);
-            MsgHandler.OnSayHello += new sayHello(HelloResponse);
-            MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
-            MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);
-            #endregion
+                _broker = new EnergyBroker(name);
 
-            #endregion
+                #region Event Listeners
+                MsgHandler.OnForwardEnergyRequest += new forwardEnergyRequest(ForwardEnergyRequest);
+                MsgHandler.OnForwardEnergyReply += new forwardEnergyReply(ForwardEnergyReply);
+                MsgHandler.OnSayHello += new sayHello(HelloResponse);
+                MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
+                MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);
+                #endregion
+
+                #endregion
+            }
         }
+
+        #region Connection Methods Section
 
         private bool StartLocalResolver()
         {
@@ -130,11 +143,9 @@ namespace Resolver
             return bRet;
         }
 
-        private bool StartRemoteConnection()
-        {            
-            int n=0;
-            bool bRet = false;
-            List<RemoteHost> h;            
+        private bool StartRemoteService()
+        {                        
+            bool bRet = false;            
             
             remoteMessageHandler = new PeerServices();
 
@@ -143,16 +154,39 @@ namespace Resolver
             //To handle the remote traffic            
             remoteMessageHandler.OnRemoteEnergyRequest += new manageEnergyRequest(ManageRemoteEnergyRequest);
             remoteMessageHandler.OnRemoteEnergyReply += new replyEnergyRequest(ManageRemoteEnergyReply);
-            remoteMessageHandler.OnRemotePeerIsDown += new remotePeerIsDown(RemotePeerIsDown);
+            remoteMessageHandler.OnRemotePeerIsDown += new remotePeerIsDown(RemotePeerIsDown);            
+
+            try
+            {
+                remoteHost.Open();
+                bRet = true;
+                XMLLogger.WriteRemoteActivity("Remote service started.");
+            }
+            catch (Exception e)
+            {                
+                XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to start Remote Service.");                
+                //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose
+                remoteHost.Abort();
+            }
+
+            return bRet;
+        }
+
+        private bool ConnectToRemoteHost()
+        {
+            bool bRet = false; 
+            int n = 0;
+            List<RemoteHost> h;
 
             h = Tools.getRemoteHosts();
-            
+
             while (bRet == false && n < h.Count)
             {
-                //To connect to remote host
+                XMLLogger.WriteRemoteActivity("Connecting to " + h[n].IP);
+                
                 NetTcpBinding tcpBinding = new NetTcpBinding();
                 EndpointAddress remoteEndpoint = new EndpointAddress(h[n].netAddress);
-                tcpBinding.Security.Mode = SecurityMode.None;                
+                tcpBinding.Security.Mode = SecurityMode.None;
 
                 //ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
                 ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
@@ -160,10 +194,7 @@ namespace Resolver
 
                 try
                 {
-                    remoteHost.Open();
-
-                    XMLLogger.WriteRemoteActivity("Remote service started.");
-                    XMLLogger.WriteRemoteActivity("Connecting to " + h[n].IP);
+                    remoteChannel.Open();
 
                     //Retrieve Remote IP Addresses
                     foreach (var newRemote in remoteChannel.RetrieveContactList())
@@ -175,16 +206,16 @@ namespace Resolver
                         }
                     }
 
-                    XMLLogger.WriteRemoteActivity("Connected to: " + h[n].IP);                    
+                    XMLLogger.WriteRemoteActivity("Connected to: " + h[n].IP);
                     bRet = true;
                 }
                 catch (Exception e)
                 {
-                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in connecting to: " + h[n].IP);
-                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
+                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to: " + h[n].IP);
+                    //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
                     n++;
-                    if(n > h.Count)
-                        remoteHost.Abort();
+                    if (n > h.Count)
+                        remoteChannel.Abort();
 
                     bRet = false;
                 }
@@ -192,10 +223,14 @@ namespace Resolver
 
             return bRet;
         }
+        
+        #endregion
+
+        #region Energy Messages Forwarding/Managing Section
 
         private void ForwardEnergyRequest(StatusNotifyMessage message)   
         {
-            if (isRemoteConnected == true)
+            if (isRemoteServiceStarted == true)
             {
                 XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender );
                 XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
@@ -277,6 +312,8 @@ namespace Resolver
 
             Connector.channel.endProposal(message);
         }
+        
+        #endregion
 
         private void RemotePeerIsDown(PeerIsDownMessage message)
         {
@@ -345,8 +382,11 @@ namespace Resolver
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
                         
                         // TODO: fix here                        
-                        //foreach (var c in _incomingConnections)
-                        //    c.channel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        if (_incomingConnections.Count > 0)
+                        {
+                            foreach (var c in _incomingConnections)
+                                c.channel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        }
 
                         _buildings.RemoveAt(i);                        
                     }
@@ -388,9 +428,12 @@ namespace Resolver
 
             _HBTimer.Enabled = false;
 
-            if (this.isRemoteConnected == true)                        
+            if (this.isRemoteServiceStarted == true)                        
                 remoteHost.Close();
-            
+
+            if (this.isRemoteConnected == true)
+                remoteChannel.Close();
+
             if(this.isLocalConnected == true)
             {                
                 crs.Close();
@@ -400,6 +443,7 @@ namespace Resolver
             StopService(); //Calls the base.StopService method
         }
 
+        #region Aux Methods
         private RemoteConnection GetConnection(string IP, string port)
         {
             RemoteConnection cRet = null;
@@ -441,6 +485,7 @@ namespace Resolver
                 }
             }
         }
+        #endregion
 
         #endregion
 

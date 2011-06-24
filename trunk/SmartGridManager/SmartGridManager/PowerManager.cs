@@ -274,7 +274,7 @@ namespace SmartGridManager
                 }
                 else
                 {
-                    //Nothing to do..Erase this Producer and go on with the next.
+                    //Nothing to do..Delete this Producer and go on with the next.
                     for (int i = 0; i < _proposalList.Count; i++)
                     {
                         if (_proposalList[i].header.Sender == message.header.Sender)
@@ -294,8 +294,7 @@ namespace SmartGridManager
         }
 
         private void _heartBeatTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            // ???
+        {            
             Connector.channel.heartBeat(MessageFactory.createHeartBeatMessage(_name));
         }
 
