@@ -197,8 +197,8 @@
                           ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
     				<ListView.View>
     					<GridView>
-    						<GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}"/>
-    						<GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="300"/>
     					</GridView>
     				</ListView.View>
     			</ListView>
@@ -240,8 +240,8 @@
     				ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
     				<ListView.View>
     					<GridView>
-    						<GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}"/>
-    						<GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="300"/>
     					</GridView>
     				</ListView.View>
     			</ListView>
@@ -282,9 +282,9 @@
     				ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
     				<ListView.View>
     					<GridView>
-    						<GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}"/>
-    						<GridViewColumn Header="Class" CellTemplate="{StaticResource ClassDataTemplate}"/>
-							<GridViewColumn Header="Errors" CellTemplate="{StaticResource ErrorDataTemplate}"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Class" CellTemplate="{StaticResource ClassDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Errors" CellTemplate="{StaticResource ErrorDataTemplate}" Width="300"/>
     					</GridView>
     				</ListView.View>
     			</ListView>
