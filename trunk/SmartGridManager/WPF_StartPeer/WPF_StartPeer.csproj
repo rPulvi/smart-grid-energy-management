@@ -42,6 +42,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -146,6 +147,9 @@
     </Resource>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="img\SmartGridManager_Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="log.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
