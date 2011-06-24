@@ -59,7 +59,7 @@
             <TextBlock Text="Address" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
         <DataTemplate x:Key="AdminColHeader">
-            <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}" Width="300"/>
+            <TextBlock Text="Admin" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
 
         <!-- Coloumn Header Template for ListRemote -->
@@ -1461,7 +1461,7 @@
 				</Rectangle>
                     
     				<!--.:LISTA LOCAL:.-->
-				<ListView Grid.Row="0" Margin="18,0" x:Name="ListView" Visibility="{Binding SetVisibilityLocal}"
+				<ListView Grid.Row="0" Margin="18,5,18,8" x:Name="ListView" Visibility="{Binding SetVisibilityLocal}"
 					ItemsSource="{Binding PeerList}"
 					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
 					util:GridViewSort.AutoSort="True"
@@ -1488,7 +1488,7 @@
 					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"
 					util:GridViewSort.AutoSort="True"
 					util:GridViewSort.SortGlyphAscending="/img/up.png"
-					util:GridViewSort.SortGlyphDescending="/img/down.png">
+					util:GridViewSort.SortGlyphDescending="/img/down.png" d:IsLocked="True" d:IsHidden="True">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostItemTemplate}" util:GridViewSort.PropertyName="HostName"/>
