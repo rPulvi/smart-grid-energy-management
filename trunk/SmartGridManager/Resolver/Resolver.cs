@@ -258,7 +258,6 @@ namespace Resolver
 
             if (conn != null)
             {                
-
                 //Header re-handling
                 message.header.Receiver = conn.requests[message.header.MessageID];
                 conn.channel.ReplyEnergyRequest(message);
