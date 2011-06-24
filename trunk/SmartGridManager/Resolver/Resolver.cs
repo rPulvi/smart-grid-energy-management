@@ -196,17 +196,25 @@ namespace Resolver
         private void ForwardEnergyRequest(StatusNotifyMessage message)   
         {
             if (isRemoteConnected == true)
+            {
+                XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender );
+
                 remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
+                    this.name,
                     Tools.getLocalIP(),
                     Tools.getResolverServicePort()
                     ));
+            }
             else
                 XMLLogger.WriteRemoteActivity("No Remote Connections. Please Check your NetConfig file.");
         }
 
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
         {
-            RemoteConnection remConn;            
+            RemoteConnection remConn;
+
+            XMLLogger.WriteRemoteActivity("Received Remote Energy Request from: " + message.enReqMessage.header.Sender + " by Remote Resolver: " + message.header.Sender);
+            XMLLogger.WriteRemoteActivity("Message ID: " + message.enReqMessage.header.MessageID);
 
             remConn = GetConnection(message.IP, message.port);
 
@@ -241,10 +249,12 @@ namespace Resolver
 
         void ForwardEnergyReply(EndProposalMessage message)
         {            
-            RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);            
+            RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);
 
             if (conn != null)
             {
+                XMLLogger.WriteRemoteActivity("Forwarding Remote Response about message: " + message.header.MessageID + " Status = " + message.endStatus);
+
                 //Header re-handling
                 message.header.Receiver = conn.requests[message.header.MessageID];
                 conn.channel.ReplyEnergyRequest(message);
@@ -258,7 +268,9 @@ namespace Resolver
         }
 
         void ManageRemoteEnergyReply(EndProposalMessage message)
-        {            
+        {
+            XMLLogger.WriteRemoteActivity("Received Remote Energy Reply from:" + message.header.Sender);
+
             Connector.channel.endProposal(message);
         }
 
@@ -290,6 +302,8 @@ namespace Resolver
             lock(_lLock)
                 _buildings.Add(b);
 
+            XMLLogger.WriteLocalActivity("New Peer: " + b.Name + " is up!");
+            
             //Be polite! Send an HelloResponse
             Connector.channel.HelloResponse(MessageFactory.createHelloResponseMessage("@All", Tools.getResolverName(), Tools.getResolverName()));
         }
@@ -321,11 +335,13 @@ namespace Resolver
                         _buildings[i].TTL--;
                     else
                     {
+                        XMLLogger.WriteLocalActivity("Peer: " + _buildings[i].Name + " is down!");
+
                         //Remove the deadly peer but first alert the folks.
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
                         // TODO: fix here                        
-                        foreach (var c in _incomingConnections)
-                            c.channel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        //foreach (var c in _incomingConnections)
+                        //    c.channel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
 
                         _buildings.RemoveAt(i);                        
                     }
@@ -363,6 +379,8 @@ namespace Resolver
 
         public void CloseService()
         {
+            XMLLogger.WriteLocalActivity("Closing Application...");
+
             _HBTimer.Enabled = false;
 
             if (this.isRemoteConnected == true)                        
