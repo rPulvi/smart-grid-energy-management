@@ -198,6 +198,7 @@ namespace Resolver
             if (isRemoteConnected == true)
             {
                 XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender );
+                XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
 
                 remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
                     this.name,
