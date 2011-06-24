@@ -82,7 +82,7 @@ namespace SmartGridManager.Core.Messaging
         {
             EndProposalMessage message = new EndProposalMessage()
             {
-                header = Tools.getHeader(dest, source,SessionID),
+                header = Tools.getHeader(dest, source, SessionID),
                 endStatus = status,
                 energy = qEnergy
             };
