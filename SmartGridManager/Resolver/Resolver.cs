@@ -256,6 +256,7 @@ namespace Resolver
             if (conn != null)
             {
                 XMLLogger.WriteRemoteActivity("Forwarding Remote Response about message: " + message.header.MessageID + " Status = " + message.endStatus);
+                XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
 
                 //Header re-handling
                 message.header.Receiver = conn.requests[message.header.MessageID];
@@ -272,6 +273,7 @@ namespace Resolver
         void ManageRemoteEnergyReply(EndProposalMessage message)
         {
             XMLLogger.WriteRemoteActivity("Received Remote Energy Reply from:" + message.header.Sender);
+            XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
 
             Connector.channel.endProposal(message);
         }
