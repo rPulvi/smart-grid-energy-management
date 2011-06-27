@@ -44,6 +44,7 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
+        SplashScreen sp = new SplashScreen("img/splash.png");
 
         private Visibility _listVisibilityLocal = new Visibility();
         private Visibility _listVisibilityRemote = new Visibility();
@@ -72,6 +73,7 @@ namespace WPF_Resolver.ViewModel
         public DelegateCommand SetLocalFont { get; set; }
         public DelegateCommand SetRemoteFont { get; set; }
         public DelegateCommand ViewLog { get; set; }
+        public DelegateCommand ViewSplash { get; set; }
         #endregion
 
         public ResolverViewModel()
@@ -155,6 +157,7 @@ namespace WPF_Resolver.ViewModel
             this.SetLocalFont = new DelegateCommand((o) => this.ChangeLocalFontSize(), o => this.canDo);
             this.SetRemoteFont = new DelegateCommand((o) => this.ChangeRemoteFontSize(), o => this.canDo);
             this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
+            this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
         }
 
         public ObservableDictionary<string, int> GetPieChartData
@@ -205,6 +208,12 @@ namespace WPF_Resolver.ViewModel
                 _enTimeLine = value;
                 OnPropertyChanged("GetPointTimeLine");
             }
+        }
+
+        public void Splashing()
+        {
+            sp.Show(false, true);
+            sp.Close(new TimeSpan(0,0,6));
         }
 
         public void Log()

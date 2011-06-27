@@ -219,7 +219,7 @@
     </Resource>
     <SplashScreen Include="img\splash.png" />
     <Content Include="log.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

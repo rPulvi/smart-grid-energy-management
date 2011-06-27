@@ -133,6 +133,9 @@
 			<MenuItem Header="View" Foreground="White">
 				<MenuItem Header="Log" Foreground="blue" Command="{Binding ViewLog}"/>
 			</MenuItem>
+            <MenuItem Header="?" Foreground="White">
+                <MenuItem Header="About" Foreground="Blue" Command="{Binding ViewSplash}"/>
+            </MenuItem>
 		</Menu>
 		<Grid Height="47.425" Margin="0,2,0,5" Grid.Row="1" d:IsLocked="True">
 			<Grid.ColumnDefinitions>
