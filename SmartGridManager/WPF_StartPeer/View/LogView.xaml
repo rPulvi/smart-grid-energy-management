@@ -153,19 +153,19 @@
         </Style>
 
         <DataTemplate x:Key="TimeDataTemplate">
-            <TextBlock Text="{Binding XPath=Time}" Width="200" Height="Auto"/>
+            <TextBlock Text="{Binding XPath=Time}" Width="Auto" Height="Auto"/>
         </DataTemplate>
 
         <DataTemplate x:Key="MessageDataTemplate">
-            <TextBlock Text="{Binding XPath=Message}" Width="400" Height="Auto"/>
+            <TextBlock Text="{Binding XPath=Message}" Width="Auto" Height="Auto"/>
         </DataTemplate>
 
         <DataTemplate x:Key="ClassDataTemplate">
-            <TextBlock Text="{Binding XPath=Class}" Width="200" Height="Auto"/>
+            <TextBlock Text="{Binding XPath=Class}" Width="Auto" Height="Auto"/>
         </DataTemplate>
 
         <DataTemplate x:Key="ErrorDataTemplate">
-            <TextBlock Text="{Binding XPath=Error}" Width="400" Height="Auto" TextWrapping="Wrap"/>
+            <TextBlock Text="{Binding XPath=Error}" Width="Auto" Height="Auto" TextWrapping="Wrap"/>
         </DataTemplate>
 
     </Window.Resources>
@@ -197,8 +197,8 @@
                           ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="300"/>
-                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="200"/>
+                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="700"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -240,8 +240,8 @@
     				ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="300"/>
-                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="200"/>
+                            <GridViewColumn Header="Message" CellTemplate="{StaticResource MessageDataTemplate}" Width="700"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -282,9 +282,9 @@
     				ItemContainerStyle="{StaticResource ListViewItemContainerStyle}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="300"/>
-                            <GridViewColumn Header="Class" CellTemplate="{StaticResource ClassDataTemplate}" Width="300"/>
-                            <GridViewColumn Header="Errors" CellTemplate="{StaticResource ErrorDataTemplate}" Width="300"/>
+                            <GridViewColumn Header="Time" CellTemplate="{StaticResource TimeDataTemplate}" Width="200"/>
+                            <GridViewColumn Header="Class" CellTemplate="{StaticResource ClassDataTemplate}" Width="200"/>
+                            <GridViewColumn Header="Errors" CellTemplate="{StaticResource ErrorDataTemplate}" Width="500"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
