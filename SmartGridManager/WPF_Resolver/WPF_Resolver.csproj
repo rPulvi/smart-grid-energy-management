@@ -218,6 +218,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <SplashScreen Include="img\splash.png" />
+    <Resource Include="img\quit.png" />
     <Content Include="log.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

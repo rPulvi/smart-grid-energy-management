@@ -1360,10 +1360,14 @@
 					<GradientStop Color="#FF9EB6F1"/>
 				</LinearGradientBrush>
 			</Menu.Background>
-			<MenuItem Header="File" Foreground="White">
+            <MenuItem Header="File" Foreground="White">
                 <MenuItem Header="Start" Foreground="{Binding GetStartColour}" Command="{Binding StartResolver}" IsEnabled="{Binding GetIsEnabledStatus}"/>
-				<MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
-			</MenuItem>
+                <MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}">
+                    <MenuItem.Icon>
+                        <Image Source="/img/quit.png" Width="18" Height="18"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
             <MenuItem Header="View" Foreground="White">
                 <MenuItem Header="Log" Foreground="Blue" Command="{Binding ViewLog}"/>
             </MenuItem>
