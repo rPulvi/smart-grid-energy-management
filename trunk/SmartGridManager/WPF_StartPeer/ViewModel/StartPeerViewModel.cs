@@ -23,6 +23,10 @@ namespace WPF_StartPeer.ViewModel
         private string _imgPath;
         private string _startButtonIconPath;
         private string _peerStatus;
+		private string _setFieldsVisibility;
+		private string _setInfoVisibility;
+        private string _checkIconFieldsVisibility;
+        private string _checkIconInfoVisibility;
 
         private bool _formEnabled;
         private bool _isStartable = true;
@@ -50,10 +54,25 @@ namespace WPF_StartPeer.ViewModel
         public DelegateCommand Exit { get; set; }
         public DelegateCommand ViewLog { get; set; }
         public DelegateCommand ViewSplash { get; set; }
+        public DelegateCommand ShowFields { get; set; }
+        public DelegateCommand ShowInfo { get; set; }
         #endregion
 
         public StartPeerViewModel()
         {
+			#region Init
+            _checkIconFieldsVisibility = "Visible";
+            OnPropertyChanged("CheckIconFieldsVisibility");
+
+            _checkIconInfoVisibility = "Hidden";
+            OnPropertyChanged("CheckIconInfoVisibility");
+
+			_setFieldsVisibility = "Visible";
+            OnPropertyChanged("SetFieldsVisibility");
+
+			_setInfoVisibility = "Hidden";
+            OnPropertyChanged("SetFieldsVisibility");
+			
             SetErrorMessages();
 
             _imgPath = @"/WPF_StartPeer;component/img/offline.png";
@@ -66,12 +85,83 @@ namespace WPF_StartPeer.ViewModel
             _startButton = "Connect";
 
             _status = PeerStatus.Consumer;
+			#endregion
 
             this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canDo);
             this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canDo);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
             this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
             this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
+            this.ShowFields = new DelegateCommand((o) => this.FieldsView(), o => this.canDo);
+            this.ShowInfo = new DelegateCommand((o) => this.InfoView(), o => this.canDo);
+        }
+
+        public void FieldsView()
+        {
+            _checkIconFieldsVisibility = "Visible";
+            _checkIconInfoVisibility = "Hidden";
+
+            _setFieldsVisibility = "Visible";
+            _setInfoVisibility = "Hidden";
+
+            OnPropertyChanged("CheckIconFieldsVisibility");
+            OnPropertyChanged("CheckIconInfoVisibility");
+            OnPropertyChanged("SetFieldsVisibility");
+            OnPropertyChanged("SetInfoVisibility");
+        }
+
+        public void InfoView()
+        {
+            _checkIconFieldsVisibility = "Hidden";
+            _checkIconInfoVisibility = "Visible";
+
+            _setFieldsVisibility = "Hidden";
+            _setInfoVisibility = "Visible";
+
+            OnPropertyChanged("CheckIconFieldsVisibility");
+            OnPropertyChanged("CheckIconInfoVisibility");
+            OnPropertyChanged("SetFieldsVisibility");
+            OnPropertyChanged("SetInfoVisibility");
+        }
+
+        public string CheckIconFieldsVisibility
+        {
+            get { return _checkIconFieldsVisibility; }
+            set
+            {
+                _checkIconFieldsVisibility = value;
+                OnPropertyChanged("CheckIconFieldsVisibility");
+            }
+        }
+        
+        public string CheckIconInfoVisibility
+        {
+            get { return _checkIconInfoVisibility; }
+            set
+            {
+                _checkIconInfoVisibility = value;
+                OnPropertyChanged("CheckIconInfoVisibility");
+            }
+        }
+
+        public string SetFieldsVisibility
+        {
+            get { return _setFieldsVisibility; }
+            set
+            {
+                _setFieldsVisibility = value;
+                OnPropertyChanged("SetFieldsVisibility");
+            }
+        }
+
+        public string SetInfoVisibility
+        {
+            get { return _setInfoVisibility; }
+            set
+            {
+                _setInfoVisibility = value;
+                OnPropertyChanged("SetInfoVisibility");
+            }
         }
 
         public string StartButton

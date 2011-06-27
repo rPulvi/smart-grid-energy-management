@@ -128,10 +128,24 @@
 				</LinearGradientBrush>
 			</Menu.Background>
 			<MenuItem Header="File" Foreground="White">
-				<MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}"/>
+				<MenuItem Header="Exit" Foreground="Blue" Command="{Binding Exit}">
+                    <MenuItem.Icon>
+                        <Image Source="/img/quit.png" Width="18" Height="18"/>
+                    </MenuItem.Icon>
+                </MenuItem>
 			</MenuItem>
 			<MenuItem Header="View" Foreground="White">
-				<MenuItem Header="Log" Foreground="blue" Command="{Binding ViewLog}"/>
+                <MenuItem Header="Fields" Foreground="Blue" Command="{Binding ShowFields}">
+                    <MenuItem.Icon>
+                        <Image Source="/img/check-icon.png" Width="18" Height="18" Visibility="{Binding CheckIconFieldsVisibility}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Info" Foreground="Blue" Command="{Binding ShowInfo}">
+                    <MenuItem.Icon>
+                        <Image Source="/img/check-icon.png" Width="18" Height="18" Visibility="{Binding CheckIconInfoVisibility}"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Log" Foreground="blue" Command="{Binding ViewLog}"/>
 			</MenuItem>
             <MenuItem Header="?" Foreground="White">
                 <MenuItem Header="About" Foreground="Blue" Command="{Binding ViewSplash}"/>
@@ -162,11 +176,8 @@
 					<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}"/>
 				</Rectangle.Fill>
 			</Rectangle>
-			<StackPanel Margin="17,8,20,2">
-
-
-
-                <StackPanel Orientation="Vertical" IsEnabled="{Binding FormEnabled}">
+			<StackPanel Margin="17,8,20,2" Visibility="{Binding SetFieldsVisibility}">
+				<StackPanel Orientation="Vertical" IsEnabled="{Binding FormEnabled}">
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition Width="0.4*"/>
@@ -209,7 +220,7 @@
 							<ColumnDefinition Width="0.4*"/>
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
-						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Price (€):"/></TextBlock>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Price € (KW/h):"/></TextBlock>
 						<TextBox Style="{StaticResource myTextBoxStyle}" IsEnabled="{Binding IsChecked, ElementName=chkProducer}" Text="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPrezzo" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
 					</Grid>
 					<Grid Margin="0,0,0,5">
@@ -263,8 +274,12 @@
 					</Grid>
 				</Button>
 			</StackPanel>
+			<Grid Margin="17,8,20,2" Visibility="{Binding SetInfoVisibility}">
+				<StackPanel/>
+				<Rectangle Fill="#FFECED26" Margin="128,95.575,124,117.302" Stroke="Black"/>
+			</Grid>
 		</Grid>
-		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom">
+		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom" d:IsLocked="True">
 			<StackPanel>
 				<Rectangle Height="1" Margin="0,0,0,3" Stroke="#FF606060" HorizontalAlignment="Center" VerticalAlignment="Center" Width="340"/>
 				<StackPanel Orientation="Horizontal">
