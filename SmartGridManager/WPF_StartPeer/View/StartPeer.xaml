@@ -103,6 +103,152 @@
 				</Setter.Value>
 			</Setter>
 		</Style>
+
+        <!--LIST STYLE-->
+        <LinearGradientBrush x:Key="PressedBorderBrush"/>
+
+        <Style x:Key="{x:Type GridViewColumnHeader}" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="2"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <Grid>
+                            <Border x:Name="HeaderBorder" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter x:Name="HeaderContent" Margin="0,0,0,1" 
+								VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+								HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+								RecognizesAccessKey="True" 
+								SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="HeaderBorder" Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="Orange"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter TargetName="HeaderBorder" Property="Background" Value="{StaticResource PressedBorderBrush}"/>
+                                <Setter TargetName="HeaderContent" Property="Margin" Value="1,1,0,0"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="{x:Type ListView}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="white"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListView}">
+                        <Border x:Name="Border">
+                            <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsGrouping" Value="true">
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Border" Property="Background" Value="#BBBBBB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ListViewItemContainerStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Background" Value="#ffffff" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Margin" Value="0,0,0,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border x:Name="Bd" Background="Transparent" SnapsToDevicePixels="true">
+                            <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected"  Value="true">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="#FF143c65" />
+                                <Setter Property="Background" TargetName="Bd">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                            <LinearGradientBrush.GradientStops>
+                                                <GradientStopCollection>
+                                                    <GradientStop Color="#FF75aac7" Offset="0"/>
+                                                    <GradientStop Color="#FF143c65" Offset="1"/>
+                                                </GradientStopCollection>
+                                            </LinearGradientBrush.GradientStops>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="Orange"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="true" />
+                                    <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Background" TargetName="Bd">
+                                    <Setter.Value>
+                                        <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                                            <LinearGradientBrush.GradientStops>
+                                                <GradientStopCollection>
+                                                    <GradientStop Color="#FF75aac7" Offset="0"/>
+                                                    <GradientStop Color="#FF143c65" Offset="1"/>
+                                                </GradientStopCollection>
+                                            </LinearGradientBrush.GradientStops>
+                                        </LinearGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="BorderBrush" TargetName="Bd" Value="#FF143c65"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--END LIST STYLE-->
+
+        <DataTemplate x:Key="SellerDataTemplate">
+			<TextBlock Text="{Binding TODO}" Width="Auto" Height="Auto"/>
+		</DataTemplate>
+		<DataTemplate x:Key="PriceDataTemplate">
+			<TextBlock Text="{Binding TODO}" Width="Auto" Height="Auto"/>
+		</DataTemplate>
 		
 	</Window.Resources>
 	
@@ -171,12 +317,12 @@
 				<RowDefinition/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			<Rectangle Margin="5,0,5,-8" Stroke="Black" RadiusX="15" RadiusY="15" Opacity="0.095">
+			<Rectangle Margin="5,0,5,-8" Stroke="Black" RadiusX="15" RadiusY="15" Opacity="0.095" d:IsLocked="True">
 				<Rectangle.Fill>
 					<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}"/>
 				</Rectangle.Fill>
 			</Rectangle>
-			<StackPanel Margin="17,8,20,2" Visibility="{Binding SetFieldsVisibility}">
+			<StackPanel Margin="17,8,20,2" Visibility="{Binding SetFieldsVisibility}" d:IsHidden="True" d:IsLocked="True">
 				<StackPanel Orientation="Vertical" IsEnabled="{Binding FormEnabled}">
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -275,8 +421,70 @@
 				</Button>
 			</StackPanel>
 			<Grid Margin="17,8,20,2" Visibility="{Binding SetInfoVisibility}">
-				<StackPanel/>
-				<Rectangle Fill="#FFECED26" Margin="128,95.575,124,117.302" Stroke="Black"/>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="Auto"/>
+				</Grid.RowDefinitions>
+				<ListView ItemsSource="{Binding TODO}"
+					ItemContainerStyle="{StaticResource ListViewItemContainerStyle}" Margin="0,0,0,10">
+					<ListView.View>
+						<GridView>
+                            <GridViewColumn Header="Seller" CellTemplate="{StaticResource SellerDataTemplate}" Width="150"/>
+                            <GridViewColumn Header="Price € (KW/h)" CellTemplate="{StaticResource PriceDataTemplate}" Width="150"/>
+						</GridView>
+					</ListView.View>
+				</ListView>
+				<Grid Margin="27,0" Grid.Row="1" VerticalAlignment="Bottom">
+					<Grid Margin="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" d:IsLocked="True">
+						<Rectangle Fill="#FF057EB5" Margin="0" Width="143.241" Height="65" RadiusX="10" RadiusY="10"/>
+						<Rectangle Margin="0,0,0,30" Width="143.241" Height="35" RadiusX="10" RadiusY="10">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="Transparent" Offset="1"/>
+									<GradientStop Color="White"/>
+									<GradientStop Color="#7FFFFFFF" Offset="0.438"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<TextBlock Margin="0,0,10,0" Text="31.5" FontSize="46.667" VerticalAlignment="Center" FontFamily="Calibri" FontWeight="Bold" HorizontalAlignment="Right" Foreground="White" Opacity="0.455" TextWrapping="Wrap"/>
+						<TextBlock Height="18" Margin="10,0,0,-4" Text="KW/h" FontSize="10.667" VerticalAlignment="Bottom" FontFamily="Calibri" FontWeight="Bold"/>
+					</Grid>
+					<Grid Margin="0" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+						<Rectangle Fill="#FF057EB5" Margin="0" Width="143.241" Height="65" RadiusX="10" RadiusY="10"/>
+						<Rectangle Margin="0,0,0,30" Width="143.241" Height="35" RadiusX="10" RadiusY="10">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="Transparent" Offset="1"/>
+									<GradientStop Color="White"/>
+									<GradientStop Color="#7FFFFFFF" Offset="0.438"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<TextBlock Margin="0,0,10,0" Text="465" FontSize="46.667" VerticalAlignment="Center" FontFamily="Calibri" FontWeight="Bold" HorizontalAlignment="Right" Foreground="White" Opacity="0.455" TextWrapping="Wrap"/>
+						<TextBlock Height="18" Margin="10,0,0,-4" Text="EUR" FontSize="10.667" VerticalAlignment="Bottom" FontFamily="Calibri" FontWeight="Bold"/>
+					</Grid>
+					<Grid Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top" d:IsLocked="True">
+						<Rectangle Margin="0,0,0,56" Height="18" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Width="90">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="#FFFF7800" Offset="0"/>
+									<GradientStop Color="#FFD6AA00" Offset="1"/>
+									<GradientStop Color="#FFFFA700" Offset="0.88"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<Rectangle Height="11.333" RadiusX="4" RadiusY="4" VerticalAlignment="Top" Width="90">
+							<Rectangle.Fill>
+								<LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+									<GradientStop Color="Transparent" Offset="1"/>
+									<GradientStop Color="White"/>
+									<GradientStop Color="#7FFFFFFF" Offset="0.438"/>
+								</LinearGradientBrush>
+							</Rectangle.Fill>
+						</Rectangle>
+						<TextBlock Height="18" Margin="0,2,0,0" Text="TOTAL" VerticalAlignment="Top" FontFamily="Calibri" FontWeight="Bold" HorizontalAlignment="Center" Foreground="#FF353535" TextAlignment="Center"/>
+					</Grid>
+				</Grid>
 			</Grid>
 		</Grid>
 		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom" d:IsLocked="True">
