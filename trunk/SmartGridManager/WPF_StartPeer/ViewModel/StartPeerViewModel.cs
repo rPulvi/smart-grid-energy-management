@@ -37,8 +37,6 @@ namespace WPF_StartPeer.ViewModel
         #endregion
 
         #region Objects
-
-        private readonly StringBuilder builder;
         private Building house;
         private List<ErrorMap> _errorMessages = new List<ErrorMap>();
         #endregion
@@ -64,7 +62,6 @@ namespace WPF_StartPeer.ViewModel
             _startButton = "Connect";
 
             _status = PeerStatus.Consumer;
-            this.builder = new StringBuilder();
 
             this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canDo);
             this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canDo);
