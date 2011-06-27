@@ -37,7 +37,10 @@ namespace WPF_StartPeer.ViewModel
         #endregion
 
         #region Objects
+        SplashScreen sp = new SplashScreen("img/splash.png");
+
         private Building house;
+        
         private List<ErrorMap> _errorMessages = new List<ErrorMap>();
         #endregion
 
@@ -46,6 +49,7 @@ namespace WPF_StartPeer.ViewModel
         public DelegateCommand SetProducer { get; set; }
         public DelegateCommand Exit { get; set; }
         public DelegateCommand ViewLog { get; set; }
+        public DelegateCommand ViewSplash { get; set; }
         #endregion
 
         public StartPeerViewModel()
@@ -67,6 +71,7 @@ namespace WPF_StartPeer.ViewModel
             this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canDo);
             this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
             this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
+            this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
         }
 
         public string StartButton
@@ -107,6 +112,12 @@ namespace WPF_StartPeer.ViewModel
                 OnPropertyChanged("EnType");
                 OnPropertyChanged("Price");
             }
+        }
+
+        public void Splashing()
+        {
+            sp.Show(false, true);
+            sp.Close(new TimeSpan(0, 0, 6));
         }
 
         public void Log()
