@@ -142,4 +142,18 @@ namespace SmartGridManager.Core.Messaging
         public RemoteEnergyRequest() { }
     }
 
+    [MessageContract]
+    public class RemoteEndProposalMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public EndProposalMessage endProposalMessage { get; set; }
+
+        [MessageBodyMember]
+        public string IP { get; set; }
+
+        [MessageBodyMember]
+        public string port { get; set; }
+
+        public RemoteEndProposalMessage() { }
+    }
 }
