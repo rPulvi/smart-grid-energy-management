@@ -78,13 +78,14 @@ namespace SmartGridManager.Core.Messaging
             return message;
         }
 
-        public static EndProposalMessage createEndProposalMessage(Guid SessionID, string dest, string source, bool status, float qEnergy)
+        public static EndProposalMessage createEndProposalMessage(Guid SessionID, string dest, string source, bool status, float qEnergy, float enPrice)
         {
             EndProposalMessage message = new EndProposalMessage()
             {
                 header = Tools.getHeader(dest, source, SessionID),
                 endStatus = status,
-                energy = qEnergy
+                energy = qEnergy,
+                price = enPrice
             };
 
             return message;

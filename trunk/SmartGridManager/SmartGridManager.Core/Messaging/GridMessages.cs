@@ -94,6 +94,9 @@ namespace SmartGridManager.Core.Messaging
         [MessageBodyMember]
         public float energy { get; set; }
 
+        [MessageBodyMember]
+        public float price { get; set; }
+
         public EndProposalMessage() { }
     }
 
