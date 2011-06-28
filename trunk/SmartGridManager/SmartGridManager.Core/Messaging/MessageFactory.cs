@@ -136,5 +136,18 @@ namespace SmartGridManager.Core.Messaging
 
             return message;
         }
+
+        public static RemoteEndProposalMessage createRemoteEndProposalMessage(EndProposalMessage endPropMessage, string resolverName, string resolverIP, string resolverPort)
+        {
+            RemoteEndProposalMessage message = new RemoteEndProposalMessage()
+            {
+                header = Tools.getHeader("RemoteResolver", resolverName),
+                endProposalMessage = endPropMessage,
+                IP = resolverIP,
+                port = resolverPort
+            };
+
+            return message;
+        }
     }
 }
