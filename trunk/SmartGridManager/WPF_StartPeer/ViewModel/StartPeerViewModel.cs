@@ -158,6 +158,26 @@ namespace WPF_StartPeer.ViewModel
             }
         }
 
+        public float GetTotalEnergy
+        {
+            get { return _totalEnergy; }
+            set
+            {
+                _totalEnergy = value;
+                OnPropertyChanged("GetTotalEnergy");
+            }
+        }
+
+        public float GetTotalPrice
+        {
+            get { return _totalPrice; }
+            set
+            {
+                _totalPrice = value;
+                OnPropertyChanged("GetTotalPrice");
+            }
+        }
+
         public int GetPriceWidth
         {
             get { return _priceHeaderWidth; }
