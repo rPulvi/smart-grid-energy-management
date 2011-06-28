@@ -433,9 +433,9 @@
 					<ListView.View>
 						<GridView>
                             <GridViewColumn Header="{Binding GetSellerBuyer}" CellTemplate="{StaticResource SellerBuyerName}" Width="100"/>
-                            <GridViewColumn Header="Energy (KW/h)" CellTemplate="{StaticResource SellerBuyerEnergy}" Width="100"/>
-                            <GridViewColumn Header="Price € (KW/h)" CellTemplate="{StaticResource SellerBuyerPrice}" Width="150"/>
-						</GridView>
+                            <GridViewColumn Header="Energy (KW/h)" CellTemplate="{StaticResource SellerBuyerEnergy}" Width="Auto"/>
+                            <GridViewColumn Header="Price € (KW/h)" CellTemplate="{StaticResource SellerBuyerPrice}" Width="{Binding GetPriceWidth}"/>
+                        </GridView>
 					</ListView.View>
 				</ListView>
 				<Grid Margin="27,0" Grid.Row="1" VerticalAlignment="Bottom">
