@@ -132,6 +132,9 @@ namespace WPF_StartPeer.ViewModel
 
         void _refreshListTimer_Tick(object sender, EventArgs e)
         {
+            _totalPrice = 0;
+            _totalEnergy = 0;
+
             if (_status == PeerStatus.Producer)
                 _sellersBuyersList = house.GetEnergyConsumers();
             else
