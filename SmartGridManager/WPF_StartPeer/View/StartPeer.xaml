@@ -243,11 +243,14 @@
         </Style>
         <!--END LIST STYLE-->
 
-        <DataTemplate x:Key="SellerDataTemplate">
-			<TextBlock Text="{Binding TODO}" Width="Auto" Height="Auto"/>
+        <DataTemplate x:Key="SellerBuyerName">
+			<TextBlock Text="{Binding peerName}" Width="Auto" Height="Auto"/>
 		</DataTemplate>
-		<DataTemplate x:Key="PriceDataTemplate">
-			<TextBlock Text="{Binding TODO}" Width="Auto" Height="Auto"/>
+        <DataTemplate x:Key="SellerBuyerEnergy">
+            <TextBlock Text="{Binding energy}" Width="Auto" Height="Auto"/>
+        </DataTemplate>
+        <DataTemplate x:Key="SellerBuyerPrice">
+			<TextBlock Text="{Binding price}" Width="Auto" Height="Auto"/>
 		</DataTemplate>
 		
 	</Window.Resources>
@@ -286,7 +289,7 @@
                         <Image Source="/img/check-icon.png" Width="18" Height="18" Visibility="{Binding CheckIconFieldsVisibility}"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Info" Foreground="Blue" Command="{Binding ShowInfo}">
+                <MenuItem Header="Info" Foreground="{Binding GetInfoColour}" Command="{Binding ShowInfo}" IsEnabled="{Binding InfoViewEnabled}">
                     <MenuItem.Icon>
                         <Image Source="/img/check-icon.png" Width="18" Height="18" Visibility="{Binding CheckIconInfoVisibility}"/>
                     </MenuItem.Icon>
@@ -425,12 +428,13 @@
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="Auto"/>
 				</Grid.RowDefinitions>
-				<ListView ItemsSource="{Binding TODO}"
+                <ListView ItemsSource="{Binding GetSellersBuyersList}"
 					ItemContainerStyle="{StaticResource ListViewItemContainerStyle}" Margin="0,0,0,10">
 					<ListView.View>
 						<GridView>
-                            <GridViewColumn Header="Seller" CellTemplate="{StaticResource SellerDataTemplate}" Width="150"/>
-                            <GridViewColumn Header="Price € (KW/h)" CellTemplate="{StaticResource PriceDataTemplate}" Width="150"/>
+                            <GridViewColumn Header="{Binding GetSellerBuyer}" CellTemplate="{StaticResource SellerBuyerName}" Width="100"/>
+                            <GridViewColumn Header="Energy (KW/h)" CellTemplate="{StaticResource SellerBuyerEnergy}" Width="100"/>
+                            <GridViewColumn Header="Price € (KW/h)" CellTemplate="{StaticResource SellerBuyerPrice}" Width="150"/>
 						</GridView>
 					</ListView.View>
 				</ListView>
