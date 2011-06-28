@@ -56,7 +56,7 @@ namespace WPF_Resolver.ViewModel
         private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
 
         private ObservableCollectionEx<TempBuilding> _peerList = new ObservableCollectionEx<TempBuilding>();
-        private ObservableCollectionEx<RemoteHost> _hostList = new ObservableCollectionEx<RemoteHost>();
+        private ObservableCollectionEx<Resolver.Resolver.RemoteConnection> _hostList = new ObservableCollectionEx<Resolver.Resolver.RemoteConnection>();
         private DispatcherTimer _timelineTemp;
         private DispatcherTimer _UIRefresh;
         private DispatcherTimer _clockBar;
@@ -195,9 +195,14 @@ namespace WPF_Resolver.ViewModel
             get { return _peerList; }
         }
 
-        public ObservableCollectionEx<RemoteHost> HostList
+        public ObservableCollectionEx<Resolver.Resolver.RemoteConnection> HostList
         {
             get { return _hostList; }
+            set
+            {
+                _hostList = value;
+                OnPropertyChanged("HostList");
+            }
         }
 
         public ObservableDictionary<DateTime, float> GetPointTimeLine
@@ -445,7 +450,7 @@ namespace WPF_Resolver.ViewModel
             _peerList = _resolver.GetConnectedPeers();
             OnPropertyChanged("PeerList");
 
-            //_hostList = Tools.getRemoteHosts();
+            _hostList = _resolver.GetRemoteConnections();
             OnPropertyChanged("HostList");
             
             for(int i=0;i< _peerList.Count;i++)
