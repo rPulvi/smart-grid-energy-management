@@ -524,26 +524,31 @@ namespace WPF_Resolver.ViewModel
 
         private void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _clockBar.Start();
-            _UIRefresh.Start();
-            _timelineTemp.Start();
+            if (_resolver.isLocalConnected)
+            {
+                _clockBar.Start();
+                _UIRefresh.Start();
+                _timelineTemp.Start();
 
-            _startIsEnabled = false;
-            _startColour = "Gray";
-            
-            _resolverName = _resolver.name;
-            _resolverStatus = "Online...";
-            _getTimeVisibility = Visibility.Visible;
+                _startIsEnabled = false;
+                _startColour = "Gray";
 
-            _imgPath = @"/WPF_Resolver;component/img/resolver_ok.png";
+                _resolverName = _resolver.name;
+                _resolverStatus = "Online...";
+                _getTimeVisibility = Visibility.Visible;
 
-            OnPropertyChanged("GetImgPath");
-            OnPropertyChanged("GetResolverName");         
-            OnPropertyChanged("GetResolverStatus");
-            OnPropertyChanged("GetResolverIP");
-            OnPropertyChanged("GetTimeVisibility");
-            OnPropertyChanged("GetIsEnabledStatus");
-            OnPropertyChanged("GetStartColour");
+                _imgPath = @"/WPF_Resolver;component/img/resolver_ok.png";
+
+                OnPropertyChanged("GetImgPath");
+                OnPropertyChanged("GetResolverName");
+                OnPropertyChanged("GetResolverStatus");
+                OnPropertyChanged("GetResolverIP");
+                OnPropertyChanged("GetTimeVisibility");
+                OnPropertyChanged("GetIsEnabledStatus");
+                OnPropertyChanged("GetStartColour");
+            }
+            else
+                MessageBox.Show("Error in starting Local Resolver Service. Please check your NetConfig.xml file.", "Resolver Service - Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private bool canDo
