@@ -64,13 +64,10 @@
 
         <!-- Coloumn Header Template for ListRemote -->
         <DataTemplate x:Key="HostRemoteNameColHeader">
-            <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="90"/>
+            <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="100"/>
         </DataTemplate>
-        <DataTemplate x:Key="RemoteContactedColHeader">
-            <TextBlock Text="Contacted on" Style="{StaticResource ColTextHeaderStyle}" Width="90"/>
-        </DataTemplate>
-        <DataTemplate x:Key="RemoteContactedByColHeader">
-            <TextBlock Text="Contacted by" Style="{StaticResource ColTextHeaderStyle}" Width="95"/>
+        <DataTemplate x:Key="RemoteEnergyColHeader">
+            <TextBlock Text="Energy" Style="{StaticResource ColTextHeaderStyle}" Width="100"/>
         </DataTemplate>
 
         <Style x:Key="myMenu" TargetType="{x:Type TextBlock}">
@@ -1138,19 +1135,15 @@
         <!--END LIST GRIPPER STYLE-->
 
     </Window.Resources>
-    
-	<Window.Background>
-		<LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-			<GradientStop Color="#FF3B6776" Offset="1"/>
-			<GradientStop Color="#FF1F282B" Offset="0.004"/>
-		</LinearGradientBrush>
-	</Window.Background>
-	
-	<!--<Window.Background>
-		<ImageBrush ImageSource="/img/wallpaper.jpg"/>
-	</Window.Background>-->
-    
-	<Grid>
+
+    <Window.Background>
+        <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
+            <GradientStop Color="#FF3B6776" Offset="1"/>
+            <GradientStop Color="#FF1F282B" Offset="0.004"/>
+        </LinearGradientBrush>
+    </Window.Background>
+
+    <Grid>
 		
 		<Grid.Resources>
 
@@ -1241,7 +1234,7 @@
 
 
             <!--Template for ListView_REMOTE-->
-            <DataTemplate x:Key="RemoteHostItemTemplate">
+            <DataTemplate x:Key="RemoteHostNameTemplate">
                 <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8" Height="70">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -1249,29 +1242,18 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding TODO}" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
-                        <TextBlock FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" Text="{Binding TODO}" VerticalAlignment="Center" Grid.Column="1" />
+                        <TextBlock FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" Text="{Binding resolverName}" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
 
-            <DataTemplate x:Key="RemoteHostContactedTemplate">
+            <DataTemplate x:Key="RemoteHostEnergyTemplate">
                 <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding TODO}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
-                    </Grid>
-                </Border>
-            </DataTemplate>
-
-            <DataTemplate x:Key="RemoteHostContactedByTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding TODO}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding totalEnergy}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -1496,9 +1478,7 @@
 					util:GridViewSort.SortGlyphDescending="/img/down.png">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostItemTemplate}" util:GridViewSort.PropertyName="HostName"/>
-                            <GridViewColumn HeaderTemplate="{StaticResource RemoteContactedColHeader}" CellTemplate="{StaticResource RemoteHostContactedTemplate}" util:GridViewSort.PropertyName="Contacted"/>
-                            <GridViewColumn HeaderTemplate="{StaticResource RemoteContactedByColHeader}" CellTemplate="{StaticResource RemoteHostContactedByTemplate}" util:GridViewSort.PropertyName="ContactedBy"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostNameTemplate}" util:GridViewSort.PropertyName="resolverName"/>
                         </GridView>
                     </ListView.View>
                 </ListView>

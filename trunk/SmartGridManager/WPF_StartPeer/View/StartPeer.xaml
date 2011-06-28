@@ -284,7 +284,7 @@
                 </MenuItem>
 			</MenuItem>
 			<MenuItem Header="View" Foreground="White">
-                <MenuItem Header="Fields" Foreground="Blue" Command="{Binding ShowFields}">
+                <MenuItem Header="Setup" Foreground="Blue" Command="{Binding ShowFields}">
                     <MenuItem.Icon>
                         <Image Source="/img/check-icon.png" Width="18" Height="18" Visibility="{Binding CheckIconFieldsVisibility}"/>
                     </MenuItem.Icon>
@@ -325,7 +325,7 @@
 					<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}"/>
 				</Rectangle.Fill>
 			</Rectangle>
-			<StackPanel Margin="17,8,20,2" Visibility="{Binding SetFieldsVisibility}" d:IsHidden="True" d:IsLocked="True">
+			<StackPanel Margin="17,8,20,2" Visibility="{Binding SetFieldsVisibility}">
 				<StackPanel Orientation="Vertical" IsEnabled="{Binding FormEnabled}">
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -396,6 +396,14 @@
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Administrator:"/></TextBlock>
 						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Admin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtAdministrator" Height="23" Margin="0" TextWrapping="Wrap" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
 					</Grid>
+					<Grid Margin="0,0,0,5">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="0.4*"/>
+							<ColumnDefinition Width="0.6*"/>
+						</Grid.ColumnDefinitions>
+                        <TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Resolver IP:"/></TextBlock>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding HostIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="23" Margin="0" TextWrapping="Wrap" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
+					</Grid>
 				
 				
 				
@@ -423,7 +431,7 @@
 					</Grid>
 				</Button>
 			</StackPanel>
-			<Grid Margin="17,8,20,2" Visibility="{Binding SetInfoVisibility}">
+			<Grid Margin="17,8,20,2" Visibility="{Binding SetInfoVisibility}" d:IsLocked="True" d:IsHidden="True">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="Auto"/>

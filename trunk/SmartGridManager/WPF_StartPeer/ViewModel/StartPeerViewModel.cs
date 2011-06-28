@@ -10,6 +10,7 @@ using System.Windows;
 using System.ComponentModel;
 using WPF_StartPeer.Command;
 using System.Windows.Threading;
+using System.Xml.Linq;
 
 namespace WPF_StartPeer.ViewModel
 {
@@ -30,6 +31,7 @@ namespace WPF_StartPeer.ViewModel
         private string _checkIconInfoVisibility;
         private string _sellerBuyer;
         private string _infoColour;
+        private string _hostIP;
 
         private bool _infoViewEnabled;
         private bool _formEnabled;
@@ -149,6 +151,16 @@ namespace WPF_StartPeer.ViewModel
             OnPropertyChanged("GetSellersBuyersList");
             OnPropertyChanged("GetTotalPrice");
             OnPropertyChanged("GetTotalEnergy");
+        }
+
+        public string HostIP
+        {
+            get { return _hostIP; }
+            set
+            {
+                _hostIP = value;
+                OnPropertyChanged("HostIP");
+            }
         }
 
         public ObservableCollectionEx<EnergyLink> GetSellersBuyersList
@@ -494,6 +506,8 @@ namespace WPF_StartPeer.ViewModel
 
         public void Connect()
         {
+            //SetHostIP();
+
             house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
 
             //Timer to refresh Sellers/Buyers list
@@ -636,6 +650,29 @@ namespace WPF_StartPeer.ViewModel
             }
 
             return sRet;
+        }
+
+        public void SetHostIP()
+        {
+            XDocument _appConfig = XDocument.Load(@"../../App.config");
+
+            try
+            {
+                _appConfig.Element("configuration")
+                    .Element("system.serviceModel")
+                    .Element("bindings")
+                    .Element("netPeerTcpBinding")
+                    .Element("binding")
+                    .Element("resolver")
+                    .Element("custom")
+                    .Attribute("address").SetValue("net.tcp://" + HostIP + ":8080/peerResolverService");
+
+                _appConfig.Save("../../App.config");
+            }
+            catch(Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
         private class ErrorMap
