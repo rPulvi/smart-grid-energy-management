@@ -28,9 +28,7 @@ namespace Resolver
         /********************************/
         #endregion
 
-        #region Attributes
-
-        private string _originPeerName;
+        #region Attributes        
 
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
