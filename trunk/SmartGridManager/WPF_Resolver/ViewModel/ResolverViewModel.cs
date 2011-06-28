@@ -28,6 +28,7 @@ namespace WPF_Resolver.ViewModel
         private string _enTh;
         private string _imgPath;
         private string _startColour;
+        private string _remoteHostName;
 
         private int _localFontSize;
         private int _remoteFontSize;
@@ -79,6 +80,9 @@ namespace WPF_Resolver.ViewModel
         public ResolverViewModel()
         {
             #region init
+            _remoteHostName = "";
+            OnPropertyChanged("RemoteHostName");
+
             _startIsEnabled = true;
             OnPropertyChanged("GetIsEnabledStatus");
 
@@ -158,6 +162,16 @@ namespace WPF_Resolver.ViewModel
             this.SetRemoteFont = new DelegateCommand((o) => this.ChangeRemoteFontSize(), o => this.canDo);
             this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
             this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
+        }
+
+        public string RemoteHostName
+        {
+            get { return _remoteHostName; }
+            set
+            {
+                _remoteHostName = value;
+                OnPropertyChanged("RemoteHostName");
+            }
         }
 
         public ObservableDictionary<string, int> GetPieChartData

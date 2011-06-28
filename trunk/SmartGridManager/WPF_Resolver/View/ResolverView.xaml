@@ -64,7 +64,7 @@
 
         <!-- Coloumn Header Template for ListRemote -->
         <DataTemplate x:Key="HostRemoteNameColHeader">
-            <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="100"/>
+            <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
         <DataTemplate x:Key="RemoteEnergyColHeader">
             <TextBlock Text="Energy" Style="{StaticResource ColTextHeaderStyle}" Width="100"/>
@@ -1242,21 +1242,11 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding TODO}" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
-                        <TextBlock FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" Text="{Binding resolverName}" VerticalAlignment="Center" Grid.Column="1" />
+                        <TextBlock Text="{Binding RemoteHostName}" FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
 
-            <DataTemplate x:Key="RemoteHostEnergyTemplate">
-                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding totalEnergy}" VerticalAlignment="Center" Grid.Column="0" HorizontalAlignment="Left"/>
-                    </Grid>
-                </Border>
-            </DataTemplate>
 
             <Style x:Key="ListViewItemContainerStyle" TargetType="{x:Type ListViewItem}">
 				<Setter Property="Background" Value="#ffffff" />
@@ -1478,7 +1468,7 @@
 					util:GridViewSort.SortGlyphDescending="/img/down.png">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostNameTemplate}" util:GridViewSort.PropertyName="resolverName"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostNameTemplate}" util:GridViewSort.PropertyName="RemoteHostName" Width="500"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
