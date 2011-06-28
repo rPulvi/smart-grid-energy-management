@@ -39,6 +39,8 @@ namespace WPF_StartPeer.ViewModel
         private float _price;
         private float _enProduced;
 
+        private int _priceHeaderWidth;
+
         private EnergyType _enType;
         private PeerStatus _status;
 
@@ -69,6 +71,9 @@ namespace WPF_StartPeer.ViewModel
         public StartPeerViewModel()
         {
 			#region Init
+            _priceHeaderWidth = 0;
+            OnPropertyChanged("GetPriceWidth");
+
             _refreshListTimer = new DispatcherTimer();
             _refreshListTimer.Interval = new TimeSpan(0, 0, 4);
             _refreshListTimer.Tick += new EventHandler(_refreshListTimer_Tick);
@@ -134,6 +139,16 @@ namespace WPF_StartPeer.ViewModel
             {
                 _sellersBuyersList = value;
                 OnPropertyChanged("GetSellersBuyersList");
+            }
+        }
+
+        public int GetPriceWidth
+        {
+            get { return _priceHeaderWidth; }
+            set
+            {
+                _priceHeaderWidth = value;
+                OnPropertyChanged("GetPriceWidth");
             }
         }
 
@@ -407,21 +422,23 @@ namespace WPF_StartPeer.ViewModel
                     _infoViewEnabled = true;
                     _infoColour = "Blue";
 
-                    OnPropertyChanged("InfoViewEnabled");
-                    OnPropertyChanged("GetInfoColour");
-
                     if (_status == PeerStatus.Consumer)
                     {
                         EnType = EnergyType.None;
 
                         _sellerBuyer = "Sellers";
-                        OnPropertyChanged("GetSellerBuyer");
+                        _priceHeaderWidth = 100;
                     }
                     else
                     {
                         _sellerBuyer = "Buyers";
-                        OnPropertyChanged("GetSellerBuyer"); 
+                        _priceHeaderWidth = 0;
                     }
+
+                    OnPropertyChanged("InfoViewEnabled");
+                    OnPropertyChanged("GetInfoColour");
+                    OnPropertyChanged("GetSellerBuyer");
+                    OnPropertyChanged("GetPriceWidth");
 
                     Connect();
                 }
@@ -548,6 +565,12 @@ namespace WPF_StartPeer.ViewModel
                 bRet = false;
             }
 
+            if (EnProduced <= EnPeak)
+            {
+                _errorMessages[7].nCheck = 1;
+                bRet = false;
+            }
+
             return bRet;
         }
 
@@ -560,6 +583,7 @@ namespace WPF_StartPeer.ViewModel
             _errorMessages.Add(new ErrorMap(0, @"Insert a valid value for 'Energy Produced'.")); //4
             _errorMessages.Add(new ErrorMap(0, @"Insert a valid Address.")); //5
             _errorMessages.Add(new ErrorMap(0, @"Insert a valid value for 'Admin'.")); //6
+            _errorMessages.Add(new ErrorMap(0, @"'Producer' is flagged. 'Energy Produced' can't be less than 'Energy Peak'.")); //7
         }
 
         private string getErrorMessages()
