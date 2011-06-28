@@ -450,7 +450,7 @@
 								</LinearGradientBrush>
 							</Rectangle.Fill>
 						</Rectangle>
-						<TextBlock Margin="0,0,10,0" Text="31.5" FontSize="46.667" VerticalAlignment="Center" FontFamily="Calibri" FontWeight="Bold" HorizontalAlignment="Right" Foreground="White" Opacity="0.455" TextWrapping="Wrap"/>
+						<TextBlock Margin="0,0,10,0" Text="{Binding GetTotalEnergy}" FontSize="46.667" VerticalAlignment="Center" FontFamily="Calibri" FontWeight="Bold" HorizontalAlignment="Right" Foreground="White" Opacity="0.455" TextWrapping="Wrap"/>
 						<TextBlock Height="18" Margin="10,0,0,-4" Text="KW/h" FontSize="10.667" VerticalAlignment="Bottom" FontFamily="Calibri" FontWeight="Bold"/>
 					</Grid>
 					<Grid Margin="0" HorizontalAlignment="Right" VerticalAlignment="Bottom">
@@ -464,7 +464,7 @@
 								</LinearGradientBrush>
 							</Rectangle.Fill>
 						</Rectangle>
-						<TextBlock Margin="0,0,10,0" Text="465" FontSize="46.667" VerticalAlignment="Center" FontFamily="Calibri" FontWeight="Bold" HorizontalAlignment="Right" Foreground="White" Opacity="0.455" TextWrapping="Wrap"/>
+						<TextBlock Margin="0,0,10,0" Text="{Binding GetTotalPrice}" FontSize="46.667" VerticalAlignment="Center" FontFamily="Calibri" FontWeight="Bold" HorizontalAlignment="Right" Foreground="White" Opacity="0.455" TextWrapping="Wrap"/>
 						<TextBlock Height="18" Margin="10,0,0,-4" Text="EUR" FontSize="10.667" VerticalAlignment="Bottom" FontFamily="Calibri" FontWeight="Bold"/>
 					</Grid>
 					<Grid Margin="0" HorizontalAlignment="Center" VerticalAlignment="Top" d:IsLocked="True">
