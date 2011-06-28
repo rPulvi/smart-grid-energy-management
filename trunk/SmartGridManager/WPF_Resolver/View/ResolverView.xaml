@@ -1242,7 +1242,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding TODO}" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
-                        <TextBlock Text="{Binding RemoteHostName}" FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
+                        <TextBlock Text="{Binding resolverName}" FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
             </DataTemplate>
@@ -1468,7 +1468,7 @@
 					util:GridViewSort.SortGlyphDescending="/img/down.png">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostNameTemplate}" util:GridViewSort.PropertyName="RemoteHostName" Width="500"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostNameTemplate}" util:GridViewSort.PropertyName="resolverName"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
