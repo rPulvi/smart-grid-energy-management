@@ -37,9 +37,10 @@ namespace SmartGridManager
         
         private PeerStatus _peerStatus;
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
-        private List<EnergyLink> _producers = new List<EnergyLink>();
-        private List<EnergyLink> _consumers = new List<EnergyLink>();
 
+        public ObservableCollectionEx<EnergyLink> producers { get; private set; }
+        public ObservableCollectionEx<EnergyLink> consumers { get; private set; }
+        
         #region Timers
         private System.Timers.Timer _proposalCountdown; //Countdown to elaborate the incoming proposal
         private System.Timers.Timer _heartBeatTimer; //Heartbeat frequency 
@@ -69,7 +70,10 @@ namespace SmartGridManager
             _enPeak = energyPeak;
             _name = bName;
             _peerStatus = status;
-                       
+
+            producers = new ObservableCollectionEx<EnergyLink>();
+            consumers = new ObservableCollectionEx<EnergyLink>();
+
             _price = price;
             _enBought = 0f;
             _enSold = 0f;
@@ -233,7 +237,7 @@ namespace SmartGridManager
                     XMLLogger.WriteLocalActivity("Ok, " + message.energy + " KW/h sold to " + message.header.Sender);                    
 
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
-                    _consumers.Add(link);
+                    consumers.Add(link);
 
                     //Advise the Local Resolver About the energy status change.
                     //and the remote?
@@ -265,7 +269,7 @@ namespace SmartGridManager
                     XMLLogger.WriteLocalActivity("Energy received from " + message.header.Sender);                    
 
                     EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
-                    _producers.Add(link);
+                    producers.Add(link);
 
                     //Advise the Local Resolver About the energy status change.
                     Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
@@ -301,24 +305,24 @@ namespace SmartGridManager
         private void SomePeerIsDown(PeerIsDownMessage message)
         { 
             //Update my Energy Consumers List
-            for (int i = 0; i < _consumers.Count; i++)
+            for (int i = 0; i < consumers.Count; i++)
             {
-                if (_consumers[i].peerName == message.peerName)
+                if (consumers[i].peerName == message.peerName)
                 {
-                    _enSold = _enSold - _consumers[i].energy;
-                    _consumers.RemoveAt(i);
+                    _enSold = _enSold - consumers[i].energy;
+                    consumers.RemoveAt(i);
                     Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
                     break;
                 }
             }
 
             //Update my Energy Producers (Suppliers) List
-            for (int i = 0; i < _producers.Count; i++)
+            for (int i = 0; i < producers.Count; i++)
             {
-                if (_producers[i].peerName == message.peerName)
+                if (producers[i].peerName == message.peerName)
                 {
-                    _enBought = _enBought - _producers[i].energy;
-                    _producers.RemoveAt(i);
+                    _enBought = _enBought - producers[i].energy;
+                    producers.RemoveAt(i);
                     Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
                     break;
                 }
@@ -337,20 +341,6 @@ namespace SmartGridManager
             _generator.Stop();            
         }
 
-        #endregion
-
-        #region EnergyLink Class
-        private class EnergyLink
-        {
-            public string peerName { get; private set; }
-            public float energy { get; private set; }            
-            
-            public EnergyLink(string name, float en)
-            {
-                this.peerName = name;
-                this.energy = en;               
-            }
-        }
         #endregion
     }
 }
