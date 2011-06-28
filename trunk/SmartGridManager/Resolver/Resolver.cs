@@ -272,8 +272,9 @@ namespace Resolver
                 remConn = new IncomingConnection()
                 {
                     channel = tChannel,
+                    remoteResolverName = message.header.Sender,
                     IP = message.IP,
-                    port = message.port
+                    port = message.port                    
                 };
 
                 remConn.requests.Add(message.enReqMessage.header.MessageID, message.enReqMessage.header.Sender);
@@ -439,8 +440,9 @@ namespace Resolver
 
         public ObservableCollectionEx<RemoteConnection> GetRemoteConnections()
         {
-            ObservableCollectionEx<RemoteConnection> listRet = new ObservableCollectionEx<RemoteConnection>();
-            
+            ObservableCollectionEx<RemoteConnection> listRet = new ObservableCollectionEx<RemoteConnection>();            
+
+            //Outgoing Connections
             var connections =
                 from c in _outgoingConnections
                 group c by c.remoteResolverName into oc
@@ -454,6 +456,18 @@ namespace Resolver
                     totalEnergy = c.TotalEnergy
                 };
                 
+                listRet.Add(rc);
+            }
+
+            //Incoming Connections
+            foreach (var ic in _incomingConnections)
+            {
+                RemoteConnection rc = new RemoteConnection()
+                {
+                    resolverName = ic.remoteResolverName,
+                    totalEnergy = 0
+                };
+
                 listRet.Add(rc);
             }
 
@@ -540,10 +554,11 @@ namespace Resolver
 
         private class IncomingConnection
         {
-            public IRemote channel;            
+            public IRemote channel;
+            public string remoteResolverName;
             public Dictionary<Guid, string> requests = new Dictionary<Guid,string>();
             public string IP;
-            public string port;
+            public string port;            
         }
     
         private class OutgoingConnection
@@ -553,7 +568,7 @@ namespace Resolver
             public float energyRequired;
         }
 
-        private class RemoteConnection
+        public class RemoteConnection
         {
             public string resolverName;
             public float totalEnergy;
