@@ -236,7 +236,7 @@ namespace SmartGridManager
 
                     XMLLogger.WriteLocalActivity("Ok, " + message.energy + " KW/h sold to " + message.header.Sender);                    
 
-                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
+                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy,_price);
                     consumers.Add(link);
 
                     //Advise the Local Resolver About the energy status change.
@@ -249,7 +249,9 @@ namespace SmartGridManager
                     message.header.Sender,
                     _name,
                     status,
-                    message.energy);
+                    message.energy,
+                    _price
+                    );
 
                 if (message.header.Sender == _resolverName)
                     Connector.channel.forwardEnergyReply(respMessage);
@@ -268,7 +270,7 @@ namespace SmartGridManager
 
                     XMLLogger.WriteLocalActivity("Energy received from " + message.header.Sender);                    
 
-                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy);
+                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy,message.price);
                     producers.Add(link);
 
                     //Advise the Local Resolver About the energy status change.
