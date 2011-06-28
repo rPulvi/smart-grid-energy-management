@@ -68,5 +68,15 @@ namespace SmartGridManager
 
             XMLLogger.WriteLocalActivity("Hello Message Sent.");
         }
+
+        public ObservableCollectionEx<EnergyLink> GetEnergyProducers()
+        {
+            return _pwManager.producers;
+        }
+
+        public ObservableCollectionEx<EnergyLink> GetEnergyConsumers()
+        {
+            return _pwManager.consumers;
+        }
     }
 }

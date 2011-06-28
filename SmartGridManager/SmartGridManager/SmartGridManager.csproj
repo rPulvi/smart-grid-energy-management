@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Building.cs" />
     <Compile Include="EnergyGenerator.cs" />
+    <Compile Include="EnergyLink.cs" />
     <Compile Include="PowerManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
