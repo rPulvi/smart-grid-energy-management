@@ -35,6 +35,8 @@ namespace WPF_StartPeer.ViewModel
         private bool _formEnabled;
         private bool _isStartable = true;
 
+        private float _totalEnergy;
+        private float _totalPrice;
         private float _enPeak;
         private float _price;
         private float _enProduced;
@@ -71,6 +73,12 @@ namespace WPF_StartPeer.ViewModel
         public StartPeerViewModel()
         {
 			#region Init
+            _totalEnergy = 0f;
+            _totalPrice = 0f;
+
+            OnPropertyChanged("GetTotalEnergy");
+            OnPropertyChanged("GetTotalPrice");
+
             _priceHeaderWidth = 0;
             OnPropertyChanged("GetPriceWidth");
 
@@ -129,7 +137,15 @@ namespace WPF_StartPeer.ViewModel
             else
                 _sellersBuyersList = house.GetEnergyProducers();
 
+            foreach (var v in _sellersBuyersList)
+            {
+                _totalEnergy += (v.energy * v.price);
+                _totalPrice += v.energy;
+            }
+
             OnPropertyChanged("GetSellersBuyersList");
+            OnPropertyChanged("GetTotalPrice");
+            OnPropertyChanged("GetTotalEnergy");
         }
 
         public ObservableCollectionEx<EnergyLink> GetSellersBuyersList
@@ -565,7 +581,7 @@ namespace WPF_StartPeer.ViewModel
                 bRet = false;
             }
 
-            if (EnProduced <= EnPeak)
+            if (_status == PeerStatus.Producer && (EnProduced <= EnPeak))
             {
                 _errorMessages[7].nCheck = 1;
                 bRet = false;
