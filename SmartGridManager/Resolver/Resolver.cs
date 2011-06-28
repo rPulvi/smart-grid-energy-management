@@ -437,10 +437,10 @@ namespace Resolver
             }
         }
 
-        public ObservableDictionary<string, float> GetRemoteConnections()
+        public ObservableCollectionEx<RemoteConnection> GetRemoteConnections()
         {
-            ObservableDictionary<String, float> dicRet = new ObservableDictionary<String, float>();
-
+            ObservableCollectionEx<RemoteConnection> listRet = new ObservableCollectionEx<RemoteConnection>();
+            
             var connections =
                 from c in _outgoingConnections
                 group c by c.remoteResolverName into oc
@@ -448,10 +448,16 @@ namespace Resolver
             
             foreach (var c in connections)
             {
-                dicRet.Add(c.Name,c.TotalEnergy);
+                RemoteConnection rc = new RemoteConnection()
+                {
+                    resolverName = c.Name,
+                    energyTotal = c.TotalEnergy
+                };
+                
+                listRet.Add(rc);
             }
 
-            return dicRet;
+            return listRet;
         }
 
         public void CloseService()
@@ -545,6 +551,12 @@ namespace Resolver
             public string remoteResolverName;
             public string remoteBuildingName;
             public float energyRequired;
+        }
+
+        private class RemoteConnection
+        {
+            public string resolverName;
+            public float energyTotal;
         }
     }
 }
