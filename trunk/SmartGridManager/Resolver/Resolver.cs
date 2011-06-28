@@ -28,7 +28,7 @@ namespace Resolver
         /********************************/
         #endregion
 
-        #region Attributes        
+        #region Attributes
 
         private CustomResolver crs = new CustomResolver { ControlShape = false };
         private ServiceHost customResolver;
@@ -36,14 +36,20 @@ namespace Resolver
         private ServiceHost remoteHost;
         //private IPeerServices remoteChannel;
         private IRemote remoteChannel;
-        private List<RemoteConnection> _incomingConnections = new List<RemoteConnection>();
+
+        private List<RemoteHost> _remoteResolvers = new List<RemoteHost>();
+
+        private List<IncomingConnection> _incomingConnections = new List<IncomingConnection>();
+        private List<OutgoingConnection> _outgoingConnections = new List<OutgoingConnection>();
 
         private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
         public string name { get; private set; }
-        
+
+        private int _nHostIndex = 0;
+
         private PeerStatus _peerStatus;
         
         //TODO: msgbox nel resolver a seconda degli stati.
@@ -89,7 +95,7 @@ namespace Resolver
             if (this.isLocalConnected == true)
             {
                 this.isRemoteServiceStarted = StartRemoteService();
-                this.isRemoteConnected = ConnectToRemoteHost();
+                //this.isRemoteConnected = ConnectToRemoteHost();
 
                 _HBTimer.Enabled = true;
 
@@ -105,7 +111,7 @@ namespace Resolver
                 MsgHandler.OnForwardEnergyReply += new forwardEnergyReply(ForwardEnergyReply);
                 MsgHandler.OnSayHello += new sayHello(HelloResponse);
                 MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
-                MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);
+                MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);                
                 #endregion
 
                 #endregion
@@ -172,18 +178,16 @@ namespace Resolver
 
         private bool ConnectToRemoteHost()
         {
-            bool bRet = false; 
-            int n = 0;
-            List<RemoteHost> h;
+            bool bRet = false;
 
-            h = Tools.getRemoteHosts();
+            _remoteResolvers = Tools.getRemoteHosts();
 
-            while (bRet == false && n < h.Count)
+            while (bRet == false && _nHostIndex < _remoteResolvers.Count)
             {
-                XMLLogger.WriteRemoteActivity("Connecting to " + h[n].IP);
+                XMLLogger.WriteRemoteActivity("Connecting to " + _remoteResolvers[_nHostIndex].IP);
                 
                 NetTcpBinding tcpBinding = new NetTcpBinding();
-                EndpointAddress remoteEndpoint = new EndpointAddress(h[n].netAddress);
+                EndpointAddress remoteEndpoint = new EndpointAddress(_remoteResolvers[_nHostIndex].netAddress);
                 tcpBinding.Security.Mode = SecurityMode.None;
 
                 //ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
@@ -197,22 +201,22 @@ namespace Resolver
                     //Retrieve Remote IP Addresses
                     foreach (var newRemote in remoteChannel.RetrieveContactList())
                     {
-                        if (!h.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
+                        if (!_remoteResolvers.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
                         {
-                            h.Add(newRemote);
+                            _remoteResolvers.Add(newRemote);
                             Tools.updateRemoteHosts(newRemote);
                         }
                     }
 
-                    XMLLogger.WriteRemoteActivity("Connected to: " + h[n].IP);
+                    XMLLogger.WriteRemoteActivity("Connected to: " + _remoteResolvers[_nHostIndex].IP);
                     bRet = true;
                 }
                 catch (Exception e)
                 {
-                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to: " + h[n].IP);
+                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to: " + _remoteResolvers[_nHostIndex].IP);
                     //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
-                    n++;
-                    if (n > h.Count)
+                    _nHostIndex++;
+                    if (_nHostIndex > _remoteResolvers.Count)
                         remoteChannel.Abort();
 
                     bRet = false;
@@ -228,9 +232,11 @@ namespace Resolver
 
         private void ForwardEnergyRequest(StatusNotifyMessage message)   
         {
-            if (isRemoteServiceStarted == true)
+            this.isRemoteConnected = ConnectToRemoteHost();
+
+            if (isRemoteConnected == true)
             {
-                XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender );
+                XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender + "To: " + _remoteResolvers[_nHostIndex]);
                 XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
 
                 remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
@@ -245,7 +251,7 @@ namespace Resolver
 
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
         {
-            RemoteConnection remConn;
+            IncomingConnection remConn;
 
             XMLLogger.WriteRemoteActivity("Received Remote Energy Request from: " + message.enReqMessage.header.Sender + " by Remote Resolver: " + message.header.Sender);
             XMLLogger.WriteRemoteActivity("Message ID: " + message.enReqMessage.header.MessageID);
@@ -263,7 +269,7 @@ namespace Resolver
                 ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
                 IRemote tChannel = cf.CreateChannel();
 
-                remConn = new RemoteConnection()
+                remConn = new IncomingConnection()
                 {
                     channel = tChannel,
                     IP = message.IP,
@@ -284,7 +290,7 @@ namespace Resolver
 
         void ForwardEnergyReply(EndProposalMessage message)
         {            
-            RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID);
+            IncomingConnection conn = GetConnectionByMessageID(message.header.MessageID);
 
             XMLLogger.WriteRemoteActivity("Forwarding Remote Response about message: " + message.header.MessageID + " Status = " + message.endStatus);
             XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
@@ -293,7 +299,10 @@ namespace Resolver
             {                
                 //Header re-handling
                 message.header.Receiver = conn.requests[message.header.MessageID];
-                conn.channel.ReplyEnergyRequest(message);
+
+                RemoteEndProposalMessage remoteEndMessage = (MessageFactory.createRemoteEndProposalMessage(message, this.name, Tools.getLocalIP(), Tools.getResolverServicePort()));
+
+                conn.channel.ReplyEnergyRequest(remoteEndMessage);
 
                 RemoveRequestEntry(message.header.MessageID);
             }
@@ -303,18 +312,26 @@ namespace Resolver
             }
         }
 
-        void ManageRemoteEnergyReply(EndProposalMessage message)
+        void ManageRemoteEnergyReply(RemoteEndProposalMessage message)
         {
-            XMLLogger.WriteRemoteActivity("Received Remote Energy Reply from:" + message.header.Sender);
-            XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
+            OutgoingConnection oC = new OutgoingConnection();
 
-            Connector.channel.endProposal(message);
+            oC.remoteResolverName = message.header.Sender;
+            oC.remoteBuildingName = message.endProposalMessage.header.Sender;
+
+            _outgoingConnections.Add(oC);
+            
+            XMLLogger.WriteRemoteActivity("Received Remote Energy Reply from: " + message.header.Sender);
+            XMLLogger.WriteRemoteActivity("Message ID: " + message.endProposalMessage.header.MessageID);
+
+            Connector.channel.endProposal(message.endProposalMessage);
         }
         
         #endregion
 
         private void RemotePeerIsDown(PeerIsDownMessage message)
         {
+            updateOutgoingConnectionList(message.peerName);
             Connector.channel.peerDown(message);
         }
 
@@ -442,9 +459,10 @@ namespace Resolver
         }
 
         #region Aux Methods
-        private RemoteConnection GetConnection(string IP, string port)
+
+        private IncomingConnection GetConnection(string IP, string port)
         {
-            RemoteConnection cRet = null;
+            IncomingConnection cRet = null;
 
             foreach (var c in _incomingConnections)
             {
@@ -458,7 +476,7 @@ namespace Resolver
             return cRet;
         }
 
-        private RemoteConnection GetConnectionByMessageID(Guid ID)
+        private IncomingConnection GetConnectionByMessageID(Guid ID)
         {
             foreach (var c in _incomingConnections)
             {
@@ -483,16 +501,33 @@ namespace Resolver
                 }
             }
         }
-        #endregion
+
+        private void updateOutgoingConnectionList(string peerName)
+        {
+            for (int i = 0; i < _outgoingConnections.Count; i++)
+            {
+                if (_outgoingConnections[i].remoteBuildingName == peerName)
+                    _outgoingConnections.RemoveAt(i);
+            }
+        }
 
         #endregion
 
-        private class RemoteConnection
+        #endregion
+
+        private class IncomingConnection
         {
             public IRemote channel;            
             public Dictionary<Guid, string> requests = new Dictionary<Guid,string>();
             public string IP;
             public string port;
-        }    
+        }
+    
+        private class OutgoingConnection
+        {
+            public string remoteResolverName;
+            public string remoteBuildingName;
+            public float energyRequired;
+        }
     }
 }
