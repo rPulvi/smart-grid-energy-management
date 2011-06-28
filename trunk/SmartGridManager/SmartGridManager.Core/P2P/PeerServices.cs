@@ -13,8 +13,7 @@ namespace SmartGridManager.Core.P2P
     public delegate void replyEnergyRequest(RemoteEndProposalMessage m);
     public delegate void remotePeerIsDown(PeerIsDownMessage m);
 
-    [ServiceContract]
-    //[ServiceContract(CallbackContract = typeof(IPeerServices))]
+    [ServiceContract]    
     public interface IPeerServices 
     {        
         [OperationContract]
