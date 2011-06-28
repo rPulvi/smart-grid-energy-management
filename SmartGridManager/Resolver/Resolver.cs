@@ -43,6 +43,8 @@ namespace Resolver
         private List<OutgoingConnection> _outgoingConnections = new List<OutgoingConnection>();
 
         private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
+        private ObservableCollectionEx<RemoteConnection> listRet = new ObservableCollectionEx<RemoteConnection>();
+
         private MessageHandler MsgHandler;
         private PeerServices remoteMessageHandler;
 
@@ -439,9 +441,7 @@ namespace Resolver
         }
 
         public ObservableCollectionEx<RemoteConnection> GetRemoteConnections()
-        {
-            ObservableCollectionEx<RemoteConnection> listRet = new ObservableCollectionEx<RemoteConnection>();            
-
+        {            
             //Outgoing Connections
             var connections =
                 from c in _outgoingConnections
