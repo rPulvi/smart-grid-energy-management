@@ -451,7 +451,7 @@ namespace Resolver
                 RemoteConnection rc = new RemoteConnection()
                 {
                     resolverName = c.Name,
-                    energyTotal = c.TotalEnergy
+                    totalEnergy = c.TotalEnergy
                 };
                 
                 listRet.Add(rc);
@@ -556,7 +556,7 @@ namespace Resolver
         private class RemoteConnection
         {
             public string resolverName;
-            public float energyTotal;
+            public float totalEnergy;
         }
     }
 }
