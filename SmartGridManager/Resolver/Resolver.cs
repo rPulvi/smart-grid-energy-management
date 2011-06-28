@@ -437,6 +437,23 @@ namespace Resolver
             }
         }
 
+        public ObservableDictionary<string, float> GetRemoteConnections()
+        {
+            ObservableDictionary<String, float> dicRet = new ObservableDictionary<String, float>();
+
+            var connections =
+                from c in _outgoingConnections
+                group c by c.remoteResolverName into oc
+                select new { Name = oc.Key, TotalEnergy = oc.Sum(c => c.energyRequired) };
+            
+            foreach (var c in connections)
+            {
+                dicRet.Add(c.Name,c.TotalEnergy);
+            }
+
+            return dicRet;
+        }
+
         public void CloseService()
         {
             XMLLogger.WriteLocalActivity("Closing Application...");
