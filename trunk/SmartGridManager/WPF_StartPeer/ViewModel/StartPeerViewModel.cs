@@ -9,6 +9,7 @@ using System.IO;
 using System.Windows;
 using System.ComponentModel;
 using WPF_StartPeer.Command;
+using System.Windows.Threading;
 
 namespace WPF_StartPeer.ViewModel
 {
@@ -27,7 +28,10 @@ namespace WPF_StartPeer.ViewModel
 		private string _setInfoVisibility;
         private string _checkIconFieldsVisibility;
         private string _checkIconInfoVisibility;
+        private string _sellerBuyer;
+        private string _infoColour;
 
+        private bool _infoViewEnabled;
         private bool _formEnabled;
         private bool _isStartable = true;
 
@@ -41,6 +45,10 @@ namespace WPF_StartPeer.ViewModel
         #endregion
 
         #region Objects
+        private DispatcherTimer _refreshListTimer;
+
+        private ObservableCollectionEx<EnergyLink> _sellersBuyersList = new ObservableCollectionEx<EnergyLink>();
+
         SplashScreen sp = new SplashScreen("img/splash.png");
 
         private Building house;
@@ -61,6 +69,19 @@ namespace WPF_StartPeer.ViewModel
         public StartPeerViewModel()
         {
 			#region Init
+            _refreshListTimer = new DispatcherTimer();
+            _refreshListTimer.Interval = new TimeSpan(0, 0, 4);
+            _refreshListTimer.Tick += new EventHandler(_refreshListTimer_Tick);
+
+            _infoColour = "Gray";
+            OnPropertyChanged("GetInfoColour");
+
+            _infoViewEnabled = false;
+            OnPropertyChanged("InfoViewEnabled");
+
+            _sellerBuyer = "";
+            OnPropertyChanged("GetSellerBuyer");
+
             _checkIconFieldsVisibility = "Visible";
             OnPropertyChanged("CheckIconFieldsVisibility");
 
@@ -94,6 +115,56 @@ namespace WPF_StartPeer.ViewModel
             this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
             this.ShowFields = new DelegateCommand((o) => this.FieldsView(), o => this.canDo);
             this.ShowInfo = new DelegateCommand((o) => this.InfoView(), o => this.canDo);
+        }
+
+        void _refreshListTimer_Tick(object sender, EventArgs e)
+        {
+            if (_status == PeerStatus.Producer)
+                _sellersBuyersList = house.GetEnergyConsumers();
+            else
+                _sellersBuyersList = house.GetEnergyProducers();
+
+            OnPropertyChanged("GetSellersBuyersList");
+        }
+
+        public ObservableCollectionEx<EnergyLink> GetSellersBuyersList
+        {
+            get { return _sellersBuyersList; }
+            set
+            {
+                _sellersBuyersList = value;
+                OnPropertyChanged("GetSellersBuyersList");
+            }
+        }
+
+        public string GetInfoColour
+        {
+            get { return _infoColour; }
+            set
+            {
+                _infoColour = value;
+                OnPropertyChanged("GetInfoColour");
+            }
+        }
+
+        public bool InfoViewEnabled
+        {
+            get { return _infoViewEnabled; }
+            set
+            {
+                _infoViewEnabled = value;
+                OnPropertyChanged("InfoViewEnabled");
+            }
+        }
+
+        public string GetSellerBuyer
+        {
+            get { return _sellerBuyer; }
+            set
+            {
+                _sellerBuyer = value;
+                OnPropertyChanged("GetSellerBuyer");
+            }
         }
 
         public void FieldsView()
@@ -333,8 +404,24 @@ namespace WPF_StartPeer.ViewModel
             {
                 if (checkFields() == true)
                 {
+                    _infoViewEnabled = true;
+                    _infoColour = "Blue";
+
+                    OnPropertyChanged("InfoViewEnabled");
+                    OnPropertyChanged("GetInfoColour");
+
                     if (_status == PeerStatus.Consumer)
+                    {
                         EnType = EnergyType.None;
+
+                        _sellerBuyer = "Sellers";
+                        OnPropertyChanged("GetSellerBuyer");
+                    }
+                    else
+                    {
+                        _sellerBuyer = "Buyers";
+                        OnPropertyChanged("GetSellerBuyer"); 
+                    }
 
                     Connect();
                 }
@@ -352,6 +439,9 @@ namespace WPF_StartPeer.ViewModel
         public void Connect()
         {
             house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
+
+            //Timer to refresh Sellers/Buyers list
+            _refreshListTimer.Start();
 
             if (house.isConnected == true)
             {
@@ -373,6 +463,7 @@ namespace WPF_StartPeer.ViewModel
 
                 _formEnabled = false;
                 OnPropertyChanged("FormEnabled");
+
             }
             else
             {
@@ -388,6 +479,11 @@ namespace WPF_StartPeer.ViewModel
 
         public void Disconnect()
         {
+            _sellersBuyersList.Clear();
+            OnPropertyChanged("GetSellersBuyersList");
+
+            _refreshListTimer.Stop();
+
             _isStartable = true;
 
             if(house != null)
