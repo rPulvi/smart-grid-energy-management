@@ -466,6 +466,7 @@ namespace WPF_Resolver.ViewModel
 
             _hostList = _resolver.GetRemoteConnections();
             OnPropertyChanged("HostList");
+
             
             for(int i=0;i< _peerList.Count;i++)
             {
