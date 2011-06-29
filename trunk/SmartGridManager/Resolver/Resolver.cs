@@ -45,6 +45,9 @@ namespace Resolver
         public string name { get; private set; }
 
         private int _nHostIndex = 0;
+        
+        private Thread _brokerThread;
+
 
         private PeerStatus _peerStatus;
         
@@ -275,11 +278,9 @@ namespace Resolver
             }
             else
                 remConn.requests.Add(MessageID, new EnergyLink(remotePeer, energyRequest, 0));
-
-            //Header handling
-            //message.enReqMessage.header.Sender = this.name;
             
-            _broker.EnergyLookUp(message.enReqMessage);
+            _brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
+            _brokerThread.Start(message.enReqMessage);
         }
 
         void ForwardEnergyReply(EndProposalMessage message)

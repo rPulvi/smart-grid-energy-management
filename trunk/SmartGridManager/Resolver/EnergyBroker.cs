@@ -39,8 +39,10 @@ namespace Resolver
             _proposalCountdown.Enabled = false;           
         }
 
-        public void EnergyLookUp(StatusNotifyMessage message)
+        public void EnergyLookUp(object m)
         {
+            StatusNotifyMessage message = (StatusNotifyMessage)m;
+
             _originPeerName = message.header.Sender;
             _enLookUp = message.energyReq;
 
