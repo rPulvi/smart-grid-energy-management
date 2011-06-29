@@ -569,7 +569,7 @@ namespace WPF_Resolver.ViewModel
 
                 item.type = ConnectionType.Incoming;
                 item.iconPath = @"/WPF_Resolver;component/img/red_arrow.png";
-                item.resolverName = iC.remoteResolverName;
+                item.resolverName = iC.remoteResolver.name;
                 item.energy = iC.requests.Sum(x => x.Value.energy);
 
                 _hostList.Add(item);
@@ -581,7 +581,7 @@ namespace WPF_Resolver.ViewModel
 
                 item.type = ConnectionType.Outgoing;
                 item.iconPath = @"/WPF_Resolver;component/img/green_arrow.png";
-                item.resolverName = oC.remoteResolverName;
+                item.resolverName = oC.remoteResolver.name;
                 item.energy = oC.requests.Sum(x => x.Value);
 
                 _hostList.Add(item);
