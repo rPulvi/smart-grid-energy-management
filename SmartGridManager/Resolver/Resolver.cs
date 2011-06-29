@@ -324,9 +324,13 @@ namespace Resolver
 
             if (oC == null)
             {
-                oC.remoteResolverName = message.header.Sender;
-                oC.IP = message.IP;
-                oC.port = message.port;
+                oC = new OutgoingConnection()
+                {
+                    remoteResolverName = message.header.Sender,
+                    IP = message.IP,
+                    port = message.port,                    
+                };
+
                 oC.requests.Add(remoteBuilding, energyBought);
                 
                 _outgoingConnections.Add(oC);
