@@ -148,6 +148,9 @@ namespace WPF_StartPeer.ViewModel
                 _totalPrice += (v.energy * v.price);
             }
 
+            if (_status == PeerStatus.Consumer)
+                _totalPrice = -_totalPrice;
+
             OnPropertyChanged("GetSellersBuyersList");
             OnPropertyChanged("GetTotalPrice");
             OnPropertyChanged("GetTotalEnergy");
