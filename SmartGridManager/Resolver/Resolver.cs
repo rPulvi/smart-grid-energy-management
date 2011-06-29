@@ -55,8 +55,6 @@ namespace Resolver
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();        
 
-        private List<TempBuilding> hbrBuildingd = new List<TempBuilding>();
-
         private System.Timers.Timer _HBTimer;
 
         private object _lLock = new object();
@@ -79,7 +77,7 @@ namespace Resolver
 
             //This timer manage the peer's HB to check the online status
             _HBTimer = new System.Timers.Timer();
-            _HBTimer.Interval = 5000;
+            _HBTimer.Interval = 3500;
             _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
             _HBTimer.Enabled = false;
         }
@@ -260,21 +258,15 @@ namespace Resolver
 
             if (remConn == null)//If entry doesn't exist
             {
-                string address = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote";
-
-                NetTcpBinding tcpBinding = new NetTcpBinding();
-                EndpointAddress remoteEndpoint = new EndpointAddress(address);
-                tcpBinding.Security.Mode = SecurityMode.None;
-
-                ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
-                IRemote tChannel = cf.CreateChannel();
-
                 remConn = new IncomingConnection()
                 {
-                    channel = tChannel,
-                    remoteResolverName = message.header.Sender,
-                    IP = message.IP,
-                    port = message.port                    
+                    remoteResolver = new RemoteHost()
+                    {
+                        name = message.header.Sender,
+                        IP = message.IP,
+                        port = message.port,
+                        netAddress = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote"
+                    }
                 };
 
                 remConn.requests.Add(MessageID, new EnergyLink(remotePeer, energyRequest, 0));
@@ -302,11 +294,18 @@ namespace Resolver
                 //Header re-handling
                 message.header.Receiver = conn.requests[message.header.MessageID].peerName;
 
+                #region Creating Channel
+                NetTcpBinding tcpBinding = new NetTcpBinding();
+                EndpointAddress remoteEndpoint = new EndpointAddress(conn.remoteResolver.netAddress);
+                tcpBinding.Security.Mode = SecurityMode.None;
+
+                ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+                IRemote tChannel = cf.CreateChannel();
+                #endregion
+
                 RemoteEndProposalMessage remoteEndMessage = (MessageFactory.createRemoteEndProposalMessage(message, this.name, Tools.getLocalIP(), Tools.getResolverServicePort()));
 
-                conn.channel.ReplyEnergyRequest(remoteEndMessage);
-
-                //RemoveRequestEntry(message.header.MessageID);
+                tChannel.ReplyEnergyRequest(remoteEndMessage);               
             }
             else
             {
@@ -326,9 +325,13 @@ namespace Resolver
             {
                 oC = new OutgoingConnection()
                 {
-                    remoteResolverName = message.header.Sender,
-                    IP = message.IP,
-                    port = message.port,                    
+                    remoteResolver = new RemoteHost()
+                    {
+                        name = message.header.Sender,
+                        IP = message.IP,
+                        port = message.port,
+                        netAddress = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote"
+                    }
                 };
 
                 oC.requests.Add(remoteBuilding, energyBought);
@@ -419,11 +422,29 @@ namespace Resolver
                         //Remove the deadly peer but first alert the folks.
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
                         
-                        // TODO: fix here                        
-                        if (_incomingConnections.Count > 0)
+                        //Alert Remote Resolvers 
+                        foreach (var iC in _incomingConnections)
                         {
-                            foreach (var c in _incomingConnections)
-                                c.channel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                            NetTcpBinding tcpBinding = new NetTcpBinding();
+                            EndpointAddress remoteEndpoint = new EndpointAddress(iC.remoteResolver.netAddress);
+                            tcpBinding.Security.Mode = SecurityMode.None;
+
+                            ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+                            IRemote tChannel = cf.CreateChannel();
+
+                            tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        }
+
+                        foreach (var oC in _outgoingConnections)
+                        {
+                            NetTcpBinding tcpBinding = new NetTcpBinding();
+                            EndpointAddress remoteEndpoint = new EndpointAddress(oC.remoteResolver.netAddress);
+                            tcpBinding.Security.Mode = SecurityMode.None;
+
+                            ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+                            IRemote tChannel = cf.CreateChannel();
+
+                            tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
                         }
 
                         _buildings.RemoveAt(i);                        
@@ -465,7 +486,6 @@ namespace Resolver
             return _incomingConnections;
         }
 
-
         public List<OutgoingConnection> GetOutgoingConnections()
         {
             return _outgoingConnections;
@@ -500,7 +520,7 @@ namespace Resolver
 
             foreach (var c in _incomingConnections)
             {
-                if (c.IP == IP && c.port == port)
+                if (c.remoteResolver.IP == IP && c.remoteResolver.port == port)
                 {
                     cRet = c;
                     break;
@@ -516,7 +536,7 @@ namespace Resolver
 
             foreach (var c in _outgoingConnections)
             {
-                if (c.IP == IP && c.port == port)
+                if (c.remoteResolver.IP == IP && c.remoteResolver.port == port)
                 {
                     cRet = c;
                     break;
@@ -541,7 +561,7 @@ namespace Resolver
         {           
             for(int i=0;i<_incomingConnections.Count;i++)
             {
-                if (_incomingConnections[i].remoteResolverName == resolvername)
+                if (_incomingConnections[i].remoteResolver.name == resolvername)
                 {                        
                     var itemsToRemove = from c in _incomingConnections[i].requests
                                         where c.Value.peerName == peerName
@@ -551,11 +571,8 @@ namespace Resolver
                         _incomingConnections[i].requests.Remove(key);
                 }
 
-                if (_incomingConnections[i].requests.Count == 0)
-                {
-                    _incomingConnections[i].channel.Close();
-                    _incomingConnections.RemoveAt(i);
-                }
+                if (_incomingConnections[i].requests.Count == 0)                                    
+                    _incomingConnections.RemoveAt(i);                
             }
         }
 
@@ -563,7 +580,7 @@ namespace Resolver
         {
             for (int i = 0; i < _outgoingConnections.Count; i++)
             {
-                if (_outgoingConnections[i].remoteResolverName == resolverName)
+                if (_outgoingConnections[i].remoteResolver.name == resolverName)
                 {
                     if (_outgoingConnections[i].requests.ContainsKey(peerName))
                         _outgoingConnections[i].requests.Remove(peerName);
