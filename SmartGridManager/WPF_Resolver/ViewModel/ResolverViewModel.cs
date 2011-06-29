@@ -28,7 +28,6 @@ namespace WPF_Resolver.ViewModel
         private string _enTh;
         private string _imgPath;
         private string _startColour;
-        private string _remoteHostName;
 
         private int _localFontSize;
         private int _remoteFontSize;
@@ -56,8 +55,8 @@ namespace WPF_Resolver.ViewModel
         private ObservableDictionary<string, float> _enConsBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
 
-        private ObservableCollectionEx<TempBuilding> _peerList = new ObservableCollectionEx<TempBuilding>();
-        private ObservableCollectionEx<Resolver.Resolver.RemoteConnection> _hostList = new ObservableCollectionEx<Resolver.Resolver.RemoteConnection>();
+        private ObservableCollectionEx<TempBuilding> _peerList = new ObservableCollectionEx<TempBuilding>();        
+        private ObservableCollectionEx<RemoteListItem> _hostList = new ObservableCollectionEx<RemoteListItem>():
         private DispatcherTimer _timelineTemp;
         private DispatcherTimer _UIRefresh;
         private DispatcherTimer _clockBar;
@@ -80,9 +79,6 @@ namespace WPF_Resolver.ViewModel
         public ResolverViewModel()
         {
             #region init
-            _remoteHostName = "";
-            OnPropertyChanged("RemoteHostName");
-
             _startIsEnabled = true;
             OnPropertyChanged("GetIsEnabledStatus");
 
@@ -164,16 +160,6 @@ namespace WPF_Resolver.ViewModel
             this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
         }
 
-        public string RemoteHostName
-        {
-            get { return _remoteHostName; }
-            set
-            {
-                _remoteHostName = value;
-                OnPropertyChanged("RemoteHostName");
-            }
-        }
-
         public ObservableDictionary<string, int> GetPieChartData
         {
             get { return _pieList; }
@@ -209,7 +195,7 @@ namespace WPF_Resolver.ViewModel
             get { return _peerList; }
         }
 
-        public ObservableCollectionEx<Resolver.Resolver.RemoteConnection> HostList
+        public ObservableCollectionEx<RemoteListItem> HostList
         {
             get { return _hostList; }
             set
@@ -452,7 +438,7 @@ namespace WPF_Resolver.ViewModel
         }
 
         private void Temporizzatore_Tick(object sender, EventArgs e)
-        {
+        {            
             _numProducers = 0;
             _numConsumers = 0;
 
@@ -462,11 +448,10 @@ namespace WPF_Resolver.ViewModel
             _enThroughput = 0f;
 
             _peerList = _resolver.GetConnectedPeers();
-            OnPropertyChanged("PeerList");
+            
 
-            _hostList = _resolver.GetRemoteConnections();
+            //_hostList = _resolver.GetRemoteConnections();
             OnPropertyChanged("HostList");
-
             
             for(int i=0;i< _peerList.Count;i++)
             {
@@ -495,6 +480,7 @@ namespace WPF_Resolver.ViewModel
             _enProdBar["En.Prod."] = _enProduced;
             _enConsBar["En.Cons."] = _enConsumed;
 
+            OnPropertyChanged("PeerList");
             OnPropertyChanged("GetPieChartData");
             
             OnPropertyChanged("GetEnProducedBar");
@@ -574,6 +560,42 @@ namespace WPF_Resolver.ViewModel
         private bool canDo
         {
             get { return true; }
+        }
+
+        private void ScanConnections()
+        {                                    
+            List<IncomingConnection> incoming = _resolver.GetIncomingConnections();
+            List<OutgoingConnection> outgoing = _resolver.GetOutgoingConnections();
+
+            _hostList.Clear();
+
+            foreach(var iC in incoming)
+            {
+                RemoteListItem item = new RemoteListItem();
+
+                item.type = ConnectionType.Incoming;
+                item.resolverName = iC.remoteResolverName;
+                item.energy = iC.requests.Sum(x => x.Value.energy);
+
+                _hostList.Add(item);
+            }
+
+            foreach(var oC in outgoing)
+            {
+                RemoteListItem item = new RemoteListItem();
+
+                item.type = ConnectionType.Outgoing;
+                item.resolverName = oC.remoteResolverName;
+                item.energy = oC.requests.Sum(x => x.Value);
+                _hostList.Add(item);
+            }
+        }
+
+        private class RemoteListItem
+        {
+            public string resolverName;
+            public ConnectionType type;
+            public float energy;
         }
     }
 }
