@@ -67,7 +67,7 @@
             <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
         <DataTemplate x:Key="RemoteEnergyColHeader">
-            <TextBlock Text="Energy" Style="{StaticResource ColTextHeaderStyle}" Width="100"/>
+            <TextBlock Text="Energy" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
         </DataTemplate>
 
         <Style x:Key="myMenu" TargetType="{x:Type TextBlock}">
@@ -1241,9 +1241,15 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding TODO}" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
+                        <Image Source="/img/green_arrow.png" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding resolverName}" FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
+                </Border>
+            </DataTemplate>
+
+            <DataTemplate x:Key="RemoteHostEnergyTemplate">
+                <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8" Height="70">
+                    <TextBlock Text="{Binding energy}" FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" VerticalAlignment="Center"/>
                 </Border>
             </DataTemplate>
 
@@ -1469,6 +1475,7 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn HeaderTemplate="{StaticResource HostRemoteNameColHeader}" CellTemplate="{StaticResource RemoteHostNameTemplate}" util:GridViewSort.PropertyName="resolverName"/>
+                            <GridViewColumn HeaderTemplate="{StaticResource RemoteEnergyColHeader}" CellTemplate="{StaticResource RemoteHostEnergyTemplate}" util:GridViewSort.PropertyName="energy"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
