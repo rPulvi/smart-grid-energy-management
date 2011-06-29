@@ -80,6 +80,9 @@ namespace SmartGridManager.Core.Messaging
     public class EnergyAcceptMessage : PeerMessage
     {
         [MessageBodyMember]
+        public string peerName { get; set; }
+
+        [MessageBodyMember]
         public float energy { get; set; }
 
         public EnergyAcceptMessage() { }

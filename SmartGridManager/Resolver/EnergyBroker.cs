@@ -41,7 +41,10 @@ namespace Resolver
 
         public void EnergyLookUp(StatusNotifyMessage message)
         {
+            _originPeerName = message.header.Sender;
             _enLookUp = message.energyReq;
+
+            message.header.Sender = this._name;
 
             XMLLogger.WriteRemoteActivity("Broker is serving: " + message.header.MessageID + " session.");
 
@@ -79,6 +82,7 @@ namespace Resolver
                     m.header.MessageID,
                     m.header.Sender,
                     _name,
+                    _originPeerName,
                     _enLookUp);
             
             Connector.channel.acceptProposal(respMessage);

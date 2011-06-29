@@ -217,6 +217,7 @@ namespace SmartGridManager
                     m.header.MessageID,
                     m.header.Sender,
                     _name,
+                    this._name,
                     _enPeak - (getEnergyLevel() + _enBought));
             
             Connector.channel.acceptProposal(respMessage);
@@ -235,11 +236,10 @@ namespace SmartGridManager
 
                     XMLLogger.WriteLocalActivity("Ok, " + message.energy + " KW/h sold to " + message.header.Sender);                    
 
-                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy,_price);
+                    EnergyLink link = new EnergyLink(message.peerName, message.energy,_price);
                     consumers.Add(link);
 
-                    //Advise the Local Resolver About the energy status change.
-                    //and the remote?
+                    //Advise the Local Resolver About the energy status change.                    
                     Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
                 }
 
