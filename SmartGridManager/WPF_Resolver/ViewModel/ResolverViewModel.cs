@@ -448,10 +448,8 @@ namespace WPF_Resolver.ViewModel
             _enThroughput = 0f;
 
             _peerList = _resolver.GetConnectedPeers();
-            
 
-            //_hostList = _resolver.GetRemoteConnections();
-            OnPropertyChanged("HostList");
+            ScanConnections();            
             
             for(int i=0;i< _peerList.Count;i++)
             {
@@ -480,12 +478,11 @@ namespace WPF_Resolver.ViewModel
             _enProdBar["En.Prod."] = _enProduced;
             _enConsBar["En.Cons."] = _enConsumed;
 
+            OnPropertyChanged("HostList");
             OnPropertyChanged("PeerList");
-            OnPropertyChanged("GetPieChartData");
-            
+            OnPropertyChanged("GetPieChartData");            
             OnPropertyChanged("GetEnProducedBar");
             OnPropertyChanged("GetEnConsumedBar");
-
             OnPropertyChanged("EnThroughput");
         }
 
