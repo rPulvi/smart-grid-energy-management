@@ -537,13 +537,10 @@ namespace WPF_StartPeer.ViewModel
             }
             else
             {
-                if (MessageBox.Show("Unable to contact the Resolver Service. Retry?",
+                MessageBox.Show("Unable to contact the Resolver Service. Check your Internet connection and retry.",
                     "Connection Error",
-                    MessageBoxButton.YesNo,
-                    MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
-                {
-                    house.Start();
-                }
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Exclamation);
             }
         }
 
