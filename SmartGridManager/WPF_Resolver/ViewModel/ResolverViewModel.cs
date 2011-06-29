@@ -55,8 +55,8 @@ namespace WPF_Resolver.ViewModel
         private ObservableDictionary<string, float> _enConsBar = new ObservableDictionary<string, float>();
         private ObservableDictionary<string, int> _pieList = new ObservableDictionary<string, int>();
 
-        private ObservableCollectionEx<TempBuilding> _peerList = new ObservableCollectionEx<TempBuilding>();        
-        private ObservableCollectionEx<RemoteListItem> _hostList = new ObservableCollectionEx<RemoteListItem>():
+        private ObservableCollectionEx<TempBuilding> _peerList = new ObservableCollectionEx<TempBuilding>();
+        private ObservableCollectionEx<RemoteListItem> _hostList = new ObservableCollectionEx<RemoteListItem>();
         private DispatcherTimer _timelineTemp;
         private DispatcherTimer _UIRefresh;
         private DispatcherTimer _clockBar;
@@ -591,7 +591,7 @@ namespace WPF_Resolver.ViewModel
             }
         }
 
-        private class RemoteListItem
+        public class RemoteListItem
         {
             public string resolverName;
             public ConnectionType type;
