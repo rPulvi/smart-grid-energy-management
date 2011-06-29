@@ -144,8 +144,8 @@ namespace WPF_StartPeer.ViewModel
 
             foreach (var v in _sellersBuyersList)
             {
-                _totalEnergy += (v.energy * v.price);
-                _totalPrice += v.energy;
+                _totalEnergy += v.energy;
+                _totalPrice += (v.energy * v.price);
             }
 
             OnPropertyChanged("GetSellersBuyersList");
@@ -546,6 +546,9 @@ namespace WPF_StartPeer.ViewModel
 
         public void Disconnect()
         {
+            _totalEnergy = 0;
+            _totalPrice = 0;
+
             _sellersBuyersList.Clear();
             OnPropertyChanged("GetSellersBuyersList");
 
@@ -570,6 +573,9 @@ namespace WPF_StartPeer.ViewModel
 
             _formEnabled = true;
             OnPropertyChanged("FormEnabled");
+
+            OnPropertyChanged("GetTotalEnergy");
+            OnPropertyChanged("GetTotalPrice");
         }
 
         private bool checkFields()
