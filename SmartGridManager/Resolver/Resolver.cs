@@ -447,6 +447,9 @@ namespace Resolver
                             tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
                         }
 
+                        //updateOutgoingConnectionList(message.header.Sender, message.peerName);
+                        //updateIncomingConnectionList(message.header.Sender, message.peerName);
+
                         _buildings.RemoveAt(i);                        
                     }
                 }
@@ -562,13 +565,14 @@ namespace Resolver
             for(int i=0;i<_incomingConnections.Count;i++)
             {
                 if (_incomingConnections[i].remoteResolver.name == resolvername)
-                {                        
-                    var itemsToRemove = from c in _incomingConnections[i].requests
-                                        where c.Value.peerName == peerName
-                                        select c.Key;
+                {
+                    var itemsToRemove = (from c in _incomingConnections[i].requests
+                                         where c.Value.peerName == peerName
+                                         select c.Key).ToArray();
 
-                    foreach (var key in itemsToRemove)
-                        _incomingConnections[i].requests.Remove(key);
+                    //foreach (var key in itemsToRemove)
+                    for(int j=0; j<itemsToRemove.Length; j++)
+                        _incomingConnections[i].requests.Remove(itemsToRemove[i]);
                 }
 
                 if (_incomingConnections[i].requests.Count == 0)                                    
