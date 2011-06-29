@@ -49,10 +49,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commons\EnergyLink.cs" />
     <Compile Include="Commons\EnergyType.cs" />
     <Compile Include="Commons\ObservableCollectionEx.cs" />
     <Compile Include="Commons\ObservableDictionary.cs" />
     <Compile Include="Commons\PeerStatus.cs" />
+    <Compile Include="Commons\RemoteConnection.cs" />
     <Compile Include="Commons\RemoteHost.cs" />
     <Compile Include="Commons\TempBuilding.cs" />
     <Compile Include="Connector.cs" />

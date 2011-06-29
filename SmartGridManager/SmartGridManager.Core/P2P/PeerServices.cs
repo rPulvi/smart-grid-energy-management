@@ -29,6 +29,11 @@ namespace SmartGridManager.Core.P2P
         void PeerDownAlert(PeerIsDownMessage message);
     }
 
+    public interface IRemote : IPeerServices, IClientChannel
+    {
+        //per avere la Open e la Close
+    }
+
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class PeerServices : IPeerServices
