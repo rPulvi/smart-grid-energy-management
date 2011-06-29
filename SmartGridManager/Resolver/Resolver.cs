@@ -568,6 +568,9 @@ namespace Resolver
                     if (_outgoingConnections[i].requests.ContainsKey(peerName))
                         _outgoingConnections[i].requests.Remove(peerName);
                 }
+
+                if (_outgoingConnections[i].requests.Count == 0)
+                    _outgoingConnections.RemoveAt(i);
             }
         }
 
