@@ -277,7 +277,7 @@ namespace Resolver
                 remConn.requests.Add(MessageID, new EnergyLink(remotePeer, energyRequest, 0));
 
             //Header handling
-            message.enReqMessage.header.Sender = this.name;
+            //message.enReqMessage.header.Sender = this.name;
             
             _broker.EnergyLookUp(message.enReqMessage);
         }

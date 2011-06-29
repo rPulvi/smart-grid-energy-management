@@ -67,11 +67,12 @@ namespace SmartGridManager.Core.Messaging
             return message;
         }
 
-        public static EnergyAcceptMessage createEnergyAcceptMessage(Guid SessionID, string dest, string source, float qEnergy)
+        public static EnergyAcceptMessage createEnergyAcceptMessage(Guid SessionID, string dest, string source, string pName, float qEnergy)
         {
             EnergyAcceptMessage message = new EnergyAcceptMessage()
             {
                 header = Tools.getHeader(dest, source, SessionID),
+                peerName = pName,
                 energy = qEnergy
             };
 
