@@ -219,7 +219,9 @@
     </Resource>
     <SplashScreen Include="img\splash.png" />
     <Resource Include="img\quit.png" />
-    <Resource Include="img\green_arrow.png" />
+    <Resource Include="img\green_arrow.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Content Include="log.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

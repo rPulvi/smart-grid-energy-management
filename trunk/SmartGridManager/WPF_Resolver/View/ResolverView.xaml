@@ -88,7 +88,6 @@
         </Style>
         
         <!-- CHART STYLE -->
-
         <Style x:Key="ChartText" TargetType="{x:Type DVC:Chart}">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontFamily" Value="/WPF_Resolver;component/Fonts/#Calibri"/>
@@ -816,13 +815,11 @@
 					</ScrollViewer>
 				</Grid>
 			</Border>
-		</ControlTemplate>
-        
+		</ControlTemplate>       
         <!--END CHART STYLE -->
         
         
         <!-- SCROLLBAR STYLE -->
-        
 		<LinearGradientBrush x:Key="VerticalScrollBarBackground" EndPoint="1,0" StartPoint="0,0" Opacity="0.1">
 			<GradientStop Color="#E1E1E1" Offset="0"/>
 			<GradientStop Color="#EDEDED" Offset="0.20"/>
@@ -978,13 +975,11 @@
 				</Trigger>
 			</Style.Triggers>
 		</Style>
-
         <!-- END SCROLLBAR STYLE -->
         
         
         
         <!--LIST GRIPPER STYLE-->
-
         <LinearGradientBrush x:Key="BackgroundBrush"/>
 
         <LinearGradientBrush x:Key="HighlightBackgroundBrush" StartPoint="0,0" EndPoint="0,1">
@@ -1131,7 +1126,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
         <!--END LIST GRIPPER STYLE-->
 
     </Window.Resources>
@@ -1147,8 +1141,7 @@
 		
 		<Grid.Resources>
 
-            <!--Template for ListView_LOCAL-->
-            
+            <!--Template for ListView_LOCAL-->            
 			<DataTemplate x:Key="NomeItemTemplate">
 				<Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8" Height="70">
 					<Grid>
@@ -1241,7 +1234,7 @@
                             <ColumnDefinition Width="60"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <Image Source="/img/green_arrow.png" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
+                        <Image Source="{Binding iconPath}" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding resolverName}" FontWeight="ExtraBold" FontSize="18" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
                     </Grid>
                 </Border>
@@ -1443,7 +1436,7 @@
 					</Rectangle.Fill>
 				</Rectangle>
                     
-    				<!--.:LISTA LOCAL:.-->
+    			<!--.:LISTA LOCAL:.-->
 				<ListView Grid.Row="0" Margin="18,5,18,8" x:Name="ListView" Visibility="{Binding SetVisibilityLocal}"
 					ItemsSource="{Binding PeerList}"
 					ItemContainerStyle="{DynamicResource ListViewItemContainerStyle}"

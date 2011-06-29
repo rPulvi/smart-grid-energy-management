@@ -79,6 +79,8 @@ namespace WPF_Resolver.ViewModel
         public ResolverViewModel()
         {
             #region init
+
+
             _startIsEnabled = true;
             OnPropertyChanged("GetIsEnabledStatus");
 
@@ -566,6 +568,7 @@ namespace WPF_Resolver.ViewModel
                 RemoteListItem item = new RemoteListItem();
 
                 item.type = ConnectionType.Incoming;
+                item.iconPath = @"/WPF_Resolver;component/img/red_arrow.png";
                 item.resolverName = iC.remoteResolverName;
                 item.energy = iC.requests.Sum(x => x.Value.energy);
 
@@ -577,8 +580,10 @@ namespace WPF_Resolver.ViewModel
                 RemoteListItem item = new RemoteListItem();
 
                 item.type = ConnectionType.Outgoing;
+                item.iconPath = @"/WPF_Resolver;component/img/green_arrow.png";
                 item.resolverName = oC.remoteResolverName;
                 item.energy = oC.requests.Sum(x => x.Value);
+
                 _hostList.Add(item);
             }
         }
@@ -587,6 +592,7 @@ namespace WPF_Resolver.ViewModel
         {
             public string resolverName { get; set; }
             public ConnectionType type { get; set; }
+            public string iconPath { get; set; }
             public float energy { get; set; }
         }
     }
