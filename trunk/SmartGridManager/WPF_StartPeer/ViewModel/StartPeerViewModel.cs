@@ -537,7 +537,7 @@ namespace WPF_StartPeer.ViewModel
             }
             else
             {
-                MessageBox.Show("Unable to contact the Resolver Service. Check your Internet connection and retry.",
+                MessageBox.Show("Unable to contact the Resolver Service.\nCheck your Internet connection and try again.",
                     "Connection Error",
                     MessageBoxButton.OK,
                     MessageBoxImage.Exclamation);
