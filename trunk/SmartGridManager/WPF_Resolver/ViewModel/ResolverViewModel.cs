@@ -198,11 +198,6 @@ namespace WPF_Resolver.ViewModel
         public ObservableCollectionEx<RemoteListItem> HostList
         {
             get { return _hostList; }
-            set
-            {
-                _hostList = value;
-                OnPropertyChanged("HostList");
-            }
         }
 
         public ObservableDictionary<DateTime, float> GetPointTimeLine
@@ -590,9 +585,9 @@ namespace WPF_Resolver.ViewModel
 
         public class RemoteListItem
         {
-            public string resolverName;
-            public ConnectionType type;
-            public float energy;
+            public string resolverName { get; set; }
+            public ConnectionType type { get; set; }
+            public float energy { get; set; }
         }
     }
 }
