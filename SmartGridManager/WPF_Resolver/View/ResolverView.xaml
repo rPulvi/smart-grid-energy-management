@@ -64,7 +64,7 @@
 
         <!-- Coloumn Header Template for ListRemote -->
         <DataTemplate x:Key="HostRemoteNameColHeader">
-            <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
+            <TextBlock Text="Host" Style="{StaticResource ColTextHeaderStyle}" Width="500"/>
         </DataTemplate>
         <DataTemplate x:Key="RemoteEnergyColHeader">
             <TextBlock Text="Energy" Style="{StaticResource ColTextHeaderStyle}" Width="200"/>
@@ -976,8 +976,7 @@
 			</Style.Triggers>
 		</Style>
         <!-- END SCROLLBAR STYLE -->
-        
-        
+           
         
         <!--LIST GRIPPER STYLE-->
         <LinearGradientBrush x:Key="BackgroundBrush"/>
@@ -1231,7 +1230,7 @@
                 <Border BorderThickness="0,0,0,0" BorderBrush="#6FBDE8" Height="70">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="60"/>
+                            <ColumnDefinition Width="70"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <Image Source="{Binding iconPath}" Width="55" Height="55" Grid.Column="0" HorizontalAlignment="Center" />
