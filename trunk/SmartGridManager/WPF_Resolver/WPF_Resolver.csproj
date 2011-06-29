@@ -222,6 +222,7 @@
     <Resource Include="img\green_arrow.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="img\red_arrow.png" />
     <Content Include="log.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
