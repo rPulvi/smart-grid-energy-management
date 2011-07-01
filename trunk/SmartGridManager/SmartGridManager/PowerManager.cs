@@ -129,6 +129,7 @@ namespace SmartGridManager
             else
             {
                 messageSent = false;
+                _proposalCountdown.Enabled = false;
             }
         }        
 
@@ -230,15 +231,20 @@ namespace SmartGridManager
             if (message.header.Receiver == _name)
             {
                 Boolean status = false;
+                float energyCanSell = 0;
 
-                if (message.energy <= (getEnergyLevel() - (_enPeak - _enSold)))
+                float enAvailable = getEnergyLevel() - (_enPeak - _enSold);
+
+                if (enAvailable >= 0)
                 {
+                    energyCanSell = enAvailable >= message.energy ? message.energy : enAvailable;
+
                     status = true;
-                    _enSold += message.energy;
+                    _enSold += energyCanSell;
 
-                    XMLLogger.WriteLocalActivity("Ok, " + message.energy + " KW/h sold to " + message.header.Sender);                    
+                    XMLLogger.WriteLocalActivity("Ok, " + energyCanSell + " KW/h sold to " + message.header.Sender);
 
-                    EnergyLink link = new EnergyLink(message.peerName, message.energy,_price);
+                    EnergyLink link = new EnergyLink(message.peerName, energyCanSell, _price);
                     consumers.Add(link);
 
                     //Advise the Local Resolver About the energy status change.                    
@@ -250,7 +256,7 @@ namespace SmartGridManager
                     message.header.Sender,
                     _name,
                     status,
-                    message.energy,
+                    energyCanSell,
                     _price
                     );
 
@@ -271,13 +277,16 @@ namespace SmartGridManager
 
                     XMLLogger.WriteLocalActivity("Energy received from " + message.header.Sender);                    
 
-                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy,message.price);
+                    EnergyLink link = new EnergyLink(message.header.Sender, message.energy, message.price);
                     producers.Add(link);
 
                     //Advise the Local Resolver About the energy status change.
                     Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
 
                     _proposalList.Clear();
+
+                    if ((getEnergyLevel() + _enBought) < _enPeak)
+                        messageSent = false;
                 }
                 else
                 {
