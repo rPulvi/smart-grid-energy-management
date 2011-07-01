@@ -125,11 +125,11 @@ namespace SmartGridManager.Core.Messaging
             return message;
         }
 
-        public static RemoteEnergyRequest createRemoteEnergyRequestMessage(StatusNotifyMessage energyRequestMessage, string resolverName, string resolverIP, string resolverPort)
+        public static RemoteEnergyRequest createRemoteEnergyRequestMessage(StatusNotifyMessage energyRequestMessage, string dest, string source, string resolverIP, string resolverPort)
         {
             RemoteEnergyRequest message = new RemoteEnergyRequest()
             {
-                header = Tools.getHeader("RemoteResolver",resolverName),
+                header = Tools.getHeader(dest, source),
                 enReqMessage = energyRequestMessage,
                 IP = resolverIP,
                 port = resolverPort
@@ -138,11 +138,11 @@ namespace SmartGridManager.Core.Messaging
             return message;
         }
 
-        public static RemoteEndProposalMessage createRemoteEndProposalMessage(EndProposalMessage endPropMessage, string resolverName, string resolverIP, string resolverPort)
+        public static RemoteEndProposalMessage createRemoteEndProposalMessage(EndProposalMessage endPropMessage, string dest, string source, string resolverIP, string resolverPort)
         {
             RemoteEndProposalMessage message = new RemoteEndProposalMessage()
             {
-                header = Tools.getHeader("RemoteResolver", resolverName),
+                header = Tools.getHeader(dest, source),
                 endProposalMessage = endPropMessage,
                 IP = resolverIP,
                 port = resolverPort
