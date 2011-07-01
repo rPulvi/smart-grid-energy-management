@@ -103,6 +103,9 @@
     <Compile Include="Util\GridViewSort.cs" />
     <Compile Include="ViewModel\ResolverViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\SplashView.xaml.cs">
+      <DependentUpon>SplashView.xaml</DependentUpon>
+    </Compile>
     <Page Include="View\LogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -123,6 +126,10 @@
       <DependentUpon>ResolverView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\SplashView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

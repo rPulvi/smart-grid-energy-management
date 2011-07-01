@@ -1,0 +1,9 @@
+﻿<Window x:Class="WPF_StartPeer.View.SplashView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SplashView" Height="480" Width="640" Background="Transparent" WindowStyle="None"
+		ShowInTaskbar="False" AllowsTransparency="True" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Image Margin="0" Source="/WPF_StartPeer;component/img/splash.png" Stretch="Fill" MouseDown="Image_MouseDown"/>
+    </Grid>
+</Window>
