@@ -145,13 +145,15 @@ namespace SmartGridManager
                 {
                     float enAvailable = getEnergyLevel() - (_enPeak - _enSold);
 
-                    if (enAvailable >= message.energyReq)
+                    if (enAvailable >= 0)
                     {
+                        float enSold = enAvailable >= message.energyReq ? message.energyReq : enAvailable;
+
                         EnergyProposalMessage respMessage = MessageFactory.createEnergyProposalMessage(
                             message.header.MessageID,
                             message.header.Sender,
                             _name,
-                            message.energyReq,
+                            enSold,
                             _price
                             );
                         
