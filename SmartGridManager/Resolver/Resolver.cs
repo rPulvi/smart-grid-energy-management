@@ -328,6 +328,7 @@ namespace Resolver
         void ManageRemoteEnergyReply(RemoteEndProposalMessage message)
         {
             RemoteConnection oC;
+
             string localBuilding = message.endProposalMessage.header.Receiver;
             string remoteBuilding  = message.endProposalMessage.header.Sender;
             float energyBought = message.endProposalMessage.energy;
@@ -441,8 +442,7 @@ namespace Resolver
                         XMLLogger.WriteLocalActivity("Peer: " + _buildings[i].Name + " is down!");
 
                         //Remove the deadly peer but first alert the folks.
-                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-                        updateLocalConnectionsList(_buildings[i].Name);
+                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));                        
                         
                         //Alert Remote Resolvers 
                         foreach (var remConn in _remoteConnections)
@@ -456,6 +456,8 @@ namespace Resolver
 
                             tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
                         }
+
+                        updateLocalConnectionsList(_buildings[i].Name);
 
                         _buildings.RemoveAt(i);                        
                     }
