@@ -144,9 +144,9 @@ namespace SmartGridManager
             {
                 if (_peerStatus == PeerStatus.Producer)
                 {
-                    float enAvailable = getEnergyLevel() - (_enPeak - _enSold);
+                    float enAvailable = getEnergyLevel() - (_enPeak + _enSold);
 
-                    if (enAvailable >= 0)
+                    if (enAvailable > 0)
                     {
                         float enSold = enAvailable >= message.energyReq ? message.energyReq : enAvailable;
 
@@ -157,7 +157,7 @@ namespace SmartGridManager
                             enSold,
                             _price
                             );
-                        
+
                         Connector.channel.energyProposal(respMessage);
                     }
                 }
@@ -233,9 +233,9 @@ namespace SmartGridManager
                 Boolean status = false;
                 float energyCanSell = 0;
 
-                float enAvailable = getEnergyLevel() - (_enPeak - _enSold);
+                float enAvailable = getEnergyLevel() - (_enPeak + _enSold);
 
-                if (enAvailable >= 0)
+                if (enAvailable > 0)
                 {
                     energyCanSell = enAvailable >= message.energy ? message.energy : enAvailable;
 
