@@ -56,6 +56,7 @@
     <Compile Include="Commons\PeerStatus.cs" />
     <Compile Include="Commons\RemoteConnection.cs" />
     <Compile Include="Commons\RemoteHost.cs" />
+    <Compile Include="Commons\RemoteRequest.cs" />
     <Compile Include="Commons\TempBuilding.cs" />
     <Compile Include="Connector.cs" />
     <Compile Include="Messaging\GridMessages.cs" />

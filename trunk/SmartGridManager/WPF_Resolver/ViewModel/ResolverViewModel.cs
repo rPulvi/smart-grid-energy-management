@@ -556,36 +556,27 @@ namespace WPF_Resolver.ViewModel
         }
 
         private void ScanConnections()
-        {                                    
-            List<IncomingConnection> incoming = _resolver.GetIncomingConnections();
-            List<OutgoingConnection> outgoing = _resolver.GetOutgoingConnections();
+        {
+            List<RemoteConnection> connections = _resolver.GetRemoteConnections();
 
             _hostList.Clear();
 
-            foreach(var iC in incoming)
+            foreach (var remConn in connections)
             {
                 RemoteListItem item = new RemoteListItem();
 
-                item.type = ConnectionType.Incoming;
-                item.iconPath = @"/WPF_Resolver;component/img/red_arrow.png";
-                item.resolverName = iC.remoteResolver.name;
-                item.energy = iC.requests.Sum(x => x.Value.energy);
+                if (remConn.type == ConnectionType.Incoming)
+                    item.iconPath = @"/WPF_Resolver;component/img/red_arrow.png";
+                else
+                    item.iconPath = @"/WPF_Resolver;component/img/green_arrow.png";
 
-                _hostList.Add(item);
-            }
-
-            foreach(var oC in outgoing)
-            {
-                RemoteListItem item = new RemoteListItem();
-
-                item.type = ConnectionType.Outgoing;
-                item.iconPath = @"/WPF_Resolver;component/img/green_arrow.png";
-                item.resolverName = oC.remoteResolver.name;
-                item.energy = oC.requests.Sum(x => x.Value);
+                item.resolverName = remConn.remoteResolver.name;
+                item.energy = remConn.requests.Sum(x => x.Value.energy);
 
                 _hostList.Add(item);
             }
         }
+
 
         public class RemoteListItem
         {

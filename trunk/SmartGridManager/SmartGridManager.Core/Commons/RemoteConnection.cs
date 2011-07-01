@@ -8,19 +8,11 @@ namespace SmartGridManager.Core.Commons
 {
     public class RemoteConnection
     {
+        public ConnectionType type;
         public RemoteHost remoteResolver;
+        public Dictionary<Guid, RemoteRequest> requests = new Dictionary<Guid, RemoteRequest>();
     }
-
-    public class IncomingConnection : RemoteConnection
-    {        
-        public Dictionary<Guid, EnergyLink> requests = new Dictionary<Guid, EnergyLink>();
-    }
-
-    public class OutgoingConnection : RemoteConnection
-    {        
-        public Dictionary<string, float> requests = new Dictionary<string, float>();
-    }
-
+   
     public enum ConnectionType
     {
         Incoming = 0,

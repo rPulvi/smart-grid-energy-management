@@ -34,8 +34,7 @@ namespace Resolver
 
         private List<RemoteHost> _remoteResolvers = new List<RemoteHost>();
 
-        private List<IncomingConnection> _incomingConnections = new List<IncomingConnection>();
-        private List<OutgoingConnection> _outgoingConnections = new List<OutgoingConnection>();
+        private List<RemoteConnection> _remoteConnections = new List<RemoteConnection>();        
 
         private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();        
 
@@ -248,7 +247,7 @@ namespace Resolver
 
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
         {
-            IncomingConnection remConn;
+            RemoteConnection remConn;
             
             Guid MessageID = message.enReqMessage.header.MessageID;
             float energyRequest = message.enReqMessage.energyReq;
@@ -256,13 +255,15 @@ namespace Resolver
 
             XMLLogger.WriteRemoteActivity("Received Remote Energy Request from: " + message.enReqMessage.header.Sender + " by Remote Resolver: " + message.header.Sender);
             XMLLogger.WriteRemoteActivity("Message ID: " + message.enReqMessage.header.MessageID);
-
-            remConn = GetIncomingConnection(message.IP, message.port);
+           
+            remConn = GetConnection(message.IP, message.port, ConnectionType.Incoming);
 
             if (remConn == null)//If entry doesn't exist
             {
-                remConn = new IncomingConnection()
+                remConn = new RemoteConnection()
                 {
+                    type = ConnectionType.Incoming,
+
                     remoteResolver = new RemoteHost()
                     {
                         name = message.header.Sender,
@@ -271,21 +272,29 @@ namespace Resolver
                         netAddress = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote"
                     }
                 };
+                
+                remConn.requests.Add(MessageID, new RemoteRequest(){
+                    localePeerName = "", 
+                    remotePeerName = remotePeer,
+                    energy = energyRequest});
 
-                remConn.requests.Add(MessageID, new EnergyLink(remotePeer, energyRequest, 0));
-
-                _incomingConnections.Add(remConn);
+               _remoteConnections.Add(remConn);
             }
             else
-                remConn.requests.Add(MessageID, new EnergyLink(remotePeer, energyRequest, 0));
+                remConn.requests.Add(MessageID, new RemoteRequest()
+                {
+                    localePeerName = "",
+                    remotePeerName = remotePeer,
+                    energy = energyRequest
+                });
             
             _brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
             _brokerThread.Start(message.enReqMessage);
         }
 
         void ForwardEnergyReply(EndProposalMessage message)
-        {            
-            IncomingConnection conn = GetConnectionByMessageID(message.header.MessageID);
+        {                        
+            RemoteConnection conn = GetConnectionByMessageID(message.header.MessageID,ConnectionType.Incoming);
 
             XMLLogger.WriteRemoteActivity("Forwarding Remote Response about message: " + message.header.MessageID + " Status = " + message.endStatus);
             XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
@@ -293,7 +302,8 @@ namespace Resolver
             if (conn != null)
             {                
                 //Header re-handling
-                message.header.Receiver = conn.requests[message.header.MessageID].peerName;
+                conn.requests[message.header.MessageID].localePeerName = message.header.Sender;
+                message.header.Receiver = conn.requests[message.header.MessageID].remotePeerName;
 
                 #region Creating Channel
                 NetTcpBinding tcpBinding = new NetTcpBinding();
@@ -316,18 +326,21 @@ namespace Resolver
 
         void ManageRemoteEnergyReply(RemoteEndProposalMessage message)
         {
-            OutgoingConnection oC;
+            RemoteConnection oC;
+            string localBuilding = message.header.Receiver;
             string remoteBuilding  = message.endProposalMessage.header.Sender;
             float energyBought = message.endProposalMessage.energy;
 
-            oC = GetOutgoingConnection(message.IP, message.port);
+            oC = GetConnection(message.IP, message.port,ConnectionType.Outgoing);
 
             if (oC == null)
             {
-                oC = new OutgoingConnection()
+                oC = new RemoteConnection()
                 {
+                    type = ConnectionType.Outgoing,
+
                     remoteResolver = new RemoteHost()
-                    {
+                    {                        
                         name = message.header.Sender,
                         IP = message.IP,
                         port = message.port,
@@ -335,16 +348,23 @@ namespace Resolver
                     }
                 };
 
-                oC.requests.Add(remoteBuilding, energyBought);
-                
-                _outgoingConnections.Add(oC);
+                oC.requests.Add(message.endProposalMessage.header.MessageID, new RemoteRequest()
+                {
+                    localePeerName = localBuilding,
+                    remotePeerName = remoteBuilding,
+                    energy = energyBought
+                });
+
+                _remoteConnections.Add(oC);
             }
             else             
             {
-                if (oC.requests.ContainsKey(remoteBuilding))
-                    oC.requests[remoteBuilding] += energyBought;
-                else
-                    oC.requests.Add(remoteBuilding, energyBought);
+                oC.requests.Add(message.endProposalMessage.header.MessageID, new RemoteRequest()
+                {
+                    localePeerName = localBuilding,
+                    remotePeerName = remoteBuilding,
+                    energy = energyBought
+                });
             }
 
             XMLLogger.WriteRemoteActivity("Received Remote Energy Reply from: " + remoteBuilding + "@" + message.header.Sender);
@@ -356,9 +376,8 @@ namespace Resolver
         #endregion
 
         private void RemotePeerIsDown(PeerIsDownMessage message)
-        {            
-            updateOutgoingConnectionList(message.header.Sender, message.peerName);
-            updateIncomingConnectionList(message.header.Sender, message.peerName);
+        {
+            updateRemoteConnectionsList(message.header.Sender, message.peerName);            
             Connector.channel.peerDown(message);
         }
 
@@ -422,12 +441,13 @@ namespace Resolver
 
                         //Remove the deadly peer but first alert the folks.
                         Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                        updateLocalConnectionsList(_buildings[i].Name);
                         
                         //Alert Remote Resolvers 
-                        foreach (var iC in _incomingConnections)
+                        foreach (var remConn in _remoteConnections)
                         {
                             NetTcpBinding tcpBinding = new NetTcpBinding();
-                            EndpointAddress remoteEndpoint = new EndpointAddress(iC.remoteResolver.netAddress);
+                            EndpointAddress remoteEndpoint = new EndpointAddress(remConn.remoteResolver.netAddress);
                             tcpBinding.Security.Mode = SecurityMode.None;
 
                             ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
@@ -435,21 +455,6 @@ namespace Resolver
 
                             tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
                         }
-
-                        foreach (var oC in _outgoingConnections)
-                        {
-                            NetTcpBinding tcpBinding = new NetTcpBinding();
-                            EndpointAddress remoteEndpoint = new EndpointAddress(oC.remoteResolver.netAddress);
-                            tcpBinding.Security.Mode = SecurityMode.None;
-
-                            ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
-                            IRemote tChannel = cf.CreateChannel();
-
-                            tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-                        }
-
-                        //updateOutgoingConnectionList(message.header.Sender, message.peerName);
-                        //updateIncomingConnectionList(message.header.Sender, message.peerName);
 
                         _buildings.RemoveAt(i);                        
                     }
@@ -485,14 +490,9 @@ namespace Resolver
             }
         }
 
-        public List<IncomingConnection> GetIncomingConnections()
+        public List<RemoteConnection> GetRemoteConnections()
         {
-            return _incomingConnections;
-        }
-
-        public List<OutgoingConnection> GetOutgoingConnections()
-        {
-            return _outgoingConnections;
+            return _remoteConnections;
         }
 
         public void CloseService()
@@ -518,29 +518,14 @@ namespace Resolver
 
         #region Aux Methods
 
-        private IncomingConnection GetIncomingConnection(string IP, string port)
+
+        private RemoteConnection GetConnection(string IP, string port, ConnectionType type)
         {
-            IncomingConnection cRet = null;
+            RemoteConnection cRet = null;
 
-            foreach (var c in _incomingConnections)
+            foreach (var c in _remoteConnections)
             {
-                if (c.remoteResolver.IP == IP && c.remoteResolver.port == port)
-                {
-                    cRet = c;
-                    break;
-                }
-            }
-
-            return cRet;
-        }
-
-        private OutgoingConnection GetOutgoingConnection(string IP, string port)
-        {
-            OutgoingConnection cRet = null;
-
-            foreach (var c in _outgoingConnections)
-            {
-                if (c.remoteResolver.IP == IP && c.remoteResolver.port == port)
+                if (c.remoteResolver.IP == IP && c.remoteResolver.port == port && c.type == type)
                 {
                     cRet = c;
                     break;
@@ -550,49 +535,50 @@ namespace Resolver
             return cRet;        
         }
 
-        private IncomingConnection GetConnectionByMessageID(Guid ID)
+        private RemoteConnection GetConnectionByMessageID(Guid ID, ConnectionType type)
         {
-            foreach (var c in _incomingConnections)
-            {
-                if(c.requests.ContainsKey(ID))                
+            foreach (var c in _remoteConnections)
+            {               
+                if(c.type == type && c.requests.ContainsKey(ID))              
                     return c;
             }
 
             return null;
         }
 
-        private void updateIncomingConnectionList(string resolvername, string peerName)
-        {           
-            for(int i=0;i<_incomingConnections.Count;i++)
+        private void updateRemoteConnectionsList(string resolverName, string peerName)
+        {
+            for (int i = 0; i < _remoteConnections.Count; i++)
             {
-                if (_incomingConnections[i].remoteResolver.name == resolvername)
+                if (_remoteConnections[i].remoteResolver.name == resolverName)
                 {
-                    var itemsToRemove = (from c in _incomingConnections[i].requests
-                                         where c.Value.peerName == peerName
-                                         select c.Key).ToArray();
+                    var itemsToRemove = (from c in _remoteConnections[i].requests
+                                            where c.Value.remotePeerName == peerName
+                                            select c.Key).ToArray();
 
-                    //foreach (var key in itemsToRemove)
-                    for(int j=0; j<itemsToRemove.Length; j++)
-                        _incomingConnections[i].requests.Remove(itemsToRemove[i]);
+                    for (int j = 0; j < itemsToRemove.Length; j++)
+                        _remoteConnections[i].requests.Remove(itemsToRemove[i]);
+
                 }
 
-                if (_incomingConnections[i].requests.Count == 0)                                    
-                    _incomingConnections.RemoveAt(i);                
-            }
+                if (_remoteConnections[i].requests.Count == 0)
+                    _remoteConnections.RemoveAt(i);
+            }        
         }
 
-        private void updateOutgoingConnectionList(string resolverName, string peerName)
+        private void updateLocalConnectionsList(string peerName)
         {
-            for (int i = 0; i < _outgoingConnections.Count; i++)
+            for (int i = 0; i < _remoteConnections.Count; i++)
             {
-                if (_outgoingConnections[i].remoteResolver.name == resolverName)
-                {
-                    if (_outgoingConnections[i].requests.ContainsKey(peerName))
-                        _outgoingConnections[i].requests.Remove(peerName);
-                }
+                var itemsToRemove = (from c in _remoteConnections[i].requests
+                                        where c.Value.localePeerName == peerName
+                                        select c.Key).ToArray();
 
-                if (_outgoingConnections[i].requests.Count == 0)
-                    _outgoingConnections.RemoveAt(i);
+                for (int j = 0; j < itemsToRemove.Length; j++)
+                    _remoteConnections[i].requests.Remove(itemsToRemove[i]);
+
+                if (_remoteConnections[i].requests.Count == 0)
+                    _remoteConnections.RemoveAt(i);
             }
         }
 
