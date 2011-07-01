@@ -233,9 +233,10 @@ namespace Resolver
             if (isRemoteConnected == true)
             {
                 XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender + "To: " + _remoteResolvers[_nHostIndex]);
-                XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
+                XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);                
 
                 remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
+                    _remoteResolvers[_nHostIndex].name,
                     this.name,
                     Tools.getLocalIP(),
                     Tools.getResolverServicePort()
@@ -314,7 +315,7 @@ namespace Resolver
                 IRemote tChannel = cf.CreateChannel();
                 #endregion
 
-                RemoteEndProposalMessage remoteEndMessage = (MessageFactory.createRemoteEndProposalMessage(message, this.name, Tools.getLocalIP(), Tools.getResolverServicePort()));
+                RemoteEndProposalMessage remoteEndMessage = (MessageFactory.createRemoteEndProposalMessage(message, conn.remoteResolver.name, this.name, Tools.getLocalIP(), Tools.getResolverServicePort()));
 
                 tChannel.ReplyEnergyRequest(remoteEndMessage);               
             }
@@ -327,7 +328,7 @@ namespace Resolver
         void ManageRemoteEnergyReply(RemoteEndProposalMessage message)
         {
             RemoteConnection oC;
-            string localBuilding = message.header.Receiver;
+            string localBuilding = message.endProposalMessage.header.Receiver;
             string remoteBuilding  = message.endProposalMessage.header.Sender;
             float energyBought = message.endProposalMessage.energy;
 
