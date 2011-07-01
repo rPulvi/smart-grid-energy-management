@@ -66,6 +66,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\SplashView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\StartPeer.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -79,6 +83,9 @@
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SplashView.xaml.cs">
+      <DependentUpon>SplashView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StartPeer.xaml.cs">
       <DependentUpon>StartPeer.xaml</DependentUpon>

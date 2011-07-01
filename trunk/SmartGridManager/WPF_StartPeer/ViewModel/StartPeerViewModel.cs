@@ -55,8 +55,6 @@ namespace WPF_StartPeer.ViewModel
 
         private ObservableCollectionEx<EnergyLink> _sellersBuyersList = new ObservableCollectionEx<EnergyLink>();
 
-        SplashScreen sp = new SplashScreen("img/splash.png");
-
         private Building house;
         
         private List<ErrorMap> _errorMessages = new List<ErrorMap>();
@@ -346,8 +344,8 @@ namespace WPF_StartPeer.ViewModel
 
         public void Splashing()
         {
-            sp.Show(false, true);
-            sp.Close(new TimeSpan(0, 0, 6));
+            View.SplashView splashWin = new View.SplashView();
+            splashWin.ShowDialog();
         }
 
         public void Log()

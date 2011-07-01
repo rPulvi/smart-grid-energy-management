@@ -44,7 +44,6 @@ namespace WPF_Resolver.ViewModel
         #endregion
 
         #region Objects
-        SplashScreen sp = new SplashScreen("img/splash.png");
 
         private Visibility _listVisibilityLocal = new Visibility();
         private Visibility _listVisibilityRemote = new Visibility();
@@ -214,8 +213,8 @@ namespace WPF_Resolver.ViewModel
 
         public void Splashing()
         {
-            sp.Show(false, true);
-            sp.Close(new TimeSpan(0,0,6));
+            View.SplashView splashWin = new View.SplashView();
+            splashWin.ShowDialog();
         }
 
         public void Log()

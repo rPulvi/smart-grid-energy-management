@@ -315,7 +315,7 @@
 				<Image Margin="0" Source="/WPF_StartPeer;component/img/Home.png" Stretch="Fill" Width="47.425"/>
 			</StackPanel>
 		</Grid>
-		<Grid Margin="0" Grid.Row="2">
+		<Grid Margin="0" Grid.Row="2" d:IsLocked="True">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition Height="Auto"/>
@@ -401,8 +401,6 @@
 							<ColumnDefinition Width="0.4*"/>
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
-                        <TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Resolver IP:"/></TextBlock>
-						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding HostIP, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Height="23" Margin="0" TextWrapping="Wrap" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
 					</Grid>
 				
 				
@@ -499,7 +497,7 @@
 				</Grid>
 			</Grid>
 		</Grid>
-		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom" d:IsLocked="True">
+		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom">
 			<StackPanel>
 				<Rectangle Height="1" Margin="0,0,0,3" Stroke="#FF606060" HorizontalAlignment="Center" VerticalAlignment="Center" Width="340"/>
 				<StackPanel Orientation="Horizontal">
