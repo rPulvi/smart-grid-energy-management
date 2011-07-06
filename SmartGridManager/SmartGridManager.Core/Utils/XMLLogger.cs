@@ -11,65 +11,75 @@ namespace SmartGridManager.Core.Utils
     public static class XMLLogger
     {
         private static XDocument xmlLog;
+        private static object _lock = new object();
 
         public static void WriteLocalActivity(string logMessage)
         {
-            xmlLog = XDocument.Load("log.xml");
-
-            try
+            lock (_lock)
             {
-                xmlLog.Root.Element("LocalActivities").Add(
-                    new XElement("LogMessage",
-                    new XElement("Time", DateTime.Now.ToString("U")),
-                    new XElement("Message", logMessage)
-                    ));
+                xmlLog = XDocument.Load("log.xml");
 
-                xmlLog.Save("log.xml");
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(" XMLLogger Local - Error in Writing {0} : " + e, logMessage);
+                try
+                {
+                    xmlLog.Root.Element("LocalActivities").Add(
+                        new XElement("LogMessage",
+                        new XElement("Time", DateTime.Now.ToString("U")),
+                        new XElement("Message", logMessage)
+                        ));
+
+                    xmlLog.Save("log.xml");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(" XMLLogger Local - Error in Writing {0} : " + e, logMessage);
+                }
             }
         }
 
         public static void WriteRemoteActivity(string logMessage)
         {
-            xmlLog = XDocument.Load("log.xml");
-
-            try
+            lock (_lock)
             {
-                xmlLog.Root.Element("RemoteActivities").Add(
-                    new XElement("LogMessage",
-                    new XElement("Time", DateTime.Now.ToString("U")),
-                    new XElement("Message", logMessage)
-                    ));
+                xmlLog = XDocument.Load("log.xml");
 
-                xmlLog.Save("log.xml");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(" XMLLogger Remote - Error in Writing {0} : " + e, logMessage);
+                try
+                {
+                    xmlLog.Root.Element("RemoteActivities").Add(
+                        new XElement("LogMessage",
+                        new XElement("Time", DateTime.Now.ToString("U")),
+                        new XElement("Message", logMessage)
+                        ));
+
+                    xmlLog.Save("log.xml");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(" XMLLogger Remote - Error in Writing {0} : " + e, logMessage);
+                }
             }
         }
 
         public static void WriteErrorMessage(string className, string logMessage)
         {
-            xmlLog = XDocument.Load("log.xml");
-
-            try
+            lock (_lock)
             {
-                xmlLog.Root.Element("ErrorMessages").Add(
-					new XElement("LogMessage",
-                    new XElement("Time", DateTime.Now.ToString("U")),
-                    new XElement("Class", className),
-                    new XElement("Error", logMessage)
-                    ));
+                xmlLog = XDocument.Load("log.xml");
 
-                xmlLog.Save("log.xml");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(" XMLLogger Error Section - Error in Writing {0} : " + e, logMessage);
+                try
+                {
+                    xmlLog.Root.Element("ErrorMessages").Add(
+                        new XElement("LogMessage",
+                        new XElement("Time", DateTime.Now.ToString("U")),
+                        new XElement("Class", className),
+                        new XElement("Error", logMessage)
+                        ));
+
+                    xmlLog.Save("log.xml");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(" XMLLogger Error Section - Error in Writing {0} : " + e, logMessage);
+                }
             }
         }
     }
