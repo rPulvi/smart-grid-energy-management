@@ -46,7 +46,7 @@ namespace Resolver
         private int _nHostIndex = 0;
         
         private Thread _brokerThread;
-
+        private Thread _requestThread;
 
         private PeerStatus _peerStatus;
         
@@ -60,6 +60,7 @@ namespace Resolver
         private System.Timers.Timer _HBTimer;
 
         private object _lLock = new object();
+        private object _connectionLock = new object();
 
         private EnergyBroker _broker;
 
@@ -172,13 +173,13 @@ namespace Resolver
             return bRet;
         }
 
-        private bool ConnectToRemoteHost()
+        private void ConnectToRemoteHost(object m)
         {
-            bool bRet = false;
-
+            bool connected = false;
+            StatusNotifyMessage message = (StatusNotifyMessage)m;
             _remoteResolvers = Tools.getRemoteHosts();
 
-            while (bRet == false && _nHostIndex < _remoteResolvers.Count)
+            while (connected == false && _nHostIndex < _remoteResolvers.Count)
             {
                 XMLLogger.WriteRemoteActivity("Connecting to " + _remoteResolvers[_nHostIndex].IP);
                 
@@ -205,21 +206,33 @@ namespace Resolver
                     }
 
                     XMLLogger.WriteRemoteActivity("Connected to: " + _remoteResolvers[_nHostIndex].IP);
-                    bRet = true;
+
+                    XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender + "To: " + _remoteResolvers[_nHostIndex]);
+                    XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
+
+                    remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
+                        _remoteResolvers[_nHostIndex].name,
+                        this.name,
+                        Tools.getLocalIP(),
+                        Tools.getResolverServicePort()
+                        ));
+
+                    connected = true;
                 }
                 catch (Exception e)
                 {
                     XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to: " + _remoteResolvers[_nHostIndex].IP);
                     //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
                     _nHostIndex++;
-                    if (_nHostIndex > _remoteResolvers.Count)
+                    if (_nHostIndex >= _remoteResolvers.Count)
+                    {
+                        _nHostIndex = 0;
                         remoteChannel.Abort();
+                    }
 
-                    bRet = false;
+                    connected = false;
                 }
             }
-
-            return bRet;
         }
         
         #endregion
@@ -228,22 +241,8 @@ namespace Resolver
 
         private void ForwardEnergyRequest(StatusNotifyMessage message)
         {
-            this.isRemoteConnected = ConnectToRemoteHost();
-
-            if (isRemoteConnected == true)
-            {
-                XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender + "To: " + _remoteResolvers[_nHostIndex]);
-                XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);                
-
-                remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
-                    _remoteResolvers[_nHostIndex].name,
-                    this.name,
-                    Tools.getLocalIP(),
-                    Tools.getResolverServicePort()
-                    ));
-            }
-            else
-                XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(),"No Remote Connections. Please Check your NetConfig file.");
+            _requestThread = new Thread(new ParameterizedThreadStart(ConnectToRemoteHost));
+            _requestThread.Start(message);
         }
 
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
@@ -442,19 +441,22 @@ namespace Resolver
                         XMLLogger.WriteLocalActivity("Peer: " + _buildings[i].Name + " is down!");
 
                         //Remove the deadly peer but first alert the folks.
-                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));                        
-                        
-                        //Alert Remote Resolvers 
-                        foreach (var remConn in _remoteConnections)
+                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+
+                        lock (_connectionLock)
                         {
-                            NetTcpBinding tcpBinding = new NetTcpBinding();
-                            EndpointAddress remoteEndpoint = new EndpointAddress(remConn.remoteResolver.netAddress);
-                            tcpBinding.Security.Mode = SecurityMode.None;
+                            //Alert Remote Resolvers 
+                            foreach (var remConn in _remoteConnections)
+                            {
+                                NetTcpBinding tcpBinding = new NetTcpBinding();
+                                EndpointAddress remoteEndpoint = new EndpointAddress(remConn.remoteResolver.netAddress);
+                                tcpBinding.Security.Mode = SecurityMode.None;
 
-                            ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
-                            IRemote tChannel = cf.CreateChannel();
+                                ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+                                IRemote tChannel = cf.CreateChannel();
 
-                            tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                                tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                            }
                         }
 
                         updateLocalConnectionsList(_buildings[i].Name);
@@ -551,37 +553,43 @@ namespace Resolver
 
         private void updateRemoteConnectionsList(string resolverName, string peerName)
         {
-            for (int i = 0; i < _remoteConnections.Count; i++)
+            lock (_connectionLock)
             {
-                if (_remoteConnections[i].remoteResolver.name == resolverName)
+                for (int i = 0; i < _remoteConnections.Count; i++)
                 {
-                    var itemsToRemove = (from c in _remoteConnections[i].requests
-                                            where c.Value.remotePeerName == peerName
-                                            select c.Key).ToArray();
+                    if (_remoteConnections[i].remoteResolver.name == resolverName)
+                    {
+                        var itemsToRemove = (from c in _remoteConnections[i].requests
+                                             where c.Value.remotePeerName == peerName
+                                             select c.Key).ToArray();
 
-                    for (int j = 0; j < itemsToRemove.Length; j++)
-                        _remoteConnections[i].requests.Remove(itemsToRemove[i]);
+                        for (int j = 0; j < itemsToRemove.Length; j++)
+                            _remoteConnections[i].requests.Remove(itemsToRemove[j]);
 
+                    }
+
+                    if (_remoteConnections[i].requests.Count == 0)
+                        _remoteConnections.RemoveAt(i);
                 }
-
-                if (_remoteConnections[i].requests.Count == 0)
-                    _remoteConnections.RemoveAt(i);
-            }        
+            }
         }
 
         private void updateLocalConnectionsList(string peerName)
         {
-            for (int i = 0; i < _remoteConnections.Count; i++)
+            lock (_connectionLock)
             {
-                var itemsToRemove = (from c in _remoteConnections[i].requests
-                                        where c.Value.localePeerName == peerName
-                                        select c.Key).ToArray();
+                for (int i = 0; i < _remoteConnections.Count; i++)
+                {
+                    var itemsToRemove = (from c in _remoteConnections[i].requests
+                                         where c.Value.localePeerName == peerName
+                                         select c.Key).ToArray();
 
-                for (int j = 0; j < itemsToRemove.Length; j++)
-                    _remoteConnections[i].requests.Remove(itemsToRemove[i]);
+                    for (int j = 0; j < itemsToRemove.Length; j++)
+                        _remoteConnections[i].requests.Remove(itemsToRemove[i]);
 
-                if (_remoteConnections[i].requests.Count == 0)
-                    _remoteConnections.RemoveAt(i);
+                    if (_remoteConnections[i].requests.Count == 0)
+                        _remoteConnections.RemoveAt(i);
+                }
             }
         }
 

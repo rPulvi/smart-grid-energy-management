@@ -315,7 +315,7 @@
 				<Image Margin="0" Source="/WPF_StartPeer;component/img/Home.png" Stretch="Fill" Width="47.425"/>
 			</StackPanel>
 		</Grid>
-		<Grid Margin="0" Grid.Row="2" d:IsLocked="True">
+		<Grid Margin="0" Grid.Row="2">
 			<Grid.RowDefinitions>
 				<RowDefinition/>
 				<RowDefinition Height="Auto"/>
@@ -325,7 +325,7 @@
 					<SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ActiveCaptionColorKey}}"/>
 				</Rectangle.Fill>
 			</Rectangle>
-			<StackPanel Margin="17,8,20,2" Visibility="{Binding SetFieldsVisibility}">
+			<StackPanel Margin="17,8,20,2" Visibility="{Binding SetFieldsVisibility}" d:IsHidden="True" d:IsLocked="True">
 				<StackPanel Orientation="Vertical" IsEnabled="{Binding FormEnabled}">
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -429,7 +429,7 @@
 					</Grid>
 				</Button>
 			</StackPanel>
-			<Grid Margin="17,8,20,2" Visibility="{Binding SetInfoVisibility}" d:IsLocked="True" d:IsHidden="True">
+			<Grid Margin="18,8,18,2" Visibility="{Binding SetInfoVisibility}">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="*"/>
 					<RowDefinition Height="Auto"/>
@@ -497,7 +497,7 @@
 				</Grid>
 			</Grid>
 		</Grid>
-		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom">
+		<Grid Margin="0,0,0,1" Grid.Row="3" VerticalAlignment="Bottom" d:IsLocked="True">
 			<StackPanel>
 				<Rectangle Height="1" Margin="0,0,0,3" Stroke="#FF606060" HorizontalAlignment="Center" VerticalAlignment="Center" Width="340"/>
 				<StackPanel Orientation="Horizontal">
