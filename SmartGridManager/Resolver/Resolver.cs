@@ -181,6 +181,12 @@ namespace Resolver
 
             while (connected == false && _nHostIndex < _remoteResolvers.Count)
             {
+                if (_remoteResolvers[_nHostIndex].IP == "127.0.0.1" || _remoteResolvers[_nHostIndex].IP.ToLower() == "localhost")
+                {                   
+                    _nHostIndex++;
+                    continue;
+                }
+
                 XMLLogger.WriteRemoteActivity("Connecting to " + _remoteResolvers[_nHostIndex].IP);
                 
                 NetTcpBinding tcpBinding = new NetTcpBinding();
@@ -325,15 +331,14 @@ namespace Resolver
         }
 
         void ManageRemoteEnergyReply(RemoteEndProposalMessage message)
-        {
-            RemoteConnection oC;
-
+        {            
             string localBuilding = message.endProposalMessage.header.Receiver;
             string remoteBuilding  = message.endProposalMessage.header.Sender;
             float energyBought = message.endProposalMessage.energy;
 
             if (message.endProposalMessage.endStatus == true)
             {
+                RemoteConnection oC;
 
                 oC = GetConnection(message.IP, message.port, ConnectionType.Outgoing);
 
