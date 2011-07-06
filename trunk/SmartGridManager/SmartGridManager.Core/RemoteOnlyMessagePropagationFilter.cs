@@ -11,8 +11,8 @@ namespace SmartGridManager.Core
         {
             PeerMessagePropagation destination = PeerMessagePropagation.LocalAndRemote;
 
-            if (origination == PeerMessageOrigination.Local)
-                destination = PeerMessagePropagation.Remote;
+            //if (origination == PeerMessageOrigination.Local)
+            //    destination = PeerMessagePropagation.Remote;
 
             return destination;
         }
