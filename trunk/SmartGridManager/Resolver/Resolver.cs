@@ -182,8 +182,10 @@ namespace Resolver
             while (connected == false && _nHostIndex < _remoteResolvers.Count)
             {
                 if (_remoteResolvers[_nHostIndex].IP == "127.0.0.1" || _remoteResolvers[_nHostIndex].IP.ToLower() == "localhost")
-                {                   
-                    _nHostIndex++;
+                {                       
+                    if(_nHostIndex < _remoteResolvers.Count-1) 
+                        _nHostIndex++;
+                    
                     continue;
                 }
 
