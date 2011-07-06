@@ -332,46 +332,52 @@ namespace Resolver
             string remoteBuilding  = message.endProposalMessage.header.Sender;
             float energyBought = message.endProposalMessage.energy;
 
-            oC = GetConnection(message.IP, message.port,ConnectionType.Outgoing);
-
-            if (oC == null)
+            if (message.endProposalMessage.endStatus == true)
             {
-                oC = new RemoteConnection()
+
+                oC = GetConnection(message.IP, message.port, ConnectionType.Outgoing);
+
+                if (oC == null)
                 {
-                    type = ConnectionType.Outgoing,
+                    oC = new RemoteConnection()
+                    {
+                        type = ConnectionType.Outgoing,
 
-                    remoteResolver = new RemoteHost()
-                    {                        
-                        name = message.header.Sender,
-                        IP = message.IP,
-                        port = message.port,
-                        netAddress = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote"
-                    }
-                };
+                        remoteResolver = new RemoteHost()
+                        {
+                            name = message.header.Sender,
+                            IP = message.IP,
+                            port = message.port,
+                            netAddress = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote"
+                        }
+                    };
 
-                oC.requests.Add(message.endProposalMessage.header.MessageID, new RemoteRequest()
+                    oC.requests.Add(message.endProposalMessage.header.MessageID, new RemoteRequest()
+                    {
+                        localePeerName = localBuilding,
+                        remotePeerName = remoteBuilding,
+                        energy = energyBought
+                    });
+
+                    _remoteConnections.Add(oC);
+                }
+                else
                 {
-                    localePeerName = localBuilding,
-                    remotePeerName = remoteBuilding,
-                    energy = energyBought
-                });
+                    oC.requests.Add(message.endProposalMessage.header.MessageID, new RemoteRequest()
+                    {
+                        localePeerName = localBuilding,
+                        remotePeerName = remoteBuilding,
+                        energy = energyBought
+                    });
+                }
 
-                _remoteConnections.Add(oC);
+                XMLLogger.WriteRemoteActivity("Received Remote Energy Reply from: " + remoteBuilding + "@" + message.header.Sender);
+                XMLLogger.WriteRemoteActivity("Message ID: " + message.endProposalMessage.header.MessageID);
+
+                Connector.channel.endProposal(message.endProposalMessage);
             }
-            else             
-            {
-                oC.requests.Add(message.endProposalMessage.header.MessageID, new RemoteRequest()
-                {
-                    localePeerName = localBuilding,
-                    remotePeerName = remoteBuilding,
-                    energy = energyBought
-                });
-            }
-
-            XMLLogger.WriteRemoteActivity("Received Remote Energy Reply from: " + remoteBuilding + "@" + message.header.Sender);
-            XMLLogger.WriteRemoteActivity("Message ID: " + message.endProposalMessage.header.MessageID);
-            
-            Connector.channel.endProposal(message.endProposalMessage);
+            else //No Energy From this remote resolver..Go with the next
+                _nHostIndex++;
         }
         
         #endregion
