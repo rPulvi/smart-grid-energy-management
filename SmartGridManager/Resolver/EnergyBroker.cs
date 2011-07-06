@@ -4,6 +4,7 @@ using SmartGridManager.Core.Messaging;
 using System.Timers;
 using SmartGridManager.Core.Utils;
 using SmartGridManager.Core;
+using System;
 
 namespace Resolver
 {
@@ -19,7 +20,8 @@ namespace Resolver
 
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         
-        private System.Timers.Timer _proposalCountdown; //Countdown to elaborate the incoming proposal        
+        private System.Timers.Timer _proposalCountdown; //Countdown to elaborate the incoming proposal
+        private Guid _originGuid;
         private int _proposalTimeout;
 
         #endregion
@@ -45,6 +47,7 @@ namespace Resolver
 
             _originPeerName = message.header.Sender;
             _enLookUp = message.energyReq;
+            _originGuid = message.header.MessageID;
 
             message.header.Sender = this._name;
 
@@ -66,12 +69,25 @@ namespace Resolver
         private void _proposalCountdown_Elapsed(object sender, ElapsedEventArgs e)
         {
             _proposalCountdown.Enabled = false; //Stop the timer
-            
+
             if (_proposalList.Count > 0)
-            {                
-                _proposalTimeout = 0;                
+            {
+                _proposalTimeout = 0;
                 EvaluateProposal();
             }
+            else 
+            {
+                EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(
+                    _originGuid,
+                    _name,
+                    "Broker",
+                    false,
+                    0,
+                    0
+                    );
+
+                Connector.channel.forwardEnergyReply(respMessage);
+            }                        
         }
 
         private void EvaluateProposal()
