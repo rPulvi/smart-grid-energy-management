@@ -25,7 +25,6 @@ namespace WPF_Resolver.ViewModel
         private string _ora;
         private string _minuto;
         private string _secondo;
-        private string _enTh;
         private string _imgPath;
         private string _startColour;
 
@@ -37,7 +36,6 @@ namespace WPF_Resolver.ViewModel
 
         private float _enProduced;
         private float _enConsumed;
-        private double _enThroughput;
 
         private bool _startIsEnabled;
 
@@ -109,9 +107,6 @@ namespace WPF_Resolver.ViewModel
 
             _enTimeLine.Add(DateTime.Now, 0f);
             OnPropertyChanged("GetPointTimeLine");
-
-            _enTh = "En. Balance: 0%";
-            OnPropertyChanged("EnThroughput");
 
             _pieList.Add("Producers", 0);
             _pieList.Add("Consumers", 0);
@@ -293,16 +288,6 @@ namespace WPF_Resolver.ViewModel
             }
         }
 
-        public string EnThroughput
-        {
-            get { return _enTh; }
-            set
-            {
-                _enTh = value;
-                OnPropertyChanged("EnThroughput");
-            }
-        }
-
         public void ChangeVisibilityLocal()
         {
             _listVisibilityLocal = Visibility.Visible;
@@ -441,8 +426,6 @@ namespace WPF_Resolver.ViewModel
             _enProduced = 0;
             _enConsumed = 0;
 
-            _enThroughput = 0f;
-
             _peerList = _resolver.GetConnectedPeers();
 
             ScanConnections();            
@@ -461,13 +444,6 @@ namespace WPF_Resolver.ViewModel
                 #endregion
             }
 
-            if (_enConsumed > 0)
-                _enThroughput = (_enConsumed / _enProduced) * 100;
-            else
-                _enThroughput = 0;
-
-            _enTh ="En. Balance: " + Math.Round(_enThroughput, 2) + "%";
-
             _pieList["Producers"] = _numProducers;
             _pieList["Consumers"] = _numConsumers;
 
@@ -479,7 +455,6 @@ namespace WPF_Resolver.ViewModel
             OnPropertyChanged("GetPieChartData");            
             OnPropertyChanged("GetEnProducedBar");
             OnPropertyChanged("GetEnConsumedBar");
-            OnPropertyChanged("EnThroughput");
         }
 
         private void TimeLine_Tick(object sender, EventArgs e)
