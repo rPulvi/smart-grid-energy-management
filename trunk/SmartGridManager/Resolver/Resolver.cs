@@ -61,6 +61,7 @@ namespace Resolver
 
         private object _lLock = new object();
         private object _connectionLock = new object();
+        private object _counterLock = new object();
 
         private EnergyBroker _broker;
 
@@ -199,46 +200,50 @@ namespace Resolver
                 ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
                 remoteChannel = cf.CreateChannel();
 
-                try
+                lock (_counterLock)
                 {
-                    remoteChannel.Open();
-
-                    //Retrieve Remote IP Addresses
-                    foreach (var newRemote in remoteChannel.RetrieveContactList())
+                    try
                     {
-                        if (!_remoteResolvers.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
+                        remoteChannel.Open();
+
+                        //Retrieve Remote IP Addresses
+                        foreach (var newRemote in remoteChannel.RetrieveContactList())
                         {
-                            _remoteResolvers.Add(newRemote);
-                            Tools.updateRemoteHosts(newRemote);
+                            if (!_remoteResolvers.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
+                            {
+                                _remoteResolvers.Add(newRemote);
+                                Tools.updateRemoteHosts(newRemote);
+                            }
                         }
+
+                        XMLLogger.WriteRemoteActivity("Connected to: " + _remoteResolvers[_nHostIndex].IP);
+
+                        XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender + "To: " + _remoteResolvers[_nHostIndex]);
+                        XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
+
+                        remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
+                            _remoteResolvers[_nHostIndex].name,
+                            this.name,
+                            Tools.getLocalIP(),
+                            Tools.getResolverServicePort()
+                            ));
+
+                        connected = true;
                     }
 
-                    XMLLogger.WriteRemoteActivity("Connected to: " + _remoteResolvers[_nHostIndex].IP);
-
-                    XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender + "To: " + _remoteResolvers[_nHostIndex]);
-                    XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
-
-                    remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
-                        _remoteResolvers[_nHostIndex].name,
-                        this.name,
-                        Tools.getLocalIP(),
-                        Tools.getResolverServicePort()
-                        ));
-
-                    connected = true;
-                }
-                catch (Exception e)
-                {
-                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to: " + _remoteResolvers[_nHostIndex].IP);
-                    //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
-                    _nHostIndex++;
-                    if (_nHostIndex >= _remoteResolvers.Count)
+                    catch (Exception e)
                     {
-                        _nHostIndex = 0;
-                        remoteChannel.Abort();
-                    }
+                        XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to: " + _remoteResolvers[_nHostIndex].IP);
+                        //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
+                        _nHostIndex++;
+                        if (_nHostIndex >= _remoteResolvers.Count)
+                        {
+                            _nHostIndex = 0;
+                            remoteChannel.Abort();
+                        }
 
-                    connected = false;
+                        connected = false;
+                    }
                 }
             }
         }
@@ -384,7 +389,12 @@ namespace Resolver
                 Connector.channel.endProposal(message.endProposalMessage);
             }
             else //No Energy From this remote resolver..Go with the next
-                _nHostIndex++;
+            {
+                lock (_counterLock)
+                {
+                    _nHostIndex++;
+                }
+            }
         }
         
         #endregion
