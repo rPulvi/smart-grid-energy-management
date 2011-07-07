@@ -298,7 +298,7 @@ namespace Resolver
                 {
                     localePeerName = "",
                     remotePeerName = remotePeer,
-                    energy = energyRequest
+                    energy = 0
                 });
             
             _brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
@@ -316,6 +316,7 @@ namespace Resolver
             {                
                 //Header re-handling
                 conn.requests[message.header.MessageID].localePeerName = message.header.Sender;
+                conn.requests[message.header.MessageID].energy = message.energy;
                 message.header.Receiver = conn.requests[message.header.MessageID].remotePeerName;
 
                 #region Creating Channel
