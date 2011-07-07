@@ -261,14 +261,13 @@ namespace Resolver
         private void ManageRemoteEnergyRequest(RemoteEnergyRequest message)
         {
             RemoteConnection remConn;
-            
-            Guid MessageID = message.enReqMessage.header.MessageID;
-            float energyRequest = message.enReqMessage.energyReq;
-            string remotePeer  = message.enReqMessage.header.Sender;            
+
+            Guid MessageID = message.enReqMessage.header.MessageID;            
+            string remotePeer  = message.enReqMessage.header.Sender;
 
             XMLLogger.WriteRemoteActivity("Received Remote Energy Request from: " + message.enReqMessage.header.Sender + " by Remote Resolver: " + message.header.Sender);
             XMLLogger.WriteRemoteActivity("Message ID: " + message.enReqMessage.header.MessageID);
-           
+
             remConn = GetConnection(message.IP, message.port, ConnectionType.Incoming);
 
             if (remConn == null)//If entry doesn't exist
@@ -285,11 +284,11 @@ namespace Resolver
                         netAddress = @"net.tcp://" + message.IP + ":" + message.port + @"/Remote"
                     }
                 };
-                
+
                 remConn.requests.Add(MessageID, new RemoteRequest(){
                     localePeerName = "", 
                     remotePeerName = remotePeer,
-                    energy = energyRequest});
+                    energy = 0});
 
                _remoteConnections.Add(remConn);
             }
@@ -300,7 +299,7 @@ namespace Resolver
                     remotePeerName = remotePeer,
                     energy = 0
                 });
-            
+
             _brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
             _brokerThread.Start(message.enReqMessage);
         }
