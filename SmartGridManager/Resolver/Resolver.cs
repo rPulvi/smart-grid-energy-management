@@ -12,6 +12,7 @@ using SmartGridManager.Core.Messaging;
 using System.Timers;
 using System.Collections.ObjectModel;
 using System.Windows;
+using System.ServiceModel.PeerResolvers;
 
 namespace Resolver
 {
@@ -25,40 +26,34 @@ namespace Resolver
 
         #region Attributes
 
-        private CustomResolver crs = new CustomResolver { ControlShape = false };
-        private ServiceHost customResolver;
-        
-        private ServiceHost remoteHost;
-        //private IPeerServices remoteChannel;
-        private IRemote remoteChannel;
+        private CustomPeerResolverService _crs = new CustomPeerResolverService();
+
+        private ServiceHost _customResolver;        
+        private ServiceHost _remoteHost;        
+        private IRemote _remoteChannel;
+        private MessageHandler _msgHandler;
+        private PeerServices _remoteMessageHandler;
+
+        private PeerStatus _peerStatus;
 
         private List<RemoteHost> _remoteResolvers = new List<RemoteHost>();
-
         private List<RemoteConnection> _remoteConnections = new List<RemoteConnection>();        
-
-        private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();        
-
-        private MessageHandler MsgHandler;
-        private PeerServices remoteMessageHandler;
+        private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
+        private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();        
 
         public string name { get; private set; }
 
         private int _nHostIndex = 0;
-        
+        private System.Timers.Timer _HBTimer;
+
         private Thread _brokerThread;
         private Thread _requestThread;
-
-        private PeerStatus _peerStatus;
         
         //TODO: msgbox nel resolver a seconda degli stati.
         public bool isLocalConnected { get; private set; }
         public bool isRemoteServiceStarted { get; private set; }
         public bool isRemoteConnected { get; private set; }
-
-        private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();        
-
-        private System.Timers.Timer _HBTimer;
-
+               
         private object _lLock = new object();
         private object _connectionLock = new object();
         private object _counterLock = new object();
@@ -100,16 +95,16 @@ namespace Resolver
                 #region Normal Peer Activity
 
                 base.StartService();
-                MsgHandler = Connector.messageHandler;
+                _msgHandler = Connector.messageHandler;
 
                 _broker = new EnergyBroker(name);
 
                 #region Event Listeners
-                MsgHandler.OnForwardEnergyRequest += new forwardEnergyRequest(ForwardEnergyRequest);
-                MsgHandler.OnForwardEnergyReply += new forwardEnergyReply(ForwardEnergyReply);
-                MsgHandler.OnSayHello += new sayHello(HelloResponse);
-                MsgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
-                MsgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);                
+                _msgHandler.OnForwardEnergyRequest += new forwardEnergyRequest(ForwardEnergyRequest);
+                _msgHandler.OnForwardEnergyReply += new forwardEnergyReply(ForwardEnergyReply);
+                _msgHandler.OnSayHello += new sayHello(HelloResponse);
+                _msgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
+                _msgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);                
                 #endregion
 
                 #endregion
@@ -122,14 +117,14 @@ namespace Resolver
         {
             bool bRet = false;
 
-            customResolver = new ServiceHost(crs);
+            _customResolver = new ServiceHost(_crs);
             
             XMLLogger.WriteLocalActivity("Starting Custom Local Peer Resolver Service...");
 
             try
             {
-                crs.Open();
-                customResolver.Open();
+                _crs.Open();
+                _customResolver.Open();
                 bRet = true;
                 XMLLogger.WriteLocalActivity("Custom Local Peer Resolver Service is started");                
             }
@@ -137,8 +132,8 @@ namespace Resolver
             {
                 XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in starting Custom Local Peer Resolver Service");
                 XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); 
-                crs.Close();
-                customResolver.Abort();
+                _crs.Close();
+                _customResolver.Abort();
                 bRet = false;
             }
 
@@ -149,18 +144,18 @@ namespace Resolver
         {                        
             bool bRet = false;            
             
-            remoteMessageHandler = new PeerServices();
+            _remoteMessageHandler = new PeerServices();
 
-            remoteHost = new ServiceHost(remoteMessageHandler);
+            _remoteHost = new ServiceHost(_remoteMessageHandler);
 
             //To handle the remote traffic            
-            remoteMessageHandler.OnRemoteEnergyRequest += new manageEnergyRequest(ManageRemoteEnergyRequest);
-            remoteMessageHandler.OnRemoteEnergyReply += new replyEnergyRequest(ManageRemoteEnergyReply);
-            remoteMessageHandler.OnRemotePeerIsDown += new remotePeerIsDown(RemotePeerIsDown);            
+            _remoteMessageHandler.OnRemoteEnergyRequest += new manageEnergyRequest(ManageRemoteEnergyRequest);
+            _remoteMessageHandler.OnRemoteEnergyReply += new replyEnergyRequest(ManageRemoteEnergyReply);
+            _remoteMessageHandler.OnRemotePeerIsDown += new remotePeerIsDown(RemotePeerIsDown);            
 
             try
             {
-                remoteHost.Open();
+                _remoteHost.Open();
                 bRet = true;
                 XMLLogger.WriteRemoteActivity("Remote service started.");
             }
@@ -168,7 +163,7 @@ namespace Resolver
             {                
                 XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to start Remote Service.");                
                 //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose
-                remoteHost.Abort();
+                _remoteHost.Abort();
             }
 
             return bRet;
@@ -198,16 +193,16 @@ namespace Resolver
 
                 //ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
                 ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
-                remoteChannel = cf.CreateChannel();
+                _remoteChannel = cf.CreateChannel();
 
                 lock (_counterLock)
                 {
                     try
                     {
-                        remoteChannel.Open();
+                        _remoteChannel.Open();
 
                         //Retrieve Remote IP Addresses
-                        foreach (var newRemote in remoteChannel.RetrieveContactList())
+                        foreach (var newRemote in _remoteChannel.RetrieveContactList())
                         {
                             if (!_remoteResolvers.Exists(delegate(RemoteHost x) { return x.netAddress == newRemote.netAddress; }))
                             {
@@ -221,7 +216,7 @@ namespace Resolver
                         XMLLogger.WriteRemoteActivity("Forwarding Energy Request from: " + message.header.Sender + "To: " + _remoteResolvers[_nHostIndex]);
                         XMLLogger.WriteRemoteActivity("Message ID: " + message.header.MessageID);
 
-                        remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
+                        _remoteChannel.ManageRemoteEnergyRequest(MessageFactory.createRemoteEnergyRequestMessage(message,
                             _remoteResolvers[_nHostIndex].name,
                             this.name,
                             Tools.getLocalIP(),
@@ -239,7 +234,7 @@ namespace Resolver
                         if (_nHostIndex >= _remoteResolvers.Count)
                         {
                             _nHostIndex = 0;
-                            remoteChannel.Abort();
+                            _remoteChannel.Abort();
                         }
 
                         connected = false;
@@ -530,15 +525,15 @@ namespace Resolver
             _HBTimer.Enabled = false;
 
             if (this.isRemoteServiceStarted == true)                        
-                remoteHost.Close();
+                _remoteHost.Close();
 
             if (this.isRemoteConnected == true)
-                remoteChannel.Close();
+                _remoteChannel.Close();
 
             if(this.isLocalConnected == true)
             {                
-                crs.Close();
-                customResolver.Close();                
+                _crs.Close();
+                _customResolver.Close();                
             }
 
             StopService(); //Calls the base.StopService method
