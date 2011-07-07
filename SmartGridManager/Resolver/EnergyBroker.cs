@@ -77,16 +77,16 @@ namespace Resolver
             }
             else 
             {
-                //EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(
-                //    _originGuid,
-                //    _name,
-                //    "Broker",
-                //    false,
-                //    0,
-                //    0
-                //    );
+                EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(
+                    _originGuid,
+                    _name,
+                    "Broker",
+                    false,
+                    0,
+                    0
+                    );
 
-                //Connector.channel.forwardEnergyReply(respMessage);
+                Connector.channel.forwardEnergyReply(respMessage);
             }                        
         }
 
