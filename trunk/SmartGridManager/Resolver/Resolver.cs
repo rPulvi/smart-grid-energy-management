@@ -27,19 +27,17 @@ namespace Resolver
         #region Attributes
 
         private CustomPeerResolverService _crs = new CustomPeerResolverService();
-
-        private ServiceHost _customResolver;        
-        private ServiceHost _remoteHost;        
-        private IRemote _remoteChannel;
+        private ServiceHost _customResolver;
         private MessageHandler _msgHandler;
-        private PeerServices _remoteMessageHandler;
 
-        private PeerStatus _peerStatus;
+        private ServiceHost _remoteHost;        
+        private IRemote _remoteChannel;        
+        private PeerServices _remoteMessageHandler;        
 
         private List<RemoteHost> _remoteResolvers = new List<RemoteHost>();
-        private List<RemoteConnection> _remoteConnections = new List<RemoteConnection>();        
+        private List<RemoteConnection> _remoteConnections = new List<RemoteConnection>();                
+
         private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
-        private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();        
 
         public string name { get; private set; }
 
@@ -49,11 +47,10 @@ namespace Resolver
         private Thread _brokerThread;
         private Thread _requestThread;
         
-        //TODO: msgbox nel resolver a seconda degli stati.
         public bool isLocalConnected { get; private set; }
         public bool isRemoteServiceStarted { get; private set; }
         public bool isRemoteConnected { get; private set; }
-               
+
         private object _lLock = new object();
         private object _connectionLock = new object();
         private object _counterLock = new object();
@@ -63,16 +60,14 @@ namespace Resolver
         #endregion
 
         #region Methods
-        
+
         public Resolver() : base(Tools.getResolverName(),PeerStatus.Resolver)
         {
             this.name = Tools.getResolverName();            
 
             this.isLocalConnected = false;
             this.isRemoteServiceStarted = false;
-            this.isRemoteConnected = false;
-
-            this._peerStatus = PeerStatus.Resolver;
+            this.isRemoteConnected = false;            
 
             //This timer manage the peer's HB to check the online status
             _HBTimer = new System.Timers.Timer();
@@ -87,8 +82,7 @@ namespace Resolver
             
             if (this.isLocalConnected == true)
             {
-                this.isRemoteServiceStarted = StartRemoteService();
-                //this.isRemoteConnected = ConnectToRemoteHost();
+                this.isRemoteServiceStarted = StartRemoteService();                
 
                 _HBTimer.Enabled = true;
 
@@ -223,6 +217,7 @@ namespace Resolver
                             Tools.getResolverServicePort()
                             ));
 
+                        this.isRemoteConnected = true;
                         connected = true;
                     }
 
