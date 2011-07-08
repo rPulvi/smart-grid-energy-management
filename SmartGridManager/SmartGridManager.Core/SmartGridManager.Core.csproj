@@ -65,7 +65,6 @@
     <Compile Include="Messaging\MessageHandler.cs" />
     <Compile Include="Messaging\MessagesImplementation.cs" />
     <Compile Include="Messaging\PeerMessage.cs" />
-    <Compile Include="Messaging\RemoteMessages.cs" />
     <Compile Include="P2P\PeerServices.cs" />
     <Compile Include="Peer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
