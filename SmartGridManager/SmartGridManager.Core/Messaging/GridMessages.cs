@@ -42,15 +42,6 @@ namespace SmartGridManager.Core.Messaging
 
         public HelloResponseMessage() { }
     }
-
-    [MessageContract]
-    public class GridMessage : PeerMessage
-    {
-        [MessageBodyMember]
-        public String descField { get; set; }
-
-        public GridMessage() { }
-    }
     
     [MessageContract]
     public class StatusNotifyMessage : PeerMessage
