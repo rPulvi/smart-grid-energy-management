@@ -29,9 +29,6 @@ namespace SmartGridManager.Core
             _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");
             channel = _factory.CreateChannel();
            
-            //set filter
-            PeerNode pn = ((IClientChannel)Connector.channel).GetProperty<PeerNode>();
-            pn.MessagePropagationFilter = new RemoteOnlyMessagePropagationFilter();
 
             try
             {
