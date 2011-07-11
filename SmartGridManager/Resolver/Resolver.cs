@@ -171,6 +171,7 @@ namespace Resolver
 
             while (connected == false && _nHostIndex < _remoteResolvers.Count)
             {
+                //localhost connections filter
                 if (_remoteResolvers[_nHostIndex].IP == "127.0.0.1" || _remoteResolvers[_nHostIndex].IP.ToLower() == "localhost")
                 {                       
                     if(_nHostIndex < _remoteResolvers.Count-1) 
@@ -184,8 +185,7 @@ namespace Resolver
                 NetTcpBinding tcpBinding = new NetTcpBinding();
                 EndpointAddress remoteEndpoint = new EndpointAddress(_remoteResolvers[_nHostIndex].netAddress);
                 tcpBinding.Security.Mode = SecurityMode.None;
-
-                //ChannelFactory<IPeerServices> cf = new ChannelFactory<IPeerServices>(tcpBinding, remoteEndpoint);
+                
                 ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
                 _remoteChannel = cf.CreateChannel();
 
