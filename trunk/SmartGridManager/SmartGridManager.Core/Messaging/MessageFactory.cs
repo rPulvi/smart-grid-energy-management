@@ -56,10 +56,6 @@ namespace SmartGridManager.Core.Messaging
             EnergyProposalMessage message = new EnergyProposalMessage()
             {
                 header = Tools.getHeader(dest, source, SessionID),
-                /* TODO: Optimization required
-                //If peer's energy is >= the request, give the requested energy, otherwise give the en. available
-                energyAvailable = energyAvailable >= message.energyReq ? message.energyReq : energyAvailable,
-                */
                 energyAvailable = enReq,
                 price = enPrice
             };
