@@ -57,7 +57,7 @@ namespace SmartGridManager
 
             #region EventListeners
             MsgHandler.OnHelloResponse += new HelloResponse(ReceiveResolverName);
-            MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);
+            MsgHandler.OnStatusChanged += new statusNotify(CreateProposal);//Energy Request arrives
             MsgHandler.OnProposalArrived += new energyProposal(ReceiveProposal);
             MsgHandler.OnProposalAccepted += new acceptProposal(ProposalAccepted);
             MsgHandler.OnEndProposalArrived += new endProposal(EndProposal);            
@@ -104,11 +104,6 @@ namespace SmartGridManager
             _heartBeatTimer.Enabled = true;
         }
 
-        /// <summary>
-        /// This Event manages the main Application Lifecycle.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void _mainTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
             //Check the energy level
@@ -341,9 +336,7 @@ namespace SmartGridManager
             }
         }
 
-        public float getEnergyLevel() { return _generator.EnergyLevel; }
-        
-        public void setEnergyLevel(float value) { _generator.EnergyLevel = value; }
+        private float getEnergyLevel() { return _generator.EnergyLevel; }               
 
         public void ShutDown()
         {
