@@ -25,13 +25,7 @@ namespace SmartGridManager
         private string _address;
         private string _adminName;
         
-        /// <summary>
-        /// Default Constructor
-        /// </summary>
-        /// <param name="ID">An Unique ID</param>
-        /// <param name="energy">The type of energy produced</param>
-        /// <param name="energyPeak">The max energy consumed by a builiding</param>
-        /// <param name="price">The energy selling price</param>
+
         public Building(String Name, PeerStatus status, EnergyType enType, float enProduced, float energyPeak, float price, string address, string adminName)
             : base(Name)
         {
