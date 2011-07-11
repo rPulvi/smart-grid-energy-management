@@ -21,8 +21,7 @@ namespace Resolver
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         
         private System.Timers.Timer _proposalCountdown; //Countdown to elaborate the incoming proposal
-        private Guid _originGuid;
-        private int _proposalTimeout;
+        private Guid _originGuid;        
 
         #endregion
 
@@ -71,8 +70,7 @@ namespace Resolver
             _proposalCountdown.Enabled = false; //Stop the timer
 
             if (_proposalList.Count > 0)
-            {
-                _proposalTimeout = 0;
+            {                
                 EvaluateProposal();
             }
             else 
