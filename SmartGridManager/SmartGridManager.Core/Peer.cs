@@ -14,10 +14,9 @@ namespace SmartGridManager.Core
     public class Peer
     {
         public bool isConnected { get; private set; }
-
         public String ID { get; private set; }
 
-        private PeerStatus status;
+        private PeerStatus status;        
 
         public Peer(String ID, PeerStatus status = PeerStatus.None)
         {
@@ -28,20 +27,13 @@ namespace SmartGridManager.Core
 
             if (!(status == PeerStatus.Resolver)) //Il Resolver lancerà il servizio manualmente            
                 this.StartService();
-
         }
 
         public void StartService()
         {
             if (Connector.Connect())
             {
-                //handling Online/Offline events
-                IOnlineStatus ostat = Connector.channel.GetProperty<IOnlineStatus>();
-
-                ostat.Online += new EventHandler(OnOnline);
-                ostat.Offline += new EventHandler(OnOffline);
                 this.isConnected = true;
-
                 XMLLogger.WriteLocalActivity("OnLine.");
             }
             else
@@ -50,7 +42,6 @@ namespace SmartGridManager.Core
                 XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Connection Error");                
             }
         }
-
 
         public void StopService() 
         {
@@ -61,15 +52,5 @@ namespace SmartGridManager.Core
             }
         }
 
-        // PeerNode event handlers
-        static void OnOnline(object sender, EventArgs e)
-        {
-            Console.WriteLine("**  Online");
-        }
-
-        static void OnOffline(object sender, EventArgs e)
-        {
-            Console.WriteLine("**  Offline");
-        }
     }
 }
