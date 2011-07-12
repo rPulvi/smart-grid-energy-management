@@ -77,7 +77,6 @@ namespace WPF_Resolver.ViewModel
         {
             #region init
 
-
             _startIsEnabled = true;
             OnPropertyChanged("GetIsEnabledStatus");
 
