@@ -16,17 +16,7 @@ namespace WPF_Resolver.Command
         private readonly Func<object, bool> canExecuteMethod = null;
         #endregion
 
-        public event EventHandler CanExecuteChanged
-        {
-            add
-            {
-                CommandManager.RequerySuggested += value;
-            }
-            remove
-            {
-                CommandManager.RequerySuggested += value;
-            }
-        }
+        public event EventHandler CanExecuteChanged;
 
         public DelegateCommand(Action<object> executeMethod, Func<object, bool> canExecuteMethod)
         {
