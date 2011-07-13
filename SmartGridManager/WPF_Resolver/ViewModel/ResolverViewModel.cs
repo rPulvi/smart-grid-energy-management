@@ -20,12 +20,10 @@ namespace WPF_Resolver.ViewModel
     {
         #region Attributes
         private string _resolverName;
-        private string _resolverStatus;
         private string _resolverIP;
         private string _ora;
         private string _minuto;
         private string _secondo;
-        private string _imgPath;
         private string _startColour;
 
         private int _localFontSize;
@@ -97,12 +95,6 @@ namespace WPF_Resolver.ViewModel
 
             _getTimeVisibility = Visibility.Hidden;
             OnPropertyChanged("GetTimeVisibility");
-
-            _imgPath = @"/WPF_Resolver;component/img/offline.png";
-            OnPropertyChanged("GetImgPath");
-
-            _resolverStatus = "Offline...";
-            OnPropertyChanged("GetResolverStatus");
 
             _enTimeLine.Add(DateTime.Now, 0f);
             OnPropertyChanged("GetPointTimeLine");
@@ -347,16 +339,6 @@ namespace WPF_Resolver.ViewModel
             Application.Current.Shutdown();
         }
 
-        public string GetImgPath
-        {
-            get { return _imgPath; }
-            set
-            {
-                _imgPath = value;
-                OnPropertyChanged("GetImgPath");
-            }
-        }
-
         public string GetResolverName
         {
             get { return _resolverName; }
@@ -364,16 +346,6 @@ namespace WPF_Resolver.ViewModel
             {
                 _resolverName = value;
                 OnPropertyChanged("GetResolverName");
-            }
-        }
-
-        public string GetResolverStatus
-        {
-            get { return _resolverStatus; }
-            set
-            {
-                _resolverStatus = value;
-                OnPropertyChanged("GetResolverStatus");
             }
         }
 
@@ -427,13 +399,16 @@ namespace WPF_Resolver.ViewModel
 
             _peerList = _resolver.GetConnectedPeers();
 
+            //Update RemoteList
             ScanConnections();            
             
             for(int i=0;i< _peerList.Count;i++)
             {
+                //Update BarChart
                 _enProduced += _peerList[i].EnProduced;
                 _enConsumed += _peerList[i].EnPeak;
 
+                //Update PieChart
                 #region checkStatus
                 if (_peerList[i].status == PeerStatus.Producer)
                     _numProducers++;
@@ -465,6 +440,7 @@ namespace WPF_Resolver.ViewModel
                 enProd += _peerList[i].EnProduced;
             }
 
+            //Update TimelineChart
             _enTimeLine.Add(DateTime.Now, enProd);
             OnPropertyChanged("GetPointTimeLine");
 
@@ -507,14 +483,9 @@ namespace WPF_Resolver.ViewModel
                 _startColour = "Gray";
 
                 _resolverName = _resolver.name;
-                _resolverStatus = "Online...";
                 _getTimeVisibility = Visibility.Visible;
 
-                _imgPath = @"/WPF_Resolver;component/img/resolver_ok.png";
-
-                OnPropertyChanged("GetImgPath");
                 OnPropertyChanged("GetResolverName");
-                OnPropertyChanged("GetResolverStatus");
                 OnPropertyChanged("GetResolverIP");
                 OnPropertyChanged("GetTimeVisibility");
                 OnPropertyChanged("GetIsEnabledStatus");
@@ -555,7 +526,6 @@ namespace WPF_Resolver.ViewModel
         public class RemoteListItem
         {
             public string resolverName { get; set; }
-            public ConnectionType type { get; set; }
             public string iconPath { get; set; }
             public float energy { get; set; }
         }
