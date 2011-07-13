@@ -402,12 +402,8 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 					</Grid>
-				
-				
-				
+						
 				</StackPanel>
-				
-				
 				
 				<Button Command="{Binding StartPeer}" Style="{StaticResource myButtonStyle}"
 					Height="33.296" Width="112.381" HorizontalAlignment="Right" Margin="0,40,0,0" BorderBrush="{x:Null}" Foreground="DarkGray">
