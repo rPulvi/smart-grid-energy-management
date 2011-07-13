@@ -154,16 +154,6 @@ namespace WPF_StartPeer.ViewModel
             OnPropertyChanged("GetTotalEnergy");
         }
 
-        public string HostIP
-        {
-            get { return _hostIP; }
-            set
-            {
-                _hostIP = value;
-                OnPropertyChanged("HostIP");
-            }
-        }
-
         public ObservableCollectionEx<EnergyLink> GetSellersBuyersList
         {
             get { return _sellersBuyersList; }
@@ -507,15 +497,13 @@ namespace WPF_StartPeer.ViewModel
 
         public void Connect()
         {
-            //SetHostIP();
-
             house = new Building(Nome, _status, EnType, EnProduced, EnPeak, Price, Address, Admin);
-
-            //Timer to refresh Sellers/Buyers list
-            _refreshListTimer.Start();
 
             if (house.isConnected == true)
             {
+                //Timer to refresh Sellers/Buyers list
+                _refreshListTimer.Start();
+
                 house.Start();
 
                 _imgPath = @"/WPF_StartPeer;component/img/online.png";
@@ -654,29 +642,6 @@ namespace WPF_StartPeer.ViewModel
             }
 
             return sRet;
-        }
-
-        public void SetHostIP()
-        {
-            XDocument _appConfig = XDocument.Load(@"../../App.config");
-
-            try
-            {
-                _appConfig.Element("configuration")
-                    .Element("system.serviceModel")
-                    .Element("bindings")
-                    .Element("netPeerTcpBinding")
-                    .Element("binding")
-                    .Element("resolver")
-                    .Element("custom")
-                    .Attribute("address").SetValue("net.tcp://" + HostIP + ":8080/peerResolverService");
-
-                _appConfig.Save("../../App.config");
-            }
-            catch(Exception e)
-            {
-                MessageBox.Show(e.ToString());
-            }
         }
 
         private class ErrorMap
