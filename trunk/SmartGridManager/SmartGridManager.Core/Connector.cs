@@ -25,6 +25,8 @@ namespace SmartGridManager.Core
             messageHandler = new MessageHandler();
                         
             //create channel
+            //InstanceContext represents the running instance of the service.
+            //OperationContext is the instance of the client accessing the service.
             InstanceContext instanceContext = new InstanceContext(messageHandler);
             _factory = new DuplexChannelFactory<IChannel>(instanceContext, "GridEndpoint");
             channel = _factory.CreateChannel();
