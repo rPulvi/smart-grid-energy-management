@@ -120,14 +120,14 @@ namespace WPF_StartPeer.ViewModel
 
             _status = PeerStatus.Consumer;
 			#endregion
-
-            this.StartPeer = new DelegateCommand((o) => this.Start(), o => this.canDo);
-            this.SetProducer = new DelegateCommand((o) => this.Producer(), o => this.canDo);
-            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
-            this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
-            this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
-            this.ShowFields = new DelegateCommand((o) => this.FieldsView(), o => this.canDo);
-            this.ShowInfo = new DelegateCommand((o) => this.InfoView(), o => this.canDo);
+            
+            this.StartPeer = new DelegateCommand(o => this.Start(), o => this.canDo);
+            this.SetProducer = new DelegateCommand(o => this.Producer(), o => this.canDo);
+            this.Exit = new DelegateCommand(o => this.AppExit(), o => this.canDo);
+            this.ViewLog = new DelegateCommand(o => this.Log(), o => this.canDo);
+            this.ViewSplash = new DelegateCommand(o => this.Splashing(), o => this.canDo);
+            this.ShowFields = new DelegateCommand(o => this.FieldsView(), o => this.canDo);
+            this.ShowInfo = new DelegateCommand(o => this.InfoView(), o => this.canDo);
         }
 
         void _refreshListTimer_Tick(object sender, EventArgs e)
