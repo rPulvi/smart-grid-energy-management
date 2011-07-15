@@ -137,14 +137,14 @@ namespace WPF_Resolver.ViewModel
 
             _ipHost = Tools.getLocalIP();
 
-            this.StartResolver = new DelegateCommand((o) => this.Start(), o => this.canDo);
-            this.Exit = new DelegateCommand((o) => this.AppExit(), o => this.canDo);
-            this.ShowLocal = new DelegateCommand((o) => this.ChangeVisibilityLocal(), o => this.canDo);
-            this.ShowRemote = new DelegateCommand((o) => this.ChangeVisibilityRemote(), o => this.canDo);
-            this.SetLocalFont = new DelegateCommand((o) => this.ChangeLocalFontSize(), o => this.canDo);
-            this.SetRemoteFont = new DelegateCommand((o) => this.ChangeRemoteFontSize(), o => this.canDo);
-            this.ViewLog = new DelegateCommand((o) => this.Log(), o => this.canDo);
-            this.ViewSplash = new DelegateCommand((o) => this.Splashing(), o => this.canDo);
+            this.StartResolver = new DelegateCommand(o => this.Start(), o => this.canDo);
+            this.Exit = new DelegateCommand(o => this.AppExit(), o => this.canDo);
+            this.ShowLocal = new DelegateCommand(o => this.ChangeVisibilityLocal(), o => this.canDo);
+            this.ShowRemote = new DelegateCommand(o => this.ChangeVisibilityRemote(), o => this.canDo);
+            this.SetLocalFont = new DelegateCommand(o => this.ChangeLocalFontSize(), o => this.canDo);
+            this.SetRemoteFont = new DelegateCommand(o => this.ChangeRemoteFontSize(), o => this.canDo);
+            this.ViewLog = new DelegateCommand(o => this.Log(), o => this.canDo);
+            this.ViewSplash = new DelegateCommand(o => this.Splashing(), o => this.canDo);
         }
 
         public ObservableDictionary<string, int> GetPieChartData
