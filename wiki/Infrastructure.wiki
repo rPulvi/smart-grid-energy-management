@@ -11,9 +11,9 @@ Each neighborhoods is represented by the `Resolver`.
 
 = P2P =
 
-The `Resolver` has a special rule in the mesh: forwarding messages to other Resolvers (neighborhoods) in the city to provide energy for its local peers. This is done using a real P2P system.
+The `Resolver` has a special role in the mesh: forwarding messages to other Resolvers (neighborhoods) in the city to provide energy for its local peers. This is done using a real P2P system.
 When a `Building` needs more Energy it sends a special request to its own `Resolver` and this will provide to forward the message to the next Resolver.
-Each `Resolver` have a `NetConfig.xml` file associated that describes its knowledghe of the net. When a `Resolver` connects to a Remote `Resolver` it will update the `NetConfig.xml` file downloading the remote file and merging the contacts list.
+Each `Resolver` has a `NetConfig.xml` file associated that describes its knowledghe of the net. When a `Resolver` connects to a Remote `Resolver` it will update the `NetConfig.xml` file downloading the remote file and merging the contacts list.
 The struct of the `NetConfig.xml` file is the following
 
 {{{
