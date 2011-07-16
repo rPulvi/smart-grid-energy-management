@@ -7,7 +7,7 @@ Suppose the city divided into neighborhoods.
 Each neighborhoods is a mesh. The mesh is made up of peers (aka `Buildings`) that are able to exchange messages to contract for energy supplies based on their needs.
 Each mesh contains a special peer called `Resolver`. The `Resolver` builds the main mesh exposing the `Local Resolver Service`; it also exposes a `Remote service` that will be described next.
 
-Each neighborhoods is represented by the Resolver.
+Each neighborhoods is represented by the `Resolver`.
 
 = P2P =
 
