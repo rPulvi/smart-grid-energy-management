@@ -56,3 +56,13 @@ The `Resolver` will re-change the `messageHeader` before sending back the energy
 There is a _Session Based System_ used to take trace of the message request/reply mechanism.
 
 = The Session System =
+
+Each Header in a message contains a `MessageID` in the C# `Guid` format:
+
+{{{
+[DataMember]
+public Guid MessageID { get; set; }
+}}}
+
+This ID can be a new ID for some messages, and a piggyback ID for other messages. This is the philosophy:
+Each NEW Energy Request require a new `MessageId` to create a new `Session`. The other followin messages will report this ID in their Header to indicate that belong to that `Session`.
