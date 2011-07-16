@@ -319,7 +319,14 @@ namespace Resolver
 
                 RemoteEndProposalMessage remoteEndMessage = (MessageFactory.createRemoteEndProposalMessage(message, conn.remoteResolver.name, this.name, Tools.getLocalIP(), Tools.getResolverServicePort()));
 
-                tChannel.ReplyEnergyRequest(remoteEndMessage);               
+                try
+                {
+                    tChannel.ReplyEnergyRequest(remoteEndMessage);
+                }
+                catch(Exception e)
+                {
+                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in Forwarding Energy Reply Message: " + e.ToString());
+                }
             }
             else
             {
@@ -470,7 +477,15 @@ namespace Resolver
                                 ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
                                 IRemote tChannel = cf.CreateChannel();
 
-                                tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                                try
+                                {
+                                    tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
+                                }
+                                catch (Exception ex)
+                                {                                    
+                                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in sending Remote Peer Alert Message" + ex.ToString());
+                                }
+                                
                             }
                         }
 
