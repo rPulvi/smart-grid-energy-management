@@ -2,7 +2,7 @@
 
 = Messages in the Grid =
 
-The Peer in the mesh send messages each others to communicate. 
+The Peers in the mesh send messages each others to communicate. 
 Each message is a `MessageContract` class that inherits from the `PeerMessage` class.
 
 Each message is made up an *Header* and a *Body*.
