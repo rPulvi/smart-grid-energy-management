@@ -7,8 +7,6 @@ Each message is a `MessageContract` class that inherits from the `PeerMessage` c
 
 http://img405.imageshack.us/img405/9205/classdiagram.jpg
 
-Uploaded with [URL=http://imageshack.us]ImageShack.us[/URL]
-
 Each message is made up an *Header* and a *Body*.
 
 == Header Format ==
