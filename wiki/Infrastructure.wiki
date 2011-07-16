@@ -35,3 +35,24 @@ The struct of the `NetConfig.xml` file is the following
   </RemoteHosts>
 </Params>
 }}}
+
+= Energy Broker =
+
+The process to find energy in response to a remote request is demanded to the `EnergyBroker`. This component has the role of look up energy in the local mesh, evaluating the proposal and send an `EndProposalMessage` that reports `true` if energy is available, `false` otherwise.
+This process is started in a separated Thread using the statement:
+
+{{{
+_brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
+_brokerThread.Start(message.enReqMessage);
+}}}
+
+As we can see, the message (`enReqMessage`) is passed as a parameter. The broker replace the `messageHeader` changing the `Sender` attribute to `Resolver` name.
+
+{{{
+message.header.Sender = this._name;
+}}}
+
+The `Resolver` will re-change the `messageHeader` before sending back the energy reply message. 
+There is a _Session Based System_ used to take trace of the message request/reply mechanism.
+
+= The Session System =
