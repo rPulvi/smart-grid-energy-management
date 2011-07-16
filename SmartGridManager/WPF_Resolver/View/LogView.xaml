@@ -1,7 +1,8 @@
 ﻿<Window x:Class="WPF_Resolver.View.LogView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="LogView" WindowStyle="ToolWindow" Background="#FF1F1F1F">        
+        Title="LogView" WindowStyle="ToolWindow" Background="#FF1F1F1F"
+        Icon="/img/log.ico">        
 	
 	<Window.Resources>
 
