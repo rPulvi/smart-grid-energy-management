@@ -380,6 +380,8 @@ namespace Resolver
             }
             else //No Energy From this remote resolver..Go with the next
             {
+                Connector.channel.endProposal(message.endProposalMessage);
+
                 lock (_counterLock)
                 {
                     _nHostIndex++;
