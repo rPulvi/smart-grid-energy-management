@@ -12,6 +12,19 @@ Each node `Producer` is able to produce Energy in different ways:
   * Hydric
   * Thermal
 
+This aspect of the model is the described in the `EnergyType enum`
+
+{{{
+    public enum EnergyType
+    {
+        None = 0,
+        Solar = 1,
+        Eolic = 2,
+        Hydric = 3,
+        Thermic = 4,
+    }
+}}}
+
 = Terminology =
 
 In our application, we talk about:
