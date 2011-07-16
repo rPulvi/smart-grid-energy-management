@@ -160,6 +160,7 @@
     <Resource Include="img\splash.png" />
     <Resource Include="img\check-icon.png" />
     <Resource Include="img\quit.png" />
+    <Resource Include="img\log.ico" />
     <Content Include="log.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
