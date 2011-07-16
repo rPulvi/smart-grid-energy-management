@@ -74,4 +74,4 @@ public static StandardMessageHeader getHeader(String receiver, String sender) {.
 public static StandardMessageHeader getHeader(String receiver, String sender, Guid SessionMessageID) {...}
 }}}
 
-the first will create a new Guid, the second will copy the SessionId in the header.
+the first will create a new `Guid`, the second will copy the SessionId in the header.
