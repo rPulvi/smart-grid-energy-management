@@ -5,6 +5,10 @@
 The Peers in the mesh send messages each others to communicate. 
 Each message is a `MessageContract` class that inherits from the `PeerMessage` class.
 
+
+http://imageshack.us/photo/my-images/405/classdiagram.jpg/
+
+
 Each message is made up an *Header* and a *Body*.
 
 == Header Format ==
