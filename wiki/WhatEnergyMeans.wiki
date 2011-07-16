@@ -1,4 +1,4 @@
-#summary Describing the concept behind the energy exchange system
+#summary Describing the terminology behind the energy exchange system
 
 = Different Types of Energy =
 
