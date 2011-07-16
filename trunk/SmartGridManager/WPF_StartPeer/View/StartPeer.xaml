@@ -348,7 +348,7 @@
 							<ColumnDefinition Width="0.4*"/>
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
-						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Tipe:"/></TextBlock>
+						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Type:"/></TextBlock>
 						<ComboBox IsEnabled="{Binding IsChecked, ElementName=chkProducer}" SelectedValue="{Binding EnType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" Width="150" x:Name="cmbEnergyType" Margin="2,0,0,0" Grid.Column="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">
 							<ComboBoxItem Content="Solare" Tag="1"/>
 							<ComboBoxItem Content="Eolica" Tag="2"/>
