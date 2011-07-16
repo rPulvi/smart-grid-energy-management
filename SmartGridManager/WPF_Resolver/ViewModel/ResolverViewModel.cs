@@ -492,7 +492,7 @@ namespace WPF_Resolver.ViewModel
                 OnPropertyChanged("GetStartColour");
             }
             else
-                MessageBox.Show("Error in starting Local Resolver Service. Please check your NetConfig.xml file.", "Resolver Service - Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error in starting Local Resolver Service. Please check your App.config file.", "Resolver Service - Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
         private bool canDo
