@@ -627,7 +627,7 @@ namespace Resolver
                                          select c.Key).ToArray();
 
                     for (int j = 0; j < itemsToRemove.Length; j++)
-                        _remoteConnections[i].requests.Remove(itemsToRemove[i]);
+                        _remoteConnections[i].requests.Remove(itemsToRemove[j]);
                 }
                 
                 for (int i = 0; i < _remoteConnections.Count; i++)
