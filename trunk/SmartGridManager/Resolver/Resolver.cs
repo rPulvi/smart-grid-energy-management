@@ -608,11 +608,8 @@ namespace Resolver
                     }
                 }
 
-                for (int i = 0; i < _remoteConnections.Count; i++)
-                {
-                    if (_remoteConnections[i].requests.Count == 0)
-                        _remoteConnections.RemoveAt(i);
-                }                
+                _remoteConnections.RemoveAll(delegate(RemoteConnection x) { return x.requests.Count == 0; });
+
             }
         }
 
@@ -629,12 +626,9 @@ namespace Resolver
                     for (int j = 0; j < itemsToRemove.Length; j++)
                         _remoteConnections[i].requests.Remove(itemsToRemove[j]);
                 }
-                
-                for (int i = 0; i < _remoteConnections.Count; i++)
-                {
-                    if (_remoteConnections[i].requests.Count == 0)
-                        _remoteConnections.RemoveAt(i);
-                }                
+
+                _remoteConnections.RemoveAll(delegate(RemoteConnection x) { return x.requests.Count == 0; });
+                                
             }
         }
 
