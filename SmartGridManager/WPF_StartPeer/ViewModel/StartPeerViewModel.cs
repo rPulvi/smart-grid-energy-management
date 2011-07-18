@@ -491,6 +491,7 @@ namespace WPF_StartPeer.ViewModel
             }
             else
             {
+                
                 Disconnect();
             }
         }
@@ -545,8 +546,11 @@ namespace WPF_StartPeer.ViewModel
 
             _isStartable = true;
 
-            if(house != null)
+            if (house != null)
+            {
+                house.ResetEnergyLinks();
                 house.StopEnergyProduction();
+            }
 
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
             OnPropertyChanged("StartButtonIconPath");

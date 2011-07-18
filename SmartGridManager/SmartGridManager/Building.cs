@@ -72,5 +72,10 @@ namespace SmartGridManager
         {
             return _pwManager.consumers;
         }
+
+        public void ResetEnergyLinks()
+        {
+            _pwManager.resetEnergyLinks();
+        }
     }
 }
