@@ -34,7 +34,7 @@ namespace SmartGridManager.Core.P2P
         //per avere la Open e la Close
     }
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
     public class PeerServices : IPeerServices
     {        
         public event manageEnergyRequest OnRemoteEnergyRequest;
