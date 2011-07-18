@@ -236,6 +236,15 @@ namespace Resolver
                     }
                 }
             }
+
+
+            if (_nHostIndex >= _remoteResolvers.Count)
+            {
+                lock (_counterLock)
+                {
+                    _nHostIndex = 0;
+                }
+            }
         }
         
         #endregion
