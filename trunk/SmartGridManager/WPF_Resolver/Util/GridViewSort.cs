@@ -15,45 +15,6 @@ namespace WPF_Resolver.Util
     {
         #region Public attached properties
 
-        public static ICommand GetCommand(DependencyObject obj)
-        {
-            return (ICommand)obj.GetValue(CommandProperty);
-        }
-
-        public static void SetCommand(DependencyObject obj, ICommand value)
-        {
-            obj.SetValue(CommandProperty, value);
-        }
-
-        // Using a DependencyProperty as the backing store for Command.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty CommandProperty =
-            DependencyProperty.RegisterAttached(
-                "Command",
-                typeof(ICommand),
-                typeof(GridViewSort),
-                new UIPropertyMetadata(
-                    null,
-                    (o, e) =>
-                    {
-                        ItemsControl listView = o as ItemsControl;
-                        if (listView != null)
-                        {
-                            if (!GetAutoSort(listView)) // Don't change click handler if AutoSort enabled
-                            {
-                                if (e.OldValue != null && e.NewValue == null)
-                                {
-                                    listView.RemoveHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
-                                }
-                                if (e.OldValue == null && e.NewValue != null)
-                                {
-                                    listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
-                                }
-                            }
-                        }
-                    }
-                )
-            );
-
         public static bool GetAutoSort(DependencyObject obj)
         {
             return (bool)obj.GetValue(AutoSortProperty);
@@ -77,18 +38,15 @@ namespace WPF_Resolver.Util
                         ListView listView = o as ListView;
                         if (listView != null)
                         {
-                            if (GetCommand(listView) == null) // Don't change click handler if a command is set
+                            bool oldValue = (bool)e.OldValue;
+                            bool newValue = (bool)e.NewValue;
+                            if (oldValue && !newValue)
                             {
-                                bool oldValue = (bool)e.OldValue;
-                                bool newValue = (bool)e.NewValue;
-                                if (oldValue && !newValue)
-                                {
-                                    listView.RemoveHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
-                                }
-                                if (!oldValue && newValue)
-                                {
-                                    listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
-                                }
+                                listView.RemoveHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
+                            }
+                            if (!oldValue && newValue)
+                            {
+                                listView.AddHandler(GridViewColumnHeader.ClickEvent, new RoutedEventHandler(ColumnHeader_Click));
                             }
                         }
                     }
@@ -189,18 +147,7 @@ namespace WPF_Resolver.Util
                     ListView listView = GetAncestor<ListView>(headerClicked);
                     if (listView != null)
                     {
-                        ICommand command = GetCommand(listView);
-                        if (command != null)
-                        {
-                            if (command.CanExecute(propertyName))
-                            {
-                                command.Execute(propertyName);
-                            }
-                        }
-                        else if (GetAutoSort(listView))
-                        {
-                            ApplySort(listView.Items, propertyName, listView, headerClicked);
-                        }
+                        ApplySort(listView.Items, propertyName, listView, headerClicked);
                     }
                 }
             }
