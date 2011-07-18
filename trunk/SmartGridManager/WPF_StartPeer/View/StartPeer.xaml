@@ -333,7 +333,7 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Name:"/></TextBlock>
-						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Nome, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtNome" Margin="0" TextWrapping="Wrap" BorderThickness="1,1,1,0" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Nome}" x:Name="txtNome" Margin="0" TextWrapping="Wrap" BorderThickness="1,1,1,0" Grid.Column="1" d:LayoutOverrides="HorizontalAlignment" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
 					</Grid>
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -349,7 +349,7 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Type:"/></TextBlock>
-						<ComboBox IsEnabled="{Binding IsChecked, ElementName=chkProducer}" SelectedValue="{Binding EnType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" Width="150" x:Name="cmbEnergyType" Margin="2,0,0,0" Grid.Column="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">
+						<ComboBox IsEnabled="{Binding IsChecked, ElementName=chkProducer}" SelectedValue="{Binding EnType}" SelectedValuePath="Tag" IsSynchronizedWithCurrentItem="True" Width="150" x:Name="cmbEnergyType" Margin="2,0,0,0" Grid.Column="1" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Center">
 							<ComboBoxItem Content="Solare" Tag="1"/>
 							<ComboBoxItem Content="Eolica" Tag="2"/>
 							<ComboBoxItem Content="Idrica" Tag="3"/>
@@ -362,7 +362,7 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Peak(KW/h):"/></TextBlock>
-						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnPeak, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPicco" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnPeak}" x:Name="txtPicco" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
 					</Grid>
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -370,7 +370,7 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Price € (KW/h):"/></TextBlock>
-						<TextBox Style="{StaticResource myTextBoxStyle}" IsEnabled="{Binding IsChecked, ElementName=chkProducer}" Text="{Binding Price, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtPrezzo" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
+						<TextBox Style="{StaticResource myTextBoxStyle}" IsEnabled="{Binding IsChecked, ElementName=chkProducer}" Text="{Binding Price}" x:Name="txtPrezzo" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
 					</Grid>
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -378,7 +378,7 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Energy Produced(KW/h):"/></TextBlock>
-						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnProduced, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtEnergiaGeneratore" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding EnProduced}" x:Name="txtEnergiaGeneratore" Margin="0" TextWrapping="Wrap" d:LayoutOverrides="Width" Grid.ColumnSpan="2" Grid.Column="1"/>
 					</Grid>
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -386,7 +386,7 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Address:"/></TextBlock>
-						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtIndirizzo" Margin="0" TextWrapping="Wrap" Height="22.744" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Address}" x:Name="txtIndirizzo" Margin="0" TextWrapping="Wrap" Height="22.744" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
 					</Grid>
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
@@ -394,7 +394,7 @@
 							<ColumnDefinition Width="0.6*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock TextWrapping="Wrap" Style="{DynamicResource StileTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,2,0"><Run Language="it-it" Text="Administrator:"/></TextBlock>
-						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Admin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="txtAdministrator" Height="23" Margin="0" TextWrapping="Wrap" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
+						<TextBox Style="{StaticResource myTextBoxStyle}" Text="{Binding Admin}" x:Name="txtAdministrator" Height="23" Margin="0" TextWrapping="Wrap" Grid.ColumnSpan="2" d:LayoutOverrides="GridBox" Grid.Column="1"/>
 					</Grid>
 					<Grid Margin="0,0,0,5">
 						<Grid.ColumnDefinitions>
