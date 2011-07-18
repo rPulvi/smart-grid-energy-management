@@ -173,10 +173,15 @@ namespace Resolver
             {
                 //localhost connections filter
                 if (_remoteResolvers[_nHostIndex].IP == "127.0.0.1" || _remoteResolvers[_nHostIndex].IP.ToLower() == "localhost")
-                {                       
-                    //if(_nHostIndex < _remoteResolvers.Count-1) 
-                        _nHostIndex++;
-                    
+                {
+                    lock (_counterLock)
+                    {
+                        if (_nHostIndex < (_remoteResolvers.Count - 1))
+                            _nHostIndex++;
+                        else
+                            _nHostIndex = 0;
+                    }
+
                     continue;
                 }
 
