@@ -346,6 +346,12 @@ namespace SmartGridManager
             _generator.Stop();            
         }
 
+        public void resetEnergyLinks()
+        {
+            producers.Clear();
+            consumers.Clear();
+        }
+
         #endregion
     }
 }
