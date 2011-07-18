@@ -9,7 +9,7 @@ using SmartGridManager.Core.Utils;
 namespace SmartGridManager.Core.Messaging
 {
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode=ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode=ConcurrencyMode.Single)]
     public class MessagesImplementation : IMessages
     {
         public virtual void sayHello(HelloMessage message)
