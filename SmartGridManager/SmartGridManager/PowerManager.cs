@@ -109,7 +109,8 @@ namespace SmartGridManager
                     Connector.channel.statusAdv(MessageFactory.createEnergyRequestMessage("@All", _name, _peerStatus, enReq));
 
                     messageSent = true;
-
+                    XMLLogger.WriteLocalActivity(enReq + "kW Energy Request Sent to Local Network...");
+                    
                     //start the timer to waiting for proposals
                     if (_proposalCountdown.Enabled == false)
                         _proposalCountdown.Enabled = true;
@@ -133,6 +134,8 @@ namespace SmartGridManager
             {
                 if (_peerStatus == PeerStatus.Producer)
                 {
+                    XMLLogger.WriteLocalActivity(message.energyReq + "kW Energy Request Received from: " + message.header.Sender);
+
                     float enAvailable = getEnergyLevel() - (_enPeak + _enSold);
 
                     if (enAvailable > 0)
@@ -148,6 +151,8 @@ namespace SmartGridManager
                             );
 
                         Connector.channel.energyProposal(respMessage);
+
+                        XMLLogger.WriteLocalActivity(enSold + "kW Energy Proposal Sent to: " + message.header.Sender);
                     }
                 }
             }
@@ -156,7 +161,8 @@ namespace SmartGridManager
         private void ReceiveProposal(EnergyProposalMessage message)
         {
             if (message.header.Receiver == _name)
-            {                
+            {
+                XMLLogger.WriteLocalActivity("Received Proposal for " + message.energyAvailable + "kW; price " + message.price + " From " + message.header.Sender);
                 _proposalList.Add(message);                                
             }
         }
@@ -191,7 +197,7 @@ namespace SmartGridManager
                 }
                 else
                 {
-                    XMLLogger.WriteLocalActivity("Nessuna offerta energetica ricevuta");                    
+                    XMLLogger.WriteLocalActivity("No Energy proposal receveid");
                     messageSent = false; //send the request message again                
                 }
             }
@@ -234,10 +240,14 @@ namespace SmartGridManager
                     XMLLogger.WriteLocalActivity("Ok, " + energyCanSell + " KW/h sold to " + message.header.Sender);
 
                     EnergyLink link = new EnergyLink(message.peerName, energyCanSell, _price);
-                    consumers.Add(link);
+                    consumers.Add(link);                    
 
                     //Advise the Local Resolver About the energy status change.                    
                     Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName,_name,_enSold,_enBought));
+
+                    XMLLogger.WriteLocalActivity("Updating Stutus");
+                    XMLLogger.WriteLocalActivity("Peer " + message.header.Sender + " - Energy Sold: " + _enSold);
+                    XMLLogger.WriteLocalActivity("Peer " + message.header.Sender + " - Energy Bought: " + _enBought);                    
                 }
 
                 EndProposalMessage respMessage = MessageFactory.createEndProposalMessage(

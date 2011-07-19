@@ -258,6 +258,9 @@ namespace Resolver
 
         private void ForwardEnergyRequest(StatusNotifyMessage message)
         {
+            XMLLogger.WriteRemoteActivity("Forwarding " + message.energyReq + "kW Energy Request from: " + message.header.Sender);
+            XMLLogger.WriteRemoteActivity("MessageID: " + message.header.MessageID);
+
             _requestThread = new Thread(new ParameterizedThreadStart(ConnectToRemoteHost));
             _requestThread.Start(message);
         }
