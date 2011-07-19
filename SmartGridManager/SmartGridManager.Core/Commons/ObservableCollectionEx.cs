@@ -14,7 +14,7 @@ namespace SmartGridManager.Core.Commons
 
         protected override void OnCollectionChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            // Be nice - use BlockReentrancy like MSDN said
+            //Limito l'accesso da parte di altri Thread che vogliono modificare la collection
             using (BlockReentrancy())
             {
                 System.Collections.Specialized.NotifyCollectionChangedEventHandler eventHandler = CollectionChanged;
