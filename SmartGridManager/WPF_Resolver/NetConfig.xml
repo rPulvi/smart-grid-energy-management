@@ -1,12 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Params>
-  <Name>Rick Resolver</Name>
+  <Name>Resolver</Name>
   <ServicePort>8082</ServicePort>
   <RemoteHosts>
-    <Host>
-      <Name>Locale</Name>
-      <IP>localhost</IP>
-      <Port>8082</Port>
-    </Host>
   </RemoteHosts>
 </Params>
