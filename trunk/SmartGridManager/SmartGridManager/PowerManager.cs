@@ -13,12 +13,6 @@ namespace SmartGridManager
 {
     class PowerManager
     {
-        #region CONSTs HERE
-        /********************************/
-        private const int TTL = 4;
-        /********************************/
-        #endregion
-
         #region Attributes
 
         private EnergyGenerator _generator;        
