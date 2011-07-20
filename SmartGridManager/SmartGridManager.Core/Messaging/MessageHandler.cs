@@ -19,6 +19,7 @@ namespace SmartGridManager.Core.Messaging
     public delegate void forwardEnergyReply(EndProposalMessage m);
     public delegate void updateStatus (UpdateStatusMessage m);
     public delegate void alertPeerDown (PeerIsDownMessage m);
+    public delegate void sayGoodBye (GoodByeMessage m);
     #endregion
 
     public class MessageHandler : MessagesImplementation
@@ -36,6 +37,7 @@ namespace SmartGridManager.Core.Messaging
         public event forwardEnergyReply OnForwardEnergyReply;
         public event updateStatus OnUpdateStatus;
         public event alertPeerDown OnPeerDown;
+        public event sayGoodBye OnSayGoodBye;
         #endregion
 
         public override void sayHello(HelloMessage message)
@@ -132,6 +134,14 @@ namespace SmartGridManager.Core.Messaging
                 OnPeerDown(message);
 
             base.peerDown(message);
+        }
+
+        public override void sayGoodBye(GoodByeMessage message)
+        {
+            if (OnSayGoodBye != null)
+                OnSayGoodBye(message);
+
+            base.sayGoodBye(message);
         }
     }
 }

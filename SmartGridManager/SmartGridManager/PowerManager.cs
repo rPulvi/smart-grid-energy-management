@@ -80,7 +80,7 @@ namespace SmartGridManager
 
             _heartBeatTimer = new System.Timers.Timer();
             _heartBeatTimer.Enabled = false;
-            _heartBeatTimer.Interval = 2000;
+            _heartBeatTimer.Interval = 5000;
             _heartBeatTimer.Elapsed += new ElapsedEventHandler(_heartBeatTimer_Elapsed);            
 
             _mainTimer = new System.Timers.Timer();

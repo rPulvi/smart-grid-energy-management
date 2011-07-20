@@ -74,5 +74,10 @@ namespace SmartGridManager.Core.Messaging
         {
             XMLLogger.WriteRemoteActivity("Peer " +  message.peerName + " is down");
         }
+
+        public virtual void sayGoodBye(GoodByeMessage message)
+        { 
+            //foo;
+        }
     }
 }

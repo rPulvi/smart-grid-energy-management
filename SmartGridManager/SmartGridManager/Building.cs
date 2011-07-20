@@ -46,7 +46,11 @@ namespace SmartGridManager
         public void StopEnergyProduction()
         {
             _pwManager.ShutDown();
-            base.StopService();            
+            Connector.channel.sayGoodBye(MessageFactory.createGoodByeMessage("@All", _name, _name));
+
+            base.StopService();
+
+            XMLLogger.WriteLocalActivity("Leaving the Mesh...");
         }
 
         public void Start()
