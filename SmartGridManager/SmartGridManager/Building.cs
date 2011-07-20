@@ -51,8 +51,6 @@ namespace SmartGridManager
 
         public void Start()
         {
-            //peerthread = new Thread(_pwManager.Start) { IsBackground = true };
-            //peerthread.Start();
             _pwManager.Start();
 
             XMLLogger.WriteLocalActivity("Power Manager Started. Sending Hello Message.");
