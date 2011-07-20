@@ -468,13 +468,12 @@ namespace Resolver
 
         private void _HBTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            lock (_lLock)
+            {
                 for (int i = 0; i < _buildings.Count; i++)
                 {
                     if (_buildings[i].TTL > 0)
-                    {
-                        lock (_lLock)
-                            _buildings[i].TTL--;
-                    }
+                        _buildings[i].TTL--;
                     else
                     {
                         XMLLogger.WriteLocalActivity("Peer: " + _buildings[i].Name + " is down!");
@@ -507,9 +506,9 @@ namespace Resolver
                         }
 
                         updateLocalConnectionsList(_buildings[i].Name);
-                        
-                        lock (_lLock)
-                            _buildings.RemoveAt(i);                    
+
+                        _buildings.RemoveAt(i);                        
+                    }
                 }
             }            
         }
