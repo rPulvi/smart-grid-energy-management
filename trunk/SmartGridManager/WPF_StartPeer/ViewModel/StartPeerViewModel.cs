@@ -455,6 +455,7 @@ namespace WPF_StartPeer.ViewModel
             Application.Current.Shutdown();
         }
 
+        //Button Click
         private void CreateBuilding()
         {
             if (_isStartable)
@@ -490,8 +491,7 @@ namespace WPF_StartPeer.ViewModel
                 }
             }
             else
-            {
-                
+            {                
                 Disconnect();
             }
         }
@@ -536,6 +536,9 @@ namespace WPF_StartPeer.ViewModel
 
         public void Disconnect()
         {
+            if (house != null)
+                house.StopEnergyProduction();            
+
             _totalEnergy = 0;
             _totalPrice = 0;
 
@@ -545,9 +548,6 @@ namespace WPF_StartPeer.ViewModel
             _refreshListTimer.Stop();
 
             _isStartable = true;
-
-            if (house != null)                           
-                house.StopEnergyProduction();           
 
             _startButtonIconPath = @"/WPF_StartPeer;component/img/disconnected.png";
             OnPropertyChanged("StartButtonIconPath");
@@ -566,6 +566,7 @@ namespace WPF_StartPeer.ViewModel
 
             OnPropertyChanged("GetTotalEnergy");
             OnPropertyChanged("GetTotalPrice");
+
         }
 
         private bool checkFields()

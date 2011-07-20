@@ -18,12 +18,6 @@ namespace Resolver
 {
     public class Resolver : Peer
     {
-        #region CONSTs HERE
-        /********************************/
-        private const int TTL = 2;
-        /********************************/
-        #endregion
-
         #region Attributes
 
         private CustomPeerResolverService _crs = new CustomPeerResolverService();
@@ -35,14 +29,16 @@ namespace Resolver
         private PeerServices _remoteMessageHandler;        
 
         private List<RemoteHost> _remoteResolvers = new List<RemoteHost>();
-        private List<RemoteConnection> _remoteConnections = new List<RemoteConnection>();                
+        private List<RemoteConnection> _remoteConnections = new List<RemoteConnection>();
+
+        private Dictionary<string, DateTime> _heartBeats = new Dictionary<string, DateTime>();
 
         private ObservableCollectionEx<TempBuilding> _buildings = new ObservableCollectionEx<TempBuilding>();
 
         public string name { get; private set; }
 
         private int _nHostIndex = 0;
-        private System.Timers.Timer _HBTimer;
+        private System.Timers.Timer _GarbageCollectorTimer;
 
         private Thread _brokerThread;
         private Thread _requestThread;
@@ -54,6 +50,7 @@ namespace Resolver
         private object _lLock = new object();
         private object _connectionLock = new object();
         private object _counterLock = new object();
+        private object _hbDictionary = new object();
 
         private EnergyBroker _broker;
 
@@ -70,10 +67,10 @@ namespace Resolver
             this.isRemoteConnected = false;            
 
             //This timer manage the peer's HB to check the online status
-            _HBTimer = new System.Timers.Timer();
-            _HBTimer.Interval = 3500;
-            _HBTimer.Elapsed += new ElapsedEventHandler(_HBTimer_Elapsed);
-            _HBTimer.Enabled = false;
+            _GarbageCollectorTimer = new System.Timers.Timer();
+            _GarbageCollectorTimer.Interval = 15000;
+            _GarbageCollectorTimer.Elapsed += new ElapsedEventHandler(_GarbageCollector_Elapsed);
+            _GarbageCollectorTimer.Enabled = false;
         }
 
         public void Connect()
@@ -84,7 +81,7 @@ namespace Resolver
             {
                 this.isRemoteServiceStarted = StartRemoteService();                
 
-                _HBTimer.Enabled = true;
+                _GarbageCollectorTimer.Enabled = true;
 
                 #region Normal Peer Activity
 
@@ -99,6 +96,7 @@ namespace Resolver
                 _msgHandler.OnSayHello += new sayHello(HelloResponse);
                 _msgHandler.OnHeartBeat += new heartBeat(CheckHeartBeat);
                 _msgHandler.OnUpdateStatus += new updateStatus(UpdatePeerStatus);                
+                _msgHandler.OnSayGoodBye += new sayGoodBye(PeerSayGoodBye);
                 #endregion
 
                 #endregion
@@ -435,8 +433,7 @@ namespace Resolver
             b.EnProduced = message.EnProduced;            
             b.EnType = message.EnType;
             b.Name = message.header.Sender;
-            b.status = message.Status;
-            b.TTL = TTL;
+            b.status = message.Status;            
             b.iconPath = b.status == PeerStatus.Producer ? @"/WPF_Resolver;component/img/producer.png" : @"/WPF_Resolver;component/img/consumer.png";
             #endregion
 
@@ -456,61 +453,33 @@ namespace Resolver
 
         private void CheckHeartBeat(HeartBeatMessage message)
         {
-            lock (_lLock)
+            string peerName = message.header.Sender;
+            DateTime hbTime = message.header.TimeStamp;
+
+            lock (_hbDictionary)
             {
-                for (int i = 0; i < _buildings.Count; i++)
-                {
-                    if (_buildings[i].Name == message.header.Sender)
-                        _buildings[i].TTL = TTL;
-                }
+                if (_heartBeats.ContainsKey(peerName))
+                    _heartBeats[peerName] = hbTime;
+                else
+                    _heartBeats.Add(peerName, hbTime);
             }
         }
 
-        private void _HBTimer_Elapsed(object sender, ElapsedEventArgs e)
+        //Garbage Collector
+        private void _GarbageCollector_Elapsed(object sender, ElapsedEventArgs e)
         {
-            lock (_lLock)
+            lock (_hbDictionary)
             {
-                for (int i = 0; i < _buildings.Count; i++)
+                var itemsToRemove = (from hb in _heartBeats
+                                     where hb.Value.AddSeconds(20) <= DateTime.Now
+                                     select hb.Key).ToArray();
+
+                for (int i = 0; i < itemsToRemove.Length; i++)
                 {
-                    if (_buildings[i].TTL > 0)
-                        _buildings[i].TTL--;
-                    else
-                    {
-                        XMLLogger.WriteLocalActivity("Peer: " + _buildings[i].Name + " is down!");
-
-                        //Remove the deadly peer but first alert the folks.
-                        Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-
-                        lock (_connectionLock)
-                        {
-                            //Alert Remote Resolvers 
-                            foreach (var remConn in _remoteConnections)
-                            {
-                                NetTcpBinding tcpBinding = new NetTcpBinding();
-                                EndpointAddress remoteEndpoint = new EndpointAddress(remConn.remoteResolver.netAddress);
-                                tcpBinding.Security.Mode = SecurityMode.None;
-
-                                ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
-                                IRemote tChannel = cf.CreateChannel();
-
-                                try
-                                {
-                                    tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, _buildings[i].Name));
-                                }
-                                catch (Exception ex)
-                                {                                    
-                                    XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in sending Remote Peer Alert Message" + ex.ToString());
-                                }
-                                
-                            }
-                        }
-
-                        updateLocalConnectionsList(_buildings[i].Name);
-
-                        _buildings.RemoveAt(i);                        
-                    }
-                }
-            }            
+                    removeBuildingByName(itemsToRemove[i]);
+                    _heartBeats.Remove(itemsToRemove[i]);
+                }                                   
+            }
         }
 
         private void UpdatePeerStatus(UpdateStatusMessage message)
@@ -546,11 +515,17 @@ namespace Resolver
             return _remoteConnections;
         }
 
+        public void PeerSayGoodBye(GoodByeMessage message)
+        {
+            removeBuildingByName(message.peerName);
+        }
+       
+
         public void CloseService()
         {
             XMLLogger.WriteLocalActivity("Closing Application...");
 
-            _HBTimer.Enabled = false;
+            _GarbageCollectorTimer.Enabled = false;
 
             if (this.isRemoteServiceStarted == true)                        
                 _remoteHost.Close();
@@ -636,6 +611,52 @@ namespace Resolver
 
                 _remoteConnections.RemoveAll(delegate(RemoteConnection x) { return x.requests.Count == 0; });
                                 
+            }
+        }
+
+        private void removeBuildingByName(string name)
+        {
+            string leavingPeer = name;
+
+            XMLLogger.WriteLocalActivity("Peer: " + leavingPeer + " is down!");
+
+            //Remove the deadly peer but first alert the folks.
+            Connector.channel.peerDown(MessageFactory.createPeerIsDownMessage("@All", this.name, leavingPeer));
+
+            lock (_connectionLock)
+            {
+                //Alert Remote Resolvers 
+                foreach (var remConn in _remoteConnections)
+                {
+                    NetTcpBinding tcpBinding = new NetTcpBinding();
+                    EndpointAddress remoteEndpoint = new EndpointAddress(remConn.remoteResolver.netAddress);
+                    tcpBinding.Security.Mode = SecurityMode.None;
+
+                    ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+                    IRemote tChannel = cf.CreateChannel();
+
+                    try
+                    {
+                        tChannel.PeerDownAlert(MessageFactory.createPeerIsDownMessage("@All", this.name, leavingPeer));
+                    }
+                    catch (Exception ex)
+                    {
+                        XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Error in sending Remote Peer Alert Message" + ex.ToString());
+                    }
+
+                }
+            }
+
+            updateLocalConnectionsList(leavingPeer);
+
+            var itemToRemove = from b in _buildings
+                               where b.Name == leavingPeer
+                               select b;
+
+            lock (_lLock)
+            {
+                if (itemToRemove.Count() > 0 )
+                    _buildings.Remove(itemToRemove.First());
             }
         }
 

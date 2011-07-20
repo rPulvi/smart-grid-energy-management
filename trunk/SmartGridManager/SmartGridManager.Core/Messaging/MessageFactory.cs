@@ -146,5 +146,16 @@ namespace SmartGridManager.Core.Messaging
 
             return message;
         }
+
+        public static GoodByeMessage createGoodByeMessage(string dest, string source, string name)
+        {
+            GoodByeMessage message = new GoodByeMessage()
+            {
+                header = Tools.getHeader(dest, source),
+                peerName = name
+            };
+
+            return message;
+        }
     }
 }

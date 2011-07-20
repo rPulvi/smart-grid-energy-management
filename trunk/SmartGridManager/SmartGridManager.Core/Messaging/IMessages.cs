@@ -45,5 +45,7 @@ namespace SmartGridManager.Core.Messaging
         [OperationContract(IsOneWay = true)]
         void peerDown(PeerIsDownMessage m);
 
+        [OperationContract(IsOneWay = true)]
+        void sayGoodBye(GoodByeMessage m);
     }
 }

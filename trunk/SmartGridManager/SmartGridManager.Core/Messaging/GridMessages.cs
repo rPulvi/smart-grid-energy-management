@@ -150,4 +150,11 @@ namespace SmartGridManager.Core.Messaging
 
         public RemoteEndProposalMessage() { }
     }
+
+    [MessageContract]
+    public class GoodByeMessage : PeerMessage
+    {
+        [MessageBodyMember]
+        public string peerName { get; set; }
+    }
 }
