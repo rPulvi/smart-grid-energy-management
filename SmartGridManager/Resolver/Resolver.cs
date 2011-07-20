@@ -191,8 +191,7 @@ namespace Resolver
 
                     ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
                     _remoteChannel = cf.CreateChannel();
-
-                    //h
+                    
                     try
                     {
                         _remoteChannel.Open();
