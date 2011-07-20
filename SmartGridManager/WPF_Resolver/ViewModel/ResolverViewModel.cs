@@ -108,6 +108,9 @@ namespace WPF_Resolver.ViewModel
             
             OnPropertyChanged("GetEnProducedBar");
             OnPropertyChanged("GetEnConsumedBar");
+
+            _ipHost = Tools.getLocalIP();
+
             #endregion
 
             #region BackGroundWorkers
@@ -134,8 +137,6 @@ namespace WPF_Resolver.ViewModel
             _clockBar.Interval = new TimeSpan(0, 0, 1);
             _clockBar.Tick += new EventHandler(clockBar_Tick);
             #endregion
-
-            _ipHost = Tools.getLocalIP();
 
             this.StartResolver = new DelegateCommand(o => this.Start(), o => this.canDo);
             this.Exit = new DelegateCommand(o => this.AppExit(), o => this.canDo);
