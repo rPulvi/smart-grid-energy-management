@@ -228,7 +228,7 @@ namespace Resolver
 
                     catch (Exception e)
                     {
-                        XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to: " + _remoteResolvers[_nHostIndex].IP);
+                        XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "Unable to connect to remote host.");
                         //XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), e.ToString()); //For debug purpose   
                         _nHostIndex++;
                         if (_nHostIndex >= _remoteResolvers.Count)
