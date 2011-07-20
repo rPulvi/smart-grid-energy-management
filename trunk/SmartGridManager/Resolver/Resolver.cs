@@ -171,31 +171,30 @@ namespace Resolver
 
             while (connected == false && _nHostIndex < _remoteResolvers.Count)
             {
-                //localhost connections filter
-                if (_remoteResolvers[_nHostIndex].IP == "127.0.0.1" || _remoteResolvers[_nHostIndex].IP.ToLower() == "localhost")
+                lock (_counterLock)
                 {
-                    lock (_counterLock)
+
+                    //localhost connections filter
+                    if (_remoteResolvers[_nHostIndex].IP == "127.0.0.1" || _remoteResolvers[_nHostIndex].IP.ToLower() == "localhost")
                     {
                         if (_nHostIndex < (_remoteResolvers.Count - 1))
                             _nHostIndex++;
                         else
                             _nHostIndex = 0;
+
+                        continue;
                     }
 
-                    continue;
-                }
+                    XMLLogger.WriteRemoteActivity("Connecting to " + _remoteResolvers[_nHostIndex].IP);
 
-                XMLLogger.WriteRemoteActivity("Connecting to " + _remoteResolvers[_nHostIndex].IP);
-                
-                NetTcpBinding tcpBinding = new NetTcpBinding();
-                EndpointAddress remoteEndpoint = new EndpointAddress(_remoteResolvers[_nHostIndex].netAddress);
-                tcpBinding.Security.Mode = SecurityMode.None;
-                
-                ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
-                _remoteChannel = cf.CreateChannel();
+                    NetTcpBinding tcpBinding = new NetTcpBinding();
+                    EndpointAddress remoteEndpoint = new EndpointAddress(_remoteResolvers[_nHostIndex].netAddress);
+                    tcpBinding.Security.Mode = SecurityMode.None;
 
-                lock (_counterLock)
-                {
+                    ChannelFactory<IRemote> cf = new ChannelFactory<IRemote>(tcpBinding, remoteEndpoint);
+                    _remoteChannel = cf.CreateChannel();
+
+                    //h
                     try
                     {
                         _remoteChannel.Open();
