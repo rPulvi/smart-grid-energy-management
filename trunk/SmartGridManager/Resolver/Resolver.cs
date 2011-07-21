@@ -529,19 +529,26 @@ namespace Resolver
 
             _GarbageCollectorTimer.Enabled = false;
 
-            if (this.isRemoteServiceStarted == true)                        
-                _remoteHost.Close();
+            try
+            {
+                if (this.isRemoteServiceStarted == true)
+                    _remoteHost.Close();
 
-            if (this.isRemoteConnected == true)
-                _remoteChannel.Close();
+                if (this.isRemoteConnected == true)
+                    _remoteChannel.Close();
 
-            if(this.isLocalConnected == true)
-            {                
-                _crs.Close();
-                _customResolver.Close();                
+                if (this.isLocalConnected == true)
+                {
+                    _crs.Close();
+                    _customResolver.Close();
+                }
+
+                StopService(); //Calls the base.StopService method
             }
-
-            StopService(); //Calls the base.StopService method
+            catch (Exception e)
+            {
+                XMLLogger.WriteErrorMessage(this.GetType().FullName.ToString(), "App Fault on Exit");
+            }
         }
 
         #region Aux Methods
