@@ -50,7 +50,7 @@ namespace Resolver
         private object _lLock = new object();
         private object _connectionLock = new object();
         private object _counterLock = new object();
-        private object _hbDictionary = new object();
+        private object _hbDictionary = new object();        
 
         private EnergyBroker _broker;
 
@@ -303,8 +303,11 @@ namespace Resolver
                     energy = 0
                 });
 
-            _brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
-            _brokerThread.Start(message.enReqMessage);
+            
+            _broker.EnergyLookUp(message.enReqMessage);
+            
+            //_brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
+            //_brokerThread.Start(message.enReqMessage);
         }
 
         void ForwardEnergyReply(EndProposalMessage message)
