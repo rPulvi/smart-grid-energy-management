@@ -316,28 +316,28 @@ namespace SmartGridManager
         private void SomePeerIsDown(PeerIsDownMessage message)
         { 
             //Update my Energy Consumers List
-            for (int i = 0; i < consumers.Count; i++)
+            var consumersToRemove = (from c in consumers
+                                 where c.peerName == message.peerName
+                                 select c).ToArray();
+
+            foreach (var cons in consumersToRemove)
             {
-                if (consumers[i].peerName == message.peerName)
-                {
-                    _enSold = _enSold - consumers[i].energy;
-                    consumers.RemoveAt(i);
-                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
-                    break;
-                }
+                _enSold = _enSold - cons.energy;
+                consumers.Remove(cons);                
             }
 
-            //Update my Energy Producers (Suppliers) List
-            for (int i = 0; i < producers.Count; i++)
+            //Update my Energy Producers List
+            var producersToRemove = (from p in producers
+                                 where p.peerName == message.peerName
+                                 select p).ToArray();
+
+            foreach (var prod in producersToRemove)
             {
-                if (producers[i].peerName == message.peerName)
-                {
-                    _enBought = _enBought - producers[i].energy;
-                    producers.RemoveAt(i);
-                    Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
-                    break;
-                }
+                _enBought = _enBought - prod.energy;
+                producers.Remove(prod);                
             }
+
+            Connector.channel.updateEnergyStatus(MessageFactory.createUpdateStatusMessage(_resolverName, _name, _enSold, _enBought));
         }
 
         private float getEnergyLevel() { return _generator.EnergyLevel; }               
