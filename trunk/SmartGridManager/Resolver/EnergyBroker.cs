@@ -5,6 +5,7 @@ using System.Timers;
 using SmartGridManager.Core.Utils;
 using SmartGridManager.Core;
 using System;
+using System.Threading;
 
 namespace Resolver
 {
@@ -21,7 +22,9 @@ namespace Resolver
         private List<EnergyProposalMessage> _proposalList = new List<EnergyProposalMessage>();
         
         private System.Timers.Timer _proposalCountdown; //Countdown to elaborate the incoming proposal
-        private Guid _originGuid;        
+        private Guid _originGuid;
+        
+        private SemaphoreSlim _sem = new SemaphoreSlim(1);
 
         #endregion
 
@@ -40,9 +43,12 @@ namespace Resolver
             _proposalCountdown.Enabled = false;           
         }
 
-        public void EnergyLookUp(object m)
+        //public void EnergyLookUp(object m)
+        public void EnergyLookUp(StatusNotifyMessage message)
         {
-            StatusNotifyMessage message = (StatusNotifyMessage)m;
+            //StatusNotifyMessage message = (StatusNotifyMessage)m;
+
+            _sem.Wait();
 
             _originPeerName = message.header.Sender;
             _enLookUp = message.energyReq;
@@ -85,6 +91,7 @@ namespace Resolver
                     );
 
                 Connector.channel.forwardEnergyReply(respMessage);
+                _sem.Release();
             }                        
         }
 
@@ -104,6 +111,7 @@ namespace Resolver
             Connector.channel.acceptProposal(respMessage);
 
             _proposalList.Clear();
+            _sem.Release();
         }
 
         #endregion
