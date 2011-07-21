@@ -40,7 +40,7 @@ namespace Resolver
         private int _nHostIndex = 0;
         private System.Timers.Timer _GarbageCollectorTimer;
 
-        private Thread _brokerThread;
+        
         private Thread _requestThread;
         
         public bool isLocalConnected { get; private set; }
@@ -305,9 +305,6 @@ namespace Resolver
 
             
             _broker.EnergyLookUp(message.enReqMessage);
-            
-            //_brokerThread = new Thread(new ParameterizedThreadStart(_broker.EnergyLookUp));
-            //_brokerThread.Start(message.enReqMessage);
         }
 
         void ForwardEnergyReply(EndProposalMessage message)
